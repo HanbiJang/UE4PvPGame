@@ -84,7 +84,8 @@ DerivedDataCache/*
 
 
 #특정 폴더만 포함하기
+!/MyProp/Content/
+/MyProp/Content/*
+
+#이 폴더만 포함시키기
 !/MyProp/Content/Blueprints/
-/MyProp/Content/Blueprints/*
-
-
