@@ -72,3 +72,18 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# 폴더 무시 ============================
+/Binaries/*
+/Config/*
+/DerivedDataCache/*
+/Intermediate/*
+/Platforms/*
+/Script/*
+
+
+#특정 폴더만 포함하기
+!/Content/Blueprints/
+/Content/Blueprints/*
+
+
