@@ -74,16 +74,16 @@ Plugins/*/Intermediate/*
 DerivedDataCache/*
 
 # 폴더 무시 ============================
-MyProp/Binaries/*
-MyProp/Config/*
-MyProp/DerivedDataCache/*
-MyProp/Intermediate/*
-MyProp/Platforms/*
-MyProp/Script/*
+/MyProp/Binaries/*
+/MyProp/Config/*
+/MyProp/DerivedDataCache/*
+/MyProp/Intermediate/*
+/MyProp/Platforms/*
+/MyProp/Script/*
 
 
 #특정 폴더만 포함하기
-!MyProp/Content/Blueprints/
-MyProp/Content/Blueprints/*
+!/MyProp/Content/Blueprints/
+/MyProp/Content/Blueprints/*
 
 
