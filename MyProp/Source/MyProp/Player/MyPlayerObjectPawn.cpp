@@ -96,10 +96,19 @@ void AMyPlayerObjectPawn::LeftRight(float f)
 
 void AMyPlayerObjectPawn::Jump()
 {
-	if (m_ObjectMesh->IsSimulatingPhysics()) {
+	if (isGround && m_ObjectMesh->IsSimulatingPhysics()) {
+		isGround = false;
 		m_ObjectMesh->AddImpulse(FVector(0, 0, fJumpPower), NAME_None, true);
 		UE_LOG(LogTemp, Log, TEXT("Jump!"));
 	}
+}
+
+void AMyPlayerObjectPawn::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	//벽은 ground로 치지 않기
+	UE_LOG(LogTemp, Log, TEXT("NotifyHit"));
+	if (!isGround) isGround = true;
+
 }
 
 //재변신 (연속 변신)

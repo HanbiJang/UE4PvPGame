@@ -239,8 +239,8 @@ void AMyCharacter::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 	SetActorLocation(FVChange);
 	SetActorRotation(FRChange);
 
-	//물리 켜기
-	m_PlayerObjectPawn->m_ObjectMesh->SetSimulatePhysics(true);
+	//물리 끄기
+	m_PlayerObjectPawn->m_ObjectMesh->SetSimulatePhysics(false);
 
 	//물체 위치를 인간폼이 있던 곳으로 설정
 	m_PlayerObjectPawn->m_ObjectMesh->SetAllPhysicsPosition(originalPos + FVector(0, 0, mesh->GetBoundingBox().GetSize().Z * fscale.Z));
@@ -252,6 +252,9 @@ void AMyCharacter::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 
 	//시점 옮기기...
 	GetWorld()->GetFirstPlayerController()->Possess(m_PlayerObjectPawn);
+
+	//0.1초 뒤에 오브젝트 물리 켜기
+	GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FPhysicsTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetSimulatePhysicsTrue, 0.1f, false);
 
 	//변신 가능 상태 조절
 	//1.5초 뒤에 변신 가능해지기

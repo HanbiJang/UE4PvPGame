@@ -73,7 +73,11 @@ public:
 
 	//Jump 관련 변수
 	bool isGround;
+	//땅과 닿았을 시 isGround를 true로 만든다
+protected:
+	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 
+public:
 	//변신 초기화 각도, 초기화 위치
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FVector FVChange;
