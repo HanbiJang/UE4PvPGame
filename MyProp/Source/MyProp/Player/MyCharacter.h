@@ -10,8 +10,7 @@
 #include "MyCharacter.generated.h"
 
 class UMyAnimInstance; //중복 헤더 포함 문제 해결
-//class AMyPlayerObjectPawn; //중복 헤더 포함 문제 해결
-class AMyCharacterObject;
+class AMyPlayerObjectPawn; //중복 헤더 포함 문제 해결
 
 UCLASS()
 class MYPROP_API AMyCharacter : public ACharacter
@@ -95,8 +94,7 @@ public:
 	void ChangeToObject(UStaticMesh* mesh, FVector fscale);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		//AMyPlayerObjectPawn* m_PlayerObjectPawn; //사물형 폰
-		AMyCharacterObject* m_CharacterObject;
+		AMyPlayerObjectPawn* m_PlayerObjectPawn; //사물형 폰
 
 	//변신 초기화 각도, 초기화 위치
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))

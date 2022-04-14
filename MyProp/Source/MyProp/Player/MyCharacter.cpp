@@ -4,8 +4,7 @@
 #include "Anim/MyAnimInstance.h"
 
 #include "Engine/BlueprintGeneratedClass.h"
-//#include "MyPlayerObjectPawn.h"
-#include "MyCharacterObject.h"
+#include "MyPlayerObjectPawn.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter() :
@@ -71,26 +70,21 @@ void AMyCharacter::BeginPlay()
 	//변신용 사물 오브젝트
 	//블.프 오브젝트 스폰
 	UBlueprintGeneratedClass* LoadBP = LoadObject<UBlueprintGeneratedClass>(GetWorld(),
-		//TEXT("Blueprint'/Game/Blueprints/Objects/BP_MyPlayerObjectPawn.BP_MyPlayerObjectPawn_C'"));
-		TEXT("Blueprint'/Game/Blueprints/BP_MyCharacterObject.BP_MyCharacterObject_C'"));
+		TEXT("Blueprint'/Game/Blueprints/Objects/BP_MyPlayerObjectPawn.BP_MyPlayerObjectPawn_C'"));	
 
 	if (LoadBP)
 	{
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		//m_PlayerObjectPawn = nullptr;
-		m_CharacterObject = nullptr;
+		m_PlayerObjectPawn = nullptr;	
 
-		//m_PlayerObjectPawn = GetWorld()->SpawnActor<AMyPlayerObjectPawn>(LoadBP,
-		//	FVector(0, 0, 0),//물체의 대략적 크기 구하기
-		//	FRotator(0, 0, 0),
-		//	SpawnInfo);
-		m_CharacterObject = GetWorld()->SpawnActor<AMyCharacterObject>(LoadBP,
+		m_PlayerObjectPawn = GetWorld()->SpawnActor<AMyPlayerObjectPawn>(LoadBP,
 			FVector(0, 0, 0),//물체의 대략적 크기 구하기
 			FRotator(0, 0, 0),
 			SpawnInfo);
-		//m_PlayerObjectPawn->SetPCharacter(this); //인간폼 정보등록
-		m_CharacterObject->SetPCharacter(this); //인간폼 정보등록
+
+		m_PlayerObjectPawn->SetPCharacter(this); //인간폼 정보등록
+
 	}
 	
 }
@@ -248,47 +242,26 @@ void AMyCharacter::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 	SetActorRotation(FRChange);
 
 	//물리 끄기
-	//m_PlayerObjectPawn->m_ObjectMesh->SetSimulatePhysics(false);
-
-	////물체 위치를 인간폼이 있던 곳으로 설정
-	//m_PlayerObjectPawn->m_ObjectMesh->SetAllPhysicsPosition(originalPos + FVector(0, 0, mesh->GetBoundingBox().GetSize().Z * fscale.Z));
-
-	////클릭한 오브젝트 메시의 크기와 같게 설정
-	//m_PlayerObjectPawn->m_ObjectMesh->SetRelativeScale3D(fscale);
-	////매시 설정
-	//m_PlayerObjectPawn->m_ObjectMesh->SetStaticMesh(mesh);
-
-	////시점 옮기기...
-	//GetWorld()->GetFirstPlayerController()->Possess(m_PlayerObjectPawn);
-
-	////0.1초 뒤에 오브젝트 물리 켜기
-	//GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FPhysicsTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetSimulatePhysicsTrue, 0.1f, false);
-
-	////변신 가능 상태 조절
-	////1.5초 뒤에 변신 가능해지기
-	//GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FChangeEnableTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
-
-
-	//=====
-	m_CharacterObject->m_ObjectMesh->SetSimulatePhysics(false);
+	m_PlayerObjectPawn->m_ObjectMesh->SetSimulatePhysics(false);
 
 	//물체 위치를 인간폼이 있던 곳으로 설정
-	m_CharacterObject->m_ObjectMesh->SetAllPhysicsPosition(originalPos + FVector(0, 0, mesh->GetBoundingBox().GetSize().Z * fscale.Z));
+	m_PlayerObjectPawn->m_ObjectMesh->SetAllPhysicsPosition(originalPos + FVector(0, 0, mesh->GetBoundingBox().GetSize().Z * fscale.Z));
 
 	//클릭한 오브젝트 메시의 크기와 같게 설정
-	m_CharacterObject->m_ObjectMesh->SetRelativeScale3D(fscale);
+	m_PlayerObjectPawn->m_ObjectMesh->SetRelativeScale3D(fscale);
 	//매시 설정
-	m_CharacterObject->m_ObjectMesh->SetStaticMesh(mesh);
+	m_PlayerObjectPawn->m_ObjectMesh->SetStaticMesh(mesh);
 
 	//시점 옮기기...
-	GetWorld()->GetFirstPlayerController()->Possess(m_CharacterObject);
+	GetWorld()->GetFirstPlayerController()->Possess(m_PlayerObjectPawn);
 
 	//0.1초 뒤에 오브젝트 물리 켜기
-	GetWorld()->GetTimerManager().SetTimer(m_CharacterObject->FPhysicsTimer, m_CharacterObject, &AMyCharacterObject::SetSimulatePhysicsTrue, 0.1f, false);
+	GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FPhysicsTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetSimulatePhysicsTrue, 0.1f, false);
 
 	//변신 가능 상태 조절
 	//1.5초 뒤에 변신 가능해지기
-	GetWorld()->GetTimerManager().SetTimer(m_CharacterObject->FChangeEnableTimer, m_CharacterObject, &AMyCharacterObject::SetbChangeEnableTrue, 1.5f, false);
+	GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FChangeEnableTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
+
 }
 
 
