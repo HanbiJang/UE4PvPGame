@@ -1,27 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "MyPlayerObjectPawn.h"
+#include "MyCharacterObject.h"
 #include "MyCharacter.h"
 
 // Sets default values
-AMyPlayerObjectPawn::AMyPlayerObjectPawn()
+AMyCharacterObject::AMyCharacterObject()
 	: fRunPower(5),
 	fRoPower(0.1f),
 	fJumpPower(500),
-	FVChange(0,0,0),
-	FRChange(0,0,0),
+	FVChange(0, 0, 0),
+	FRChange(0, 0, 0),
 	bChangeEnable(false)
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//캡슐 컴포넌트	
-	RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	//RootComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 
 	//변신 용 메시
 	m_ObjectMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ObjectMesh"));
-	m_ObjectMesh->SetupAttachment(RootComponent);
+	//m_ObjectMesh->SetupAttachment(RootComponent);
+	m_ObjectMesh->SetupAttachment(GetMesh());
 
 	//카메라 설정
 	m_Cam = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -47,75 +47,77 @@ AMyPlayerObjectPawn::AMyPlayerObjectPawn()
 }
 
 // Called when the game starts or when spawned
-void AMyPlayerObjectPawn::BeginPlay()
+void AMyCharacterObject::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 // Called every frame
-void AMyPlayerObjectPawn::Tick(float DeltaTime)
+void AMyCharacterObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 // Called to bind functionality to input
-void AMyPlayerObjectPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AMyCharacterObject::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	//Moving
-	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &AMyPlayerObjectPawn::UpDown);
-	PlayerInputComponent->BindAxis(TEXT("LeftRight"), this, &AMyPlayerObjectPawn::LeftRight);
+	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &AMyCharacterObject::UpDown);
+	PlayerInputComponent->BindAxis(TEXT("LeftRight"), this, &AMyCharacterObject::LeftRight);
 
 	//Jump
-	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyPlayerObjectPawn::Jump);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyCharacterObject::Jump);
 
 	//상호작용
-	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &AMyPlayerObjectPawn::Interaction);
+	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &AMyCharacterObject::Interaction);
 
 	//인간폼 변신
-	PlayerInputComponent->BindAction(TEXT("PlayerObject"), EInputEvent::IE_Pressed, this, &AMyPlayerObjectPawn::PlayerObject);
+	PlayerInputComponent->BindAction(TEXT("PlayerObject"), EInputEvent::IE_Pressed, this, &AMyCharacterObject::PlayerObject);
 }
 
-void AMyPlayerObjectPawn::UpDown(float f)
+void AMyCharacterObject::UpDown(float f)
 {
 	if (f != 0 && m_ObjectMesh->IsSimulatingPhysics()) {
-		m_ObjectMesh->AddImpulse(FVector(fRunPower* f, 0, 0), NAME_None, true);
-		m_ObjectMesh->AddAngularImpulseInDegrees(FVector(0, fRoPower *f, 0.f), NAME_None, true);
+		m_ObjectMesh->AddImpulse(FVector(fRunPower * f, 0, 0), NAME_None, true);
+		m_ObjectMesh->AddAngularImpulseInDegrees(FVector(0, fRoPower * f, 0.f), NAME_None, true);
 	}
-
 }
 
-void AMyPlayerObjectPawn::LeftRight(float f)
+void AMyCharacterObject::LeftRight(float f)
 {
 	if (f != 0 && m_ObjectMesh->IsSimulatingPhysics()) {
 		m_ObjectMesh->AddImpulse(FVector(0, fRunPower * f, 0.f), NAME_None, true);
-		m_ObjectMesh->AddAngularImpulseInDegrees(FVector(fRoPower *f, 0, 0.f), NAME_None, true);
+		m_ObjectMesh->AddAngularImpulseInDegrees(FVector(fRoPower * f, 0, 0.f), NAME_None, true);
 	}
 }
 
-void AMyPlayerObjectPawn::Jump()
+void AMyCharacterObject::Jump()
 {
 	if (isGround && m_ObjectMesh->IsSimulatingPhysics()) {
 		isGround = false;
 		m_ObjectMesh->AddImpulse(FVector(0, 0, fJumpPower), NAME_None, true);
-		UE_LOG(LogTemp, Log, TEXT("Jump!"));
+		UE_LOG(LogTemp, Log, TEXT("Jump! "));
+
 	}
+	
 }
 
-void AMyPlayerObjectPawn::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+void AMyCharacterObject::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
 	//벽은 ground로 치지 않기
 	//+DefaultChannelResponses=(Channel=ECC_GameTraceChannel2,DefaultResponse=ECR_Block,bTraceType=False,bStaticObject=False,Name="WallObject")
 	if (OtherComp->GetCollisionObjectType() != ECC_GameTraceChannel2) {
+		UE_LOG(LogTemp, Log, TEXT("NotifyHit"));
 		if (!isGround) isGround = true;
 	}
-	
-
 }
 
 //재변신 (연속 변신)
-void AMyPlayerObjectPawn::ChangeObjectMesh(UStaticMesh* mesh, FVector scale)
+void AMyCharacterObject::ChangeObjectMesh(UStaticMesh* mesh, FVector scale)
 {
 	if (bChangeEnable) {
 		bChangeEnable = false; //과다변신 막기
@@ -135,18 +137,18 @@ void AMyPlayerObjectPawn::ChangeObjectMesh(UStaticMesh* mesh, FVector scale)
 		m_ObjectMesh->SetRelativeScale3D(scale);
 
 		//0.1초 뒤에 물리 켜기
-		GetWorld()->GetTimerManager().SetTimer(FPhysicsTimer, this, &AMyPlayerObjectPawn::SetSimulatePhysicsTrue, 0.1f, false);
+		GetWorld()->GetTimerManager().SetTimer(FPhysicsTimer, this, &AMyCharacterObject::SetSimulatePhysicsTrue, 0.1f, false);
 
 		//1.5초 뒤에 변신 가능해지기
-		GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
+		GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &AMyCharacterObject::SetbChangeEnableTrue, 1.5f, false);
 	}
 }
 
-void AMyPlayerObjectPawn::Interaction() {
+void AMyCharacterObject::Interaction() {
 
 }
 
-void AMyPlayerObjectPawn::PlayerObject() {
+void AMyCharacterObject::PlayerObject() {
 
 	//변신 해제하기 (인간 폰으로 돌아가기)
 
@@ -176,7 +178,7 @@ void AMyPlayerObjectPawn::PlayerObject() {
 			pCharacter->SetActorLocation(originalPos);
 
 			//1.5초 뒤에 변신 가능해지기
-			GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
+			GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &AMyCharacterObject::SetbChangeEnableTrue, 1.5f, false);
 
 		}
 	}

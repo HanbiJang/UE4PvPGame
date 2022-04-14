@@ -2,7 +2,8 @@
 
 
 #include "MyPlayerObject.h"
-#include "../Player/MyPlayerObjectPawn.h"
+//#include "../Player/MyPlayerObjectPawn.h"
+#include "../Player/MyCharacterObject.h"
 
 // Sets default values
 AMyPlayerObject::AMyPlayerObject()
@@ -49,7 +50,8 @@ void AMyPlayerObject::ChangePlayerToObject()
 		//[오브젝트 -> 플레이어]
 		//UE_LOG(LogTemp, Log, TEXT("null!"));
 
-		AMyPlayerObjectPawn* pPlayerObject = Cast<AMyPlayerObjectPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		//AMyPlayerObjectPawn* pPlayerObject = Cast<AMyPlayerObjectPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		AMyCharacterObject* pPlayerObject = Cast<AMyCharacterObject>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 		
 		if (nullptr != pPlayerObject && pPlayerObject->m_ObjectMesh->GetStaticMesh() != m_Mesh->GetStaticMesh()) {
 			pPlayerObject->ChangeObjectMesh(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
