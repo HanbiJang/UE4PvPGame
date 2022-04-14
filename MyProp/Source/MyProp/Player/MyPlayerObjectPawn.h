@@ -73,6 +73,9 @@ public:
 
 	//Jump 관련 변수
 	bool isGround;
+	//2단 점프 제한
+	int JumpCnt = 0;
+
 	//땅과 닿았을 시 isGround를 true로 만든다
 protected:
 	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;

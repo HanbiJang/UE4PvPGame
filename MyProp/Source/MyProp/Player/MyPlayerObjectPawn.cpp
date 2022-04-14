@@ -96,7 +96,8 @@ void AMyPlayerObjectPawn::LeftRight(float f)
 
 void AMyPlayerObjectPawn::Jump()
 {
-	if (isGround && m_ObjectMesh->IsSimulatingPhysics()) {
+	if (JumpCnt < 2 && m_ObjectMesh->IsSimulatingPhysics()) {
+		JumpCnt++;
 		isGround = false;
 		m_ObjectMesh->AddImpulse(FVector(0, 0, fJumpPower), NAME_None, true);
 		UE_LOG(LogTemp, Log, TEXT("Jump!"));
@@ -108,7 +109,10 @@ void AMyPlayerObjectPawn::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, 
 	//벽은 ground로 치지 않기
 	//+DefaultChannelResponses=(Channel=ECC_GameTraceChannel2,DefaultResponse=ECR_Block,bTraceType=False,bStaticObject=False,Name="WallObject")
 	if (OtherComp->GetCollisionObjectType() != ECC_GameTraceChannel2) {
-		if (!isGround) isGround = true;
+		if (!isGround) { 
+			isGround = true; 
+			JumpCnt = 0;
+		}
 	}
 	
 
@@ -139,6 +143,9 @@ void AMyPlayerObjectPawn::ChangeObjectMesh(UStaticMesh* mesh, FVector scale)
 
 		//1.5초 뒤에 변신 가능해지기
 		GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
+	}
+	else {
+		UE_LOG(LogTemp, Log, TEXT("bChangeEnable false!"));
 	}
 }
 
