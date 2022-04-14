@@ -8,7 +8,10 @@
 AMyPlayerObjectPawn::AMyPlayerObjectPawn()
 	: fRunPower(5),
 	fRoPower(0.1f),
-	fJumpPower(500)
+	fJumpPower(500),
+	FVChange(0,0,0),
+	FRChange(0,0,0),
+	bChangeEnable(false)
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -55,10 +58,6 @@ void AMyPlayerObjectPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-//void AMyPlayerObjectPawn::SetSpawnPos(FVector new_originalPos) {
-//	originalPos = new_originalPos;
-//}
-
 // Called to bind functionality to input
 void AMyPlayerObjectPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -103,6 +102,34 @@ void AMyPlayerObjectPawn::Jump()
 	}
 }
 
+//재변신 (연속 변신)
+void AMyPlayerObjectPawn::ChangeObjectMesh(UStaticMesh* mesh, FVector scale)
+{
+	if (bChangeEnable) {
+		bChangeEnable = false; //과다변신 막기
+
+		//물리 끄기
+		m_ObjectMesh->SetSimulatePhysics(false);
+
+		//매시의 각도 초기화 하기
+		m_ObjectMesh->SetAllPhysicsRotation(FRChange);
+		//[매시] 부분 이동
+		m_ObjectMesh->SetRelativeLocation(m_ObjectMesh->GetRelativeLocation() + FVector(0, 0,
+			m_ObjectMesh->GetStaticMesh()->GetBoundingBox().GetSize().Z * GetActorScale().Z));
+
+		//매시 변경
+		m_ObjectMesh->SetStaticMesh(mesh);
+		//크기 설정
+		m_ObjectMesh->SetRelativeScale3D(scale);
+
+		//0.1초 뒤에 물리 켜기
+		GetWorld()->GetTimerManager().SetTimer(FPhysicsTimer, this, &AMyPlayerObjectPawn::SetSimulatePhysicsTrue, 0.1f, false);
+
+		//1.5초 뒤에 변신 가능해지기
+		GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
+	}
+}
+
 void AMyPlayerObjectPawn::Interaction() {
 
 }
@@ -111,27 +138,34 @@ void AMyPlayerObjectPawn::PlayerObject() {
 
 	//변신 해제하기 (인간 폰으로 돌아가기)
 
-	if (nullptr != pCharacter)
-	{
-		GetWorld()->GetFirstPlayerController()->Possess(pCharacter);
+	if (bChangeEnable) {
 
-		FVector originalPos = m_ObjectMesh->GetRelativeLocation(); //인간폼 돌아가기 당시 원래 [메시의] 위치 저장
+		if (nullptr != pCharacter) //외부에서 정보 등록해줌
+		{
+			bChangeEnable = false; //과다변신 막기
+			GetWorld()->GetFirstPlayerController()->Possess(pCharacter);
 
-		//물리 끄기
-		m_ObjectMesh->SetSimulatePhysics(false);
+			FVector originalPos = m_ObjectMesh->GetRelativeLocation(); //인간폼 돌아가기 당시 원래 [메시의] 위치 저장
+
+			//물리 끄기
+			m_ObjectMesh->SetSimulatePhysics(false);
 
 
-		//원래 [인간형] 오브젝트 다른 곳으로 치우기 && 각도 시작과 같이 설정하기
-		SetActorLocation(FVector(0, 0, 0));
-		SetActorRotation(FRotator(0, 0, 0));
-		//매시의 각도 초기화 하기
-		m_ObjectMesh->SetAllPhysicsRotation(FRotator(0, 0, 0));
-		//[메시] 부분 이동
-		m_ObjectMesh->SetRelativeLocation(FVector(0, 0,
-			m_ObjectMesh->GetStaticMesh()->GetBoundingBox().GetSize().Z * GetActorScale().Z));
+			//원래 [인간형] 오브젝트 다른 곳으로 치우기 && 각도 시작과 같이 설정하기
+			SetActorLocation(FVChange);
+			SetActorRotation(FRChange);
+			//매시의 각도 초기화 하기
+			m_ObjectMesh->SetAllPhysicsRotation(FRChange);
+			//[메시] 부분 이동
+			m_ObjectMesh->SetRelativeLocation(FVChange + FVector(0, 0,
+				m_ObjectMesh->GetStaticMesh()->GetBoundingBox().GetSize().Z * GetActorScale().Z));
 
-		//인간폼의 위치를 오브젝트가 있던 액터 위치로 설정하기
-		pCharacter->SetActorLocation(originalPos);
+			//인간폼의 위치를 오브젝트가 있던 액터 위치로 설정하기
+			pCharacter->SetActorLocation(originalPos);
 
+			//1.5초 뒤에 변신 가능해지기
+			GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
+
+		}
 	}
 }

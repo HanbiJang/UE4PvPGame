@@ -74,4 +74,21 @@ public:
 	//Jump 관련 변수
 	bool isGround;
 
+	//변신 초기화 각도, 초기화 위치
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		FVector FVChange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		FRotator FRChange;
+
+	//재 변신
+	void ChangeObjectMesh(UStaticMesh* mesh, FVector scale);
+
+	FTimerHandle FPhysicsTimer; //물리 작용 끔/켬 타이머
+	void SetSimulatePhysicsTrue() { m_ObjectMesh->SetSimulatePhysics(true); }
+
+	//변신 가능 상태 나타내는 변수 (변신 과다 사용 조절용)
+	bool bChangeEnable;
+	FTimerHandle FChangeEnableTimer; //변신 가능 시간 끔/켬 타이머
+	void SetbChangeEnableTrue() { bChangeEnable = true; }
 };

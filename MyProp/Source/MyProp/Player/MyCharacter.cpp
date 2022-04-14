@@ -9,7 +9,9 @@
 // Sets default values
 AMyCharacter::AMyCharacter() :
 	isDashed(false),
-	m_state(EPLAYER_STATE::IDLE)
+	m_state(EPLAYER_STATE::IDLE),
+	FVChange(0, 0, 0),
+	FRChange(0, 0, 0)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -226,7 +228,7 @@ void AMyCharacter::ChangeState(EPLAYER_STATE newState)
 	UE_LOG(LogTemp, Log, TEXT("state: %i"), m_state);
 }
 
-void AMyCharacter::ChangeMesh(UStaticMesh* mesh, FVector fscale)
+void AMyCharacter::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 {
 	//플레이어 상태 변경
 	ChangeState(EPLAYER_STATE::OBJECT);
@@ -234,11 +236,8 @@ void AMyCharacter::ChangeMesh(UStaticMesh* mesh, FVector fscale)
 	FVector originalPos = GetActorLocation(); //변신 당시 원래 위치 저장
 
 	//원래 [인간형] 오브젝트 다른 곳으로 치우기 && 각도 시작과 같이 설정하기
-	SetActorLocation(FVector(0,0,0));
-	SetActorRotation(FRotator(0,0,0));
-
-	//물체의 대략적 크기 구하기
-	//mesh->GetBoundingBox().GetSize().Z
+	SetActorLocation(FVChange);
+	SetActorRotation(FRChange);
 
 	//물리 켜기
 	m_PlayerObjectPawn->m_ObjectMesh->SetSimulatePhysics(true);
@@ -254,6 +253,9 @@ void AMyCharacter::ChangeMesh(UStaticMesh* mesh, FVector fscale)
 	//시점 옮기기...
 	GetWorld()->GetFirstPlayerController()->Possess(m_PlayerObjectPawn);
 
+	//변신 가능 상태 조절
+	//1.5초 뒤에 변신 가능해지기
+	GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FChangeEnableTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
 }
 
 

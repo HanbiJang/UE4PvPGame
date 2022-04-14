@@ -2,6 +2,7 @@
 
 
 #include "MyPlayerObject.h"
+#include "../Player/MyPlayerObjectPawn.h"
 
 // Sets default values
 AMyPlayerObject::AMyPlayerObject()
@@ -32,26 +33,30 @@ void AMyPlayerObject::Tick(float DeltaTime)
 
 }
 
-void AMyPlayerObject::ChangePlayerMesh()
+void AMyPlayerObject::ChangePlayerToObject()
 {
-	//(클릭한 대상) 플레이어의 매시를 변경시킨다
+	//(클릭한 대상) 플레이어, 오브젝트를 폰으로 빙의 시킨다
 
-	//월드에서 플레이어 pawn 인 녀석을 가져오기
+	//[플레이어 -> 오브젝트] 월드에서 플레이어 pawn 인 녀석을 가져오기
 	AMyCharacter* pCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
 	if (nullptr != pCharacter)
 	{		
-		//MyCharacter 안에 있는 매시 변경 함수를 실행, 오브젝트의 매시와 스케일 크기를 넘긴다
-		pCharacter->ChangeMesh(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
+		//MyCharacter 안에 있는 오브젝트 빙의 함수를 실행, 오브젝트의 매시와 스케일 크기를 넘긴다
+		pCharacter->ChangeToObject(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
 	}
 	else {
-		UE_LOG(LogTemp, Log, TEXT("null!"));
+		//[오브젝트 -> 플레이어]
+		//UE_LOG(LogTemp, Log, TEXT("null!"));
+
+		AMyPlayerObjectPawn* pPlayerObject = Cast<AMyPlayerObjectPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		
+		if (nullptr != pPlayerObject && pPlayerObject->m_ObjectMesh->GetStaticMesh() != m_Mesh->GetStaticMesh()) {
+			pPlayerObject->ChangeObjectMesh(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
+		}
 	}
+
 }
 
-//void AMyPlayerObject::ChangePlayerMesh(AActor* target, FKey ButtomPressed) //AddDynamic으로 추가해주기 위해서 인수를 맞춰주었음
-//{
-//	UE_LOG(LogTemp, Log, TEXT("Clicked!"))
-//}
 
 

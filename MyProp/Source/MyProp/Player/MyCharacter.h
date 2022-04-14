@@ -89,15 +89,17 @@ public:
 public:
 	EPLAYER_STATE GetState() { return m_state; }
 
-	//캐릭터의 매시 전환
+	//캐릭터의 오브젝트 전환
 public:
-	void ChangeMesh(UStaticMesh* mesh, FVector fscale);
-
-	//사물형 매시
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-	//UStaticMeshComponent* m_ObjectMesh;
+	void ChangeToObject(UStaticMesh* mesh, FVector fscale);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		AMyPlayerObjectPawn* m_PlayerObjectPawn; //사물형 폰
 
+	//변신 초기화 각도, 초기화 위치
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		FVector FVChange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		FRotator FRChange;
 };

@@ -34,9 +34,9 @@ public:
 
 	//void ChangePlayerMesh(AActor* target, FKey ButtomPressed);//AddDynamic으로 추가해주기 위해서 인수를 맞춰주었음
 	
-	//플레이어를 변신 시킨다
+	//플레이어를 변신 시킨다 (블루프린트에서 부른다)
 	UFUNCTION(BlueprintCallable, Category = "PlayerObject")
-		void ChangePlayerMesh();
+		void ChangePlayerToObject();
 
 
 };
