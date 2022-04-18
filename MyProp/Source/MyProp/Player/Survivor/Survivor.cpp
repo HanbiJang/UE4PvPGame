@@ -32,6 +32,35 @@ void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &ASurvivor::Interaction);
 }
 
+void ASurvivor::Dash()
+{
+	//스태미너 제한
+	if () {
+		isDashed = true;
+
+		if (m_state != EPLAYER_STATE::OBJECT) {
+			//속도 증가 (대시)
+			GetCharacterMovement()->MaxWalkSpeed = 1200.f;
+
+			//상태 전환
+			ChangeState(EPLAYER_STATE::DASH);
+		}
+	}
+}
+
+void ASurvivor::DashStop()
+{
+	isDashed = false;
+
+	if (m_state != EPLAYER_STATE::OBJECT) {
+		//속도 원상복귀
+		GetCharacterMovement()->MaxWalkSpeed = 600.f;
+
+		//상태 전환
+		ChangeState(EPLAYER_STATE::MOVE);
+	}
+}
+
 void ASurvivor::Interaction()
 {
 	//발전기, 문 등과 상호작용

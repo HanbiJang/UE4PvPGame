@@ -46,6 +46,7 @@ void AMyPropGameModeBase::UpdatePlayHUD(float _CurHPRatio, float _CurSPRatio) {
 
 	if (pHPHUD) {
 		pHPHUD->SetHP(_CurHPRatio);
+		pHPHUD->SetText(TEXT("MyPlayerName"));
 	}
 	if (pSPHUD) {
 		pSPHUD->SetSP(_CurSPRatio);

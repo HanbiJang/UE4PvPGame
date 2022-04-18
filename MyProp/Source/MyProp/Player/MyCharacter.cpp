@@ -140,28 +140,12 @@ void AMyCharacter::LeftRight(float f) {
 
 void AMyCharacter::Dash()
 {
-	isDashed = true;
 
-	if (m_state != EPLAYER_STATE::OBJECT) {
-		//속도 증가 (대시)
-		GetCharacterMovement()->MaxWalkSpeed = 1200.f;
-
-		//상태 전환
-		ChangeState(EPLAYER_STATE::DASH);
-	}
 }
 
 void AMyCharacter::DashStop()
 {
-	isDashed = false;
 
-	if (m_state != EPLAYER_STATE::OBJECT) {
-		//속도 원상복귀
-		GetCharacterMovement()->MaxWalkSpeed = 600.f;
-
-		//상태 전환
-		ChangeState(EPLAYER_STATE::MOVE);
-	}
 }
 
 void AMyCharacter::Interaction()

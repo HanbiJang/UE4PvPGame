@@ -46,7 +46,9 @@ public:
 	//Moving
 	void UpDown(float f);
 	void LeftRight(float f);
-	void Dash();
+
+	virtual void Dash();
+	virtual void DashStop();
 
 	//Machine Interaction
 	void Interaction();
@@ -55,7 +57,7 @@ public:
 	void Jump();
 	void JumpAction();
 	bool isDashed;
-	void DashStop();
+
 
 	//ItemBtn
 	void Item1();

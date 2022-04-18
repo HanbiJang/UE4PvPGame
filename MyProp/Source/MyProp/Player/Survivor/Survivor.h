@@ -21,6 +21,11 @@ public:
 
 private:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	//이동 (대시)
+	void Dash() override;
+	void DashStop() override;
+
 	void Interaction();
 
 	void BeginPlay() override;
