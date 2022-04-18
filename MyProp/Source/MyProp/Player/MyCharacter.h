@@ -106,12 +106,12 @@ public:
 
 
 private:
-
 	//캐릭터 정보
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		FServivorInfo m_Info;
+		FTableRowBase m_Info;
 
 public:
-	FServivorInfo* GetInfo() { return &m_Info; }
-	void SetInfo(FServivorInfo new_Info) { m_Info = new_Info; }
+	FTableRowBase* GetInfo() { return &m_Info; }
+	void SetInfo(FTableRowBase new_Info) { m_Info = new_Info; }
+
 };

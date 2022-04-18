@@ -67,8 +67,8 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//변신용 사물 오브젝트
-	//블.프 오브젝트 스폰
+	//======블레이어 변신용 사물 오브젝트 블루프린트======
+	//가져와서 스폰시키기
 	UBlueprintGeneratedClass* LoadBP = LoadObject<UBlueprintGeneratedClass>(GetWorld(),
 		TEXT("Blueprint'/Game/Blueprints/Objects/BP_MyPlayerObjectPawn.BP_MyPlayerObjectPawn_C'"));	
 
@@ -86,7 +86,6 @@ void AMyCharacter::BeginPlay()
 		m_PlayerObjectPawn->SetPCharacter(this); //인간폼 정보등록
 
 	}
-	
 }
 
 // Called every frame

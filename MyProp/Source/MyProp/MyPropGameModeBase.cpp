@@ -34,7 +34,6 @@ void AMyPropGameModeBase::BeginPlay()
 
 	if (nullptr != m_MainHUD)
 		m_MainHUD->AddToViewport();
-
 }
 
 void AMyPropGameModeBase::UpdatePlayHUD(float _CurHPRatio, float _CurSPRatio) {

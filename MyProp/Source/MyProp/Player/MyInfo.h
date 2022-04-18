@@ -51,7 +51,6 @@ public:
 
 };
 
-
 //살인마
 USTRUCT(Atomic, BlueprintType)
 struct FKillerInfo : public FTableRowBase // 데이터 테이블과 연동되는 구조체

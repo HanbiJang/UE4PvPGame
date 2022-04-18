@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
+#include <Engine/DataTable.h>
 #include "CoreMinimal.h"
 #include "../MyCharacter.h"
 #include "Killer.generated.h"
@@ -16,4 +16,7 @@ class MYPROP_API AKiller : public AMyCharacter
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	void Attack();
+
+	void BeginPlay() override;
+
 };
