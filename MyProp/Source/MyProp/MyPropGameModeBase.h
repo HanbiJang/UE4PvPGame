@@ -2,6 +2,11 @@
 
 #pragma once
 
+//UI
+#include "UI/MyMainHUD.h"
+#include "UI/MyHPBarWidget.h"
+#include "UI/MySPWidget.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "MyPropGameModeBase.generated.h"
@@ -14,8 +19,16 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-		//MyCharacter에게 폰 빙의 시키기
-		AMyPropGameModeBase();
+	//MyCharacter에게 폰 빙의 시키기
+	AMyPropGameModeBase();
 
 	void BeginPlay();
+
+	//UI
+	TSubclassOf<UUserWidget>	m_MainHUDClass;
+	UMyMainHUD* m_MainHUD;
+
+	UMyMainHUD* GetMainHUD() { return m_MainHUD; }
+	void UpdatePlayHUD(float _CurHPRatio, float _CurMPRatio);
+
 };
