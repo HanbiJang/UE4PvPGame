@@ -3,6 +3,22 @@
 
 #include "Killer.h"
 
+AKiller::AKiller() {
+
+	//======플레이어 (초기) 데이터 설정======
+	const FKillerInfo* Info = nullptr;
+
+	//데이터 테이블 블루프린트에서 가져오기
+	ConstructorHelpers::FObjectFinder<UDataTable> PlayerTable(TEXT("DataTable'/Game/Blueprints/DT_Killer.DT_Killer'"));
+	if (PlayerTable.Succeeded())
+	{
+		m_PlayerTable = PlayerTable.Object;
+	}
+	Info = m_PlayerTable->FindRow<FKillerInfo>(FName(TEXT("Killer1")), TEXT(""));
+
+	SetInfo(*Info);
+}
+
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -19,18 +35,4 @@ void AKiller::Attack()
 
 void AKiller::BeginPlay() {
 	Super::BeginPlay();
-
-	//======플레이어 (초기) 데이터 설정======
-	AMyCharacter* Character = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	const FKillerInfo* Info = nullptr;
-
-	//데이터 테이블 블루프린트에서 가져오기
-	ConstructorHelpers::FObjectFinder<UDataTable> PlayerTable(TEXT("DataTable'/Game/Blueprints/DT_Killer.DT_Killer'"));
-	if (PlayerTable.Succeeded())
-	{
-		m_PlayerTable = PlayerTable.Object;
-	}
-	Info = m_PlayerTable->FindRow<FKillerInfo>(FName(TEXT("Killer1")), TEXT(""));
-
-	SetInfo(*Info);
 }

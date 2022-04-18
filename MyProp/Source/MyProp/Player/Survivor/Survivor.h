@@ -14,7 +14,10 @@ class MYPROP_API ASurvivor : public AMyCharacter
 {
 	GENERATED_BODY()
 
+public:
+	ASurvivor();
 
+private:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	void Interaction();
 
