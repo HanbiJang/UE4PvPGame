@@ -262,6 +262,8 @@ void AMyCharacter::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 	//1.5초 뒤에 변신 가능해지기
 	GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FChangeEnableTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
 
+	//캐릭터 정보 옮기기
+	m_PlayerObjectPawn->SetInfo(m_Info);
 }
 
 

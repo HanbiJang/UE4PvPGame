@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "MyInfo.h" //캐릭터 정보 
 #include <EngineMinimal.h>
 
 #include "CoreMinimal.h"
@@ -98,4 +99,14 @@ public:
 	bool bChangeEnable;
 	FTimerHandle FChangeEnableTimer; //변신 가능 시간 끔/켬 타이머
 	void SetbChangeEnableTrue() { bChangeEnable = true; }
+
+
+private:
+
+	//캐릭터 정보
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		FServivorInfo m_Info;
+public:
+	FServivorInfo* GetInfo() { return &m_Info; }
+	void SetInfo(FServivorInfo new_Info) { m_Info = new_Info; }
 };

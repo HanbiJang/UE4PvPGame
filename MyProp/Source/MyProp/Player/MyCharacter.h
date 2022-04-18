@@ -111,6 +111,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FServivorInfo m_Info;
 
+public:
 	FServivorInfo* GetInfo() { return &m_Info; }
 	void SetInfo(FServivorInfo new_Info) { m_Info = new_Info; }
 };

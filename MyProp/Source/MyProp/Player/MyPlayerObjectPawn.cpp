@@ -153,9 +153,10 @@ void AMyPlayerObjectPawn::Interaction() {
 
 }
 
+/// <summary>
+/// 변신 해제하기 (인간 폰으로 돌아가기)
+/// </summary>
 void AMyPlayerObjectPawn::PlayerObject() {
-
-	//변신 해제하기 (인간 폰으로 돌아가기)
 
 	if (bChangeEnable) {
 
@@ -185,6 +186,8 @@ void AMyPlayerObjectPawn::PlayerObject() {
 			//1.5초 뒤에 변신 가능해지기
 			GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
 
+			//캐릭터 정보 옮기기
+			pCharacter->SetInfo(m_Info);
 		}
 	}
 }
