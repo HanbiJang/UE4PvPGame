@@ -2,7 +2,8 @@
 
 
 #include "MyPlayerObjectPawn.h"
-#include "MyCharacter.h"
+//#include "MyCharacter.h"
+#include "Survivor/Survivor.h"
 
 // Sets default values
 AMyPlayerObjectPawn::AMyPlayerObjectPawn()

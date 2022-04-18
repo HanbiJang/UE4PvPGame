@@ -18,7 +18,7 @@ public:
 
 //생존자
 USTRUCT(Atomic, BlueprintType)
-struct FServivorInfo : public FTableRowBase // 데이터 테이블과 연동되는 구조체
+struct FSurvivorInfo : public FTableRowBase // 데이터 테이블과 연동되는 구조체
 {
 	GENERATED_BODY()
 

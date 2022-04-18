@@ -90,32 +90,12 @@ public:
 public:
 	EPLAYER_STATE GetState() { return m_state; }
 
-	//캐릭터의 오브젝트 전환
-public:
-	void ChangeToObject(UStaticMesh* mesh, FVector fscale);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		AMyPlayerObjectPawn* m_PlayerObjectPawn; //사물형 폰
-
-	//변신 초기화 각도, 초기화 위치
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		FVector FVChange;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		FRotator FRChange;
-
-
-private:
-	//캐릭터 정보
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		FTableRowBase m_Info;
-
 protected:
 	//데이터 테이블
 	UDataTable* m_PlayerTable;
 
 public:
-	FTableRowBase* GetInfo() { return &m_Info; }
-	void SetInfo(FTableRowBase new_Info) { m_Info = new_Info; }
-
+	//캐릭터 정보 옮기기
+	virtual void ShareInfoToObject(AMyPlayerObjectPawn* m_PlayerObjectPawn, FTableRowBase data) {}; //인간 -> 사물
+	virtual void SetInfoToCharacter(AMyPlayerObjectPawn* m_PlayerObjectPawn,FTableRowBase data) {}; //사물 -> 인간
 };

@@ -3,8 +3,8 @@
 #pragma once
 
 #include <EngineMinimal.h>
-#include "../Player/MyCharacter.h"
-
+//#include "../Player/MyCharacter.h"
+#include "../Player/Survivor/Survivor.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"

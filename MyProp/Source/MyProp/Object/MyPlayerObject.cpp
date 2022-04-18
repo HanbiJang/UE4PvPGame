@@ -38,7 +38,7 @@ void AMyPlayerObject::ChangePlayerToObject()
 	//(클릭한 대상) 플레이어, 오브젝트를 폰으로 빙의 시킨다
 
 	//[플레이어 -> 오브젝트] 월드에서 플레이어 pawn 인 녀석을 가져오기
-	AMyCharacter* pCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	ASurvivor* pCharacter = Cast<ASurvivor>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
 	if (nullptr != pCharacter)
 	{		

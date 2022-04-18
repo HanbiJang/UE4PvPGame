@@ -23,7 +23,7 @@ private:
 	
 public:
 	void SetHP(float _CurHPRatio);
-	void SetText(const FString& _Name) {};
+	void SetText(const FString& _Name);
 
 
 public:

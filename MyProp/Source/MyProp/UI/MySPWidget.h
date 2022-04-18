@@ -21,7 +21,7 @@ private:
 	UProgressBar* m_SPBar;
 
 public:
-	void SetSP(float _CurSPRatio) {}
+	void SetSP(float _CurSPRatio);
 
 
 public:

@@ -29,6 +29,8 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 	UMyMainHUD* m_MainHUD;
 
 	UMyMainHUD* GetMainHUD() { return m_MainHUD; }
+
+public:
 	void UpdatePlayHUD(float _CurHPRatio, float _CurMPRatio);
 
 };

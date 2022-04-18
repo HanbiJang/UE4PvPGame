@@ -9,7 +9,8 @@
 #include "GameFramework/Pawn.h"
 #include "MyPlayerObjectPawn.generated.h"
 
-class AMyCharacter; //중복헤더 문제 해결
+//class AMyCharacter; //중복헤더 문제 해결
+class ASurvivor;
 
 UCLASS()
 class MYPROP_API AMyPlayerObjectPawn : public APawn
@@ -30,10 +31,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	//move
-
-	//jump 2회 가능
 
 
 	//매시
@@ -66,8 +63,8 @@ public:
 
 	//변신
 	void PlayerObject();
-	AMyCharacter* pCharacter; //플레이어 인간폼 정보
-	void SetPCharacter(AMyCharacter* new_pCharacter){ pCharacter = new_pCharacter;  };
+	ASurvivor* pCharacter; //플레이어 인간폼 정보
+	void SetPCharacter(ASurvivor* new_pCharacter){ pCharacter = new_pCharacter;  };
 
 	//Jump
 	void Jump();
@@ -102,11 +99,10 @@ public:
 
 
 private:
-
 	//캐릭터 정보
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		FTableRowBase m_Info;
+		FSurvivorInfo m_Info;
 public:
-	FTableRowBase* GetInfo() { return &m_Info; }
-	void SetInfo(FTableRowBase new_Info) { m_Info = new_Info; }
+	FSurvivorInfo* GetInfo() { return &m_Info; }
+	void SetInfo(FSurvivorInfo new_Info) { m_Info = new_Info; }
 };

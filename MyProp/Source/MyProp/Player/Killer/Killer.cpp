@@ -13,10 +13,14 @@ AKiller::AKiller() {
 	if (PlayerTable.Succeeded())
 	{
 		m_PlayerTable = PlayerTable.Object;
-	}
-	Info = m_PlayerTable->FindRow<FKillerInfo>(FName(TEXT("Killer1")), TEXT(""));
 
-	SetInfo(*Info);
+		if (m_PlayerTable) {
+			Info = m_PlayerTable->FindRow<FKillerInfo>(FName(TEXT("Killer1")), TEXT(""));
+			SetInfo(*Info);
+		}
+
+	}
+
 }
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
