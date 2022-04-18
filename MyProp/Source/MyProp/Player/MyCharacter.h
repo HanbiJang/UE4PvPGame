@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "MyInfo.h" //캐릭터 정보 
 #include <EngineMinimal.h>
 #include "MyCharacterState.h"
 
@@ -102,4 +103,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FRotator FRChange;
+
+
+private:
+
+	//캐릭터 정보
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		FServivorInfo m_Info;
+
+	FServivorInfo* GetInfo() { return &m_Info; }
+	void SetInfo(FServivorInfo new_Info) { m_Info = new_Info; }
 };
