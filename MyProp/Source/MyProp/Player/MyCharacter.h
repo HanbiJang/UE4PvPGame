@@ -110,6 +110,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FTableRowBase m_Info;
 
+protected:
+	//데이터 테이블
+	UDataTable* m_PlayerTable;
+
 public:
 	FTableRowBase* GetInfo() { return &m_Info; }
 	void SetInfo(FTableRowBase new_Info) { m_Info = new_Info; }

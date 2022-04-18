@@ -20,7 +20,14 @@ void ASurvivor::BeginPlay() {
 	//======플레이어 (초기) 데이터 설정======
 	AMyCharacter* Character = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	const FServivorInfo* Info = nullptr;
-	//데이터 테이블에서 가져오기
+
+	//데이터 테이블 블루프린트에서 가져오기
+	ConstructorHelpers::FObjectFinder<UDataTable> PlayerTable(TEXT("DataTable'/Game/Blueprints/DT_Survivor.DT_Survivor'"));
+	if (PlayerTable.Succeeded())
+	{
+		m_PlayerTable = PlayerTable.Object;
+	}
+	Info = m_PlayerTable->FindRow<FServivorInfo>(FName(TEXT("Survivor1")), TEXT(""));
 
 	SetInfo(*Info);
 }
