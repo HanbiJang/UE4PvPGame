@@ -7,8 +7,16 @@ AMyPropGameModeBase::AMyPropGameModeBase() {
 
 	//캐릭터 블루프린트 클래스 가져오기
 	//[1] 생존자 코드
+	//ConstructorHelpers::FClassFinder<APawn>
+	//	MainCharacterClass(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
+	//if (MainCharacterClass.Succeeded())
+	//{
+	//	DefaultPawnClass = MainCharacterClass.Class;
+	//}
+
+	//[2] 살인마 코드
 	ConstructorHelpers::FClassFinder<APawn>
-		MainCharacterClass(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
+		MainCharacterClass(TEXT("Blueprint'/Game/Blueprints/Killer/BP_Killer.BP_Killer_C'"));
 	if (MainCharacterClass.Succeeded())
 	{
 		DefaultPawnClass = MainCharacterClass.Class;

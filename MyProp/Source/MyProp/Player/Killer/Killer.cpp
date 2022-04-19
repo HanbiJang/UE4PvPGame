@@ -35,6 +35,7 @@ void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AKiller::Attack()
 {
 	//공격 모션
+	ChangeState(EPLAYER_STATE::ATTACK);
 }
 
 void AKiller::BeginPlay() {

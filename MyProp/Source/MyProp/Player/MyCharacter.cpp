@@ -112,36 +112,40 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::UpDown(float f) {
 	// 위아래로 이동
-	if ( f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed) {
-		ChangeState(EPLAYER_STATE::MOVE);
-		isMoving = true;
+	if (m_state != EPLAYER_STATE::ATTACK) {
+		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed && m_state != EPLAYER_STATE::ATTACK) {
+			ChangeState(EPLAYER_STATE::MOVE);
+			isMoving = true;
+		}
+
+		fLeftRight = f;
+
+		//캐릭터 회전과 이동
+		FRotator Rotation = Controller->GetControlRotation();
+		FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+
+		FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, f);
 	}
-
-	fLeftRight = f;
-		
-	//캐릭터 회전과 이동
-	FRotator Rotation = Controller->GetControlRotation();
-	FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
-	FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	AddMovementInput(Direction, f);
 }
 
 void AMyCharacter::LeftRight(float f) {
 	//오른쪽, 왼쪽으로 이동
-	if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed) {
-		ChangeState(EPLAYER_STATE::MOVE);
-		isMoving = true;
+	if (m_state != EPLAYER_STATE::ATTACK) {
+		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed) {
+			ChangeState(EPLAYER_STATE::MOVE);
+			isMoving = true;
+		}
+
+		fUpdown = f;
+
+		//캐릭터 회전과 이동
+		FRotator Rotation = Controller->GetControlRotation();
+		FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+
+		FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, f);
 	}
-
-	fUpdown = f;
-
-	//캐릭터 회전과 이동
-	FRotator Rotation = Controller->GetControlRotation();
-	FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
-	FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	AddMovementInput(Direction, f);
 }
 
 void AMyCharacter::Dash()
