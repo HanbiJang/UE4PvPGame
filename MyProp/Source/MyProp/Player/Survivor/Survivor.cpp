@@ -32,32 +32,6 @@ void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &ASurvivor::Interaction);
 }
 
-void ASurvivor::Dash()
-{
-	//스태미너 제한
-	if (GetInfo()->fCurSP > 10) {
-		isDashed = true;
-
-		if (m_state != EPLAYER_STATE::OBJECT) {	
-			GetCharacterMovement()->MaxWalkSpeed = 1200.f; //속도 증가 (대시)
-			ChangeState(EPLAYER_STATE::DASH); //상태 전환
-		}
-	}
-}
-
-void ASurvivor::DashStop()
-{
-	isDashed = false;
-
-	if (m_state != EPLAYER_STATE::OBJECT) {
-		//속도 원상복귀
-		GetCharacterMovement()->MaxWalkSpeed = 600.f;
-
-		//상태 전환
-		ChangeState(EPLAYER_STATE::MOVE);
-	}
-}
-
 void ASurvivor::Interaction()
 {
 	//발전기, 문 등과 상호작용
@@ -69,7 +43,7 @@ void ASurvivor::BeginPlay() {
 	//======블레이어 변신용 사물 오브젝트 블루프린트======
 	//가져와서 스폰시키기
 	UBlueprintGeneratedClass* LoadBP = LoadObject<UBlueprintGeneratedClass>(GetWorld(),
-		TEXT("Blueprint'/Game/Blueprints/Objects/BP_MyPlayerObjectPawn.BP_MyPlayerObjectPawn_C'"));
+		TEXT("Blueprint'/Game/Blueprints/BP_MyPlayerObjectPawn.BP_MyPlayerObjectPawn_C'"));
 
 	if (LoadBP)
 	{
@@ -85,6 +59,21 @@ void ASurvivor::BeginPlay() {
 		m_PlayerObjectPawn->SetPCharacter(this); //인간폼 정보등록
 
 	}
+}
+
+void ASurvivor::Dash()
+{
+	UE_LOG(LogTemp, Log, TEXT("Dasu!!!"));
+	isDashPressed = true;
+
+	if (GetInfo()->fCurSP > 10) {
+		isDashEnable = true;
+	}
+}
+
+void ASurvivor::DashStop()
+{
+	isDashPressed = false;
 }
 
 void ASurvivor::Tick(float DeltaTime) {
@@ -106,14 +95,27 @@ void ASurvivor::Tick(float DeltaTime) {
 	m_PrevHP = m_Info.fCurHP;
 	m_PrevSP = m_Info.fCurSP;
 
-	//대시중)
+	//대시 가능 여부)
+	if (GetInfo()->fCurSP < 0.1) {
+		isDashEnable = false;
+	}
+
+	//대시 중)
 	//[1] 스태미너 감소
-	if (isDashed) {
+	if (isDashEnable && isDashPressed && isMoving) {
+		GetCharacterMovement()->MaxWalkSpeed = 1200.f; //속도 증가 (대시)	
+		ChangeState(EPLAYER_STATE::DASH); //상태 전환
+		isDashed = true;
+
 		GetInfo()->fCurSP -= 0.4f;
 		if (GetInfo()->fCurSP < 0) GetInfo()->fCurSP = 0;
 	}
-	else{ //대시 아닌 상태) 스태미너 회복
-		GetInfo()->fCurSP += 0.05f;
+	//[2] 대시 아닌 상태) 스태미너 회복
+	else{ 
+		GetCharacterMovement()->MaxWalkSpeed = 600.f; //속도 원상복귀
+		isDashed = false;
+
+		GetInfo()->fCurSP += 0.035f;
 		if (GetInfo()->fCurSP > GetInfo()->fMaxSP) GetInfo()->fCurSP = GetInfo()->fMaxSP;
 	}
 }

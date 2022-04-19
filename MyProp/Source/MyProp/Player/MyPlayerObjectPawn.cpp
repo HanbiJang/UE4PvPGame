@@ -57,6 +57,9 @@ void AMyPlayerObjectPawn::BeginPlay()
 void AMyPlayerObjectPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	////컴포넌트 위치를 Physics Location으로 업데이트
+	//RootComponent->SetWorldLocation(m_ObjectMesh->GetComponentLocation());
 }
 
 // Called to bind functionality to input

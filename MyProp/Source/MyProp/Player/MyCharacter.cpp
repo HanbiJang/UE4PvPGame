@@ -8,7 +8,10 @@
 
 // Sets default values
 AMyCharacter::AMyCharacter() :
+	isDashPressed(false),
+	isDashEnable(true),
 	isDashed(false),
+	isMoving(false),
 	m_state(EPLAYER_STATE::IDLE)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -72,8 +75,9 @@ void AMyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//멈춤
-	if (fLeftRight == 0.f && fUpdown == 0.f && m_state == EPLAYER_STATE::MOVE) {
+	if (fLeftRight == 0.f && fUpdown == 0.f && (m_state == EPLAYER_STATE::MOVE || m_state == EPLAYER_STATE::DASH)) {
 		ChangeState(EPLAYER_STATE::IDLE);
+		isMoving = false;
 	}
 
 }
@@ -84,7 +88,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	//Moving
-	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Repeat, this, &AMyCharacter::Dash); //누르는 동안 대시 실행
+	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Pressed, this, &AMyCharacter::Dash); //누르는 동안 대시 실행
 	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Released, this, &AMyCharacter::DashStop); //대시 멈춤
 	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &AMyCharacter::UpDown);
 	PlayerInputComponent->BindAxis(TEXT("LeftRight"),this, &AMyCharacter::LeftRight);
@@ -108,8 +112,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::UpDown(float f) {
 	// 위아래로 이동
-	if ( f != 0.f && m_state != EPLAYER_STATE::JUMP && m_state != EPLAYER_STATE::DASH ) {
+	if ( f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed) {
 		ChangeState(EPLAYER_STATE::MOVE);
+		isMoving = true;
 	}
 
 	fLeftRight = f;
@@ -124,8 +129,9 @@ void AMyCharacter::UpDown(float f) {
 
 void AMyCharacter::LeftRight(float f) {
 	//오른쪽, 왼쪽으로 이동
-	if (f != 0.f && m_state != EPLAYER_STATE::JUMP && m_state != EPLAYER_STATE::DASH && !isDashed) {
+	if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed) {
 		ChangeState(EPLAYER_STATE::MOVE);
+		isMoving = true;
 	}
 
 	fUpdown = f;
@@ -163,7 +169,7 @@ void AMyCharacter::Jump() {
 		ChangeState(EPLAYER_STATE::JUMP);
 	}
 
-	ACharacter::Jump();
+	//ACharacter::Jump();
 
 }
 
