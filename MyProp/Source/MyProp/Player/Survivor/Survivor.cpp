@@ -12,7 +12,7 @@ ASurvivor::ASurvivor() :
 
 	//데이터 테이블 블루프린트에서 가져오기
 	ConstructorHelpers::FObjectFinder<UDataTable> PlayerTable
-	(TEXT("DataTable'/Game/Blueprints/DT_Survivor.DT_Survivor'"));
+	(TEXT("DataTable'/Game/Blueprints/Survivor/DT_Survivor.DT_Survivor'"));
 	
 	if (PlayerTable.Succeeded())
 	{
@@ -43,7 +43,7 @@ void ASurvivor::BeginPlay() {
 	//======블레이어 변신용 사물 오브젝트 블루프린트======
 	//가져와서 스폰시키기
 	UBlueprintGeneratedClass* LoadBP = LoadObject<UBlueprintGeneratedClass>(GetWorld(),
-		TEXT("Blueprint'/Game/Blueprints/BP_MyPlayerObjectPawn.BP_MyPlayerObjectPawn_C'"));
+		TEXT("Blueprint'/Game/Blueprints/Survivor/BP_MyPlayerObjectPawn.BP_MyPlayerObjectPawn_C'"));
 
 	if (LoadBP)
 	{
