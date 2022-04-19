@@ -35,15 +35,12 @@ void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ASurvivor::Dash()
 {
 	//스태미너 제한
-	if () {
+	if (GetInfo()->fCurSP > 10) {
 		isDashed = true;
 
-		if (m_state != EPLAYER_STATE::OBJECT) {
-			//속도 증가 (대시)
-			GetCharacterMovement()->MaxWalkSpeed = 1200.f;
-
-			//상태 전환
-			ChangeState(EPLAYER_STATE::DASH);
+		if (m_state != EPLAYER_STATE::OBJECT) {	
+			GetCharacterMovement()->MaxWalkSpeed = 1200.f; //속도 증가 (대시)
+			ChangeState(EPLAYER_STATE::DASH); //상태 전환
 		}
 	}
 }
@@ -105,10 +102,20 @@ void ASurvivor::Tick(float DeltaTime) {
 		GM->UpdatePlayHUD(HPRatio, MPRatio);
 	}
 
-	// 현재 체력을 이전프레임 체력으로 갱신
+	// 현재 체력, 스태미너를 이전프레임 체력으로 갱신
 	m_PrevHP = m_Info.fCurHP;
 	m_PrevSP = m_Info.fCurSP;
 
+	//대시중)
+	//[1] 스태미너 감소
+	if (isDashed) {
+		GetInfo()->fCurSP -= 0.4f;
+		if (GetInfo()->fCurSP < 0) GetInfo()->fCurSP = 0;
+	}
+	else{ //대시 아닌 상태) 스태미너 회복
+		GetInfo()->fCurSP += 0.05f;
+		if (GetInfo()->fCurSP > GetInfo()->fMaxSP) GetInfo()->fCurSP = GetInfo()->fMaxSP;
+	}
 }
 
 void ASurvivor::ChangeToObject(UStaticMesh* mesh, FVector fscale)
