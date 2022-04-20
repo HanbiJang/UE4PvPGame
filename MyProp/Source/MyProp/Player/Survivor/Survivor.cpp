@@ -8,6 +8,22 @@ ASurvivor::ASurvivor() :
 	FVChange(0, 0, 0),
 	FRChange(0, 0, 0)
 {
+	//사운드 가져오기
+	ConstructorHelpers::FObjectFinder<USoundWave> HeartBeatSoundAsset(TEXT("SoundWave'/Game/Music/HeartBeat_Fast.HeartBeat_Fast'"));
+
+	if (HeartBeatSoundAsset.Succeeded())
+		SW_HeartBeat = HeartBeatSoundAsset.Object;
+
+	ConstructorHelpers::FObjectFinder<USoundWave> ChaseSoundAsset(TEXT("SoundWave'/Game/Music/HorrorChaseMusic.HorrorChaseMusic'"));
+
+	if (ChaseSoundAsset.Succeeded())
+		SW_Chase = ChaseSoundAsset.Object;
+
+	//오디오 컴포넌트 부착
+	AC_HeartBeat = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio_HeartBeat"));
+	AC_Chase = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio_Chase"));
+	AC_HeartBeat->AttachTo(GetMesh());
+	AC_Chase->AttachTo(GetMesh());
 }
 
 void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -52,6 +68,13 @@ void ASurvivor::BeginPlay() {
 		arrKiller.Add(Cast<AKiller>(arrActor[i])); //형변환
 	}
 
+	//사운드 스폰하기
+	//AC_HeartBeat = UGameplayStatics::SpawnSound2D(this, SW_HeartBeat);
+	AC_HeartBeat->SetSound(SW_HeartBeat);
+	//AC_Chase = UGameplayStatics::SpawnSound2D(this, SW_Chase);
+	AC_Chase->SetSound(SW_Chase);
+	AC_HeartBeat->Stop();
+	AC_Chase->Stop();
 }
 
 void ASurvivor::Dash()
@@ -116,10 +139,9 @@ void ASurvivor::Tick(float DeltaTime) {
 
 	//살인마와 거리 차이에 따라서 비네팅 효과 & 화면 그레인 (지터) 증가 감소
 	for (int i = 0; i < arrKiller.Num(); i++) {
-		if (GetDistanceTo(arrKiller[i]) < 1000) {
-			//m_Cam->PostProcessSettings.VignetteIntensity 
-			//m_Cam->PostProcessSettings.GrainIntensity
-			//m_Cam->PostProcessSettings.GrainJitter
+
+		if (this->GetDistanceTo(arrKiller[i]) < 500) {
+
 			m_Cam->PostProcessSettings.VignetteIntensity += 0.05;
 			if (m_Cam->PostProcessSettings.VignetteIntensity > 2) m_Cam->PostProcessSettings.VignetteIntensity = 2;
 
@@ -129,6 +151,15 @@ void ASurvivor::Tick(float DeltaTime) {
 			m_Cam->PostProcessSettings.GrainJitter += 0.05;
 			if (m_Cam->PostProcessSettings.GrainJitter > 1) m_Cam->PostProcessSettings.GrainJitter = 1;
 
+			//사운드 조절
+			if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0) == this && !AC_HeartBeat->IsPlaying() && !AC_Chase->IsPlaying()) {
+				UE_LOG(LogTemp, Log, TEXT("Killer Name!!! : %s"), *(arrKiller[i]->GetName()));
+				UE_LOG(LogTemp, Log, TEXT("Killer distance!!! : %f"), GetDistanceTo(arrKiller[i]));
+
+				AC_HeartBeat->Play();
+				AC_Chase->Play();
+			}
+			
 		}
 		else {
 			m_Cam->PostProcessSettings.VignetteIntensity -= 0.05;
@@ -139,6 +170,12 @@ void ASurvivor::Tick(float DeltaTime) {
 
 			m_Cam->PostProcessSettings.GrainJitter -= 0.05;
 			if (m_Cam->PostProcessSettings.GrainJitter < 0) m_Cam->PostProcessSettings.GrainJitter = 0;
+
+			//사운드 조절
+			if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0) == this && AC_HeartBeat->IsPlaying() && AC_Chase->IsPlaying()) {
+				AC_HeartBeat->Stop();
+				AC_Chase->Stop();
+			}
 		}
 	}
 

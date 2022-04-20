@@ -63,4 +63,13 @@ public:
 		FRotator FRChange;
 
 	void ChangeToObject(UStaticMesh* mesh, FVector fscale);
+
+	//사운드
+	//추격 심장박동 사운드 에셋
+	USoundWave* SW_HeartBeat;
+	//추격 BGM 사운드 에셋
+	USoundWave* SW_Chase;
+	//사운드 컴포넌트
+	UAudioComponent* AC_HeartBeat;
+	UAudioComponent* AC_Chase;
 };
