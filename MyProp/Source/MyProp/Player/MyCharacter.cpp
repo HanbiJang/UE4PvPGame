@@ -42,11 +42,9 @@ AMyCharacter::AMyCharacter() :
 	m_Arm->TargetArmLength = 800.f;
 	m_Arm->TargetOffset = FVector(300, 0, 500);
 	m_Cam->SetWorldRotation(FRotator(-50, 0, 0));
-
-	m_Arm->bUsePawnControlRotation = true;
-
 	m_Cam->SetupAttachment(m_Arm, USpringArmComponent::SocketName); //카메라암에 카메라 붙이기
 
+	m_Arm->bUsePawnControlRotation = true;
 	m_Cam->bUsePawnControlRotation = false;
 	
 
