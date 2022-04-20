@@ -5,6 +5,7 @@
 #include "MyInfo.h" //캐릭터 정보 
 #include <EngineMinimal.h>
 #include "MyCharacterState.h"
+#include "../MyGameInstance.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -73,9 +74,10 @@ private:
 	float jumpCntTime = 0.f; //점프 할 때마다 시간을 잰다 
 	const float jumpEnableTime = 2.0f;
 
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* m_Cam;
-
+private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* m_Arm;
 

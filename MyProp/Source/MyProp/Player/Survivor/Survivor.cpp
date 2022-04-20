@@ -2,28 +2,12 @@
 
 #include "Survivor.h"
 #include "../MyPlayerObjectPawn.h"
+#include "../Killer/Killer.h"
 
 ASurvivor::ASurvivor() :
 	FVChange(0, 0, 0),
 	FRChange(0, 0, 0)
 {
-	//======플레이어 (초기) 데이터 설정======
-	const FSurvivorInfo* Info = nullptr;
-
-	//데이터 테이블 블루프린트에서 가져오기
-	ConstructorHelpers::FObjectFinder<UDataTable> PlayerTable
-	(TEXT("DataTable'/Game/Blueprints/Survivor/DT_Survivor.DT_Survivor'"));
-	
-	if (PlayerTable.Succeeded())
-	{
-		m_PlayerTable = PlayerTable.Object;
-
-		if (m_PlayerTable) {
-			Info = m_PlayerTable->FindRow<FSurvivorInfo>(FName(TEXT("Survivor1")), TEXT(""));
-			SetInfo(*Info);
-		}
-	}
-
 }
 
 void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -118,6 +102,24 @@ void ASurvivor::Tick(float DeltaTime) {
 		GetInfo()->fCurSP += 0.035f;
 		if (GetInfo()->fCurSP > GetInfo()->fMaxSP) GetInfo()->fCurSP = GetInfo()->fMaxSP;
 	}
+
+	//======================================================================================
+
+	//살인마와 거리 차이에 따라서 비네팅 효과 & 화면 그레인 (지터) 증가 감소
+	//m_Cam->PostProcessSettings.VignetteIntensity 
+	//m_Cam->PostProcessSettings.GrainIntensity
+	//m_Cam->PostProcessSettings.GrainJitter
+
+	//월드 상의 특정 클래스 Actor을 가져오기
+	TArray<AActor*> arrActor;
+	TArray<AKiller*> arrKiller;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKiller::StaticClass(), arrActor);
+	for (int i = 0; i < arrActor.Num(); i++) {
+		arrKiller.Add(Cast<AKiller>(arrActor[i])); //형변환
+	}
+	//if(arrKiller.Num() != 0)
+	//UE_LOG(LogTemp, Log, TEXT("Killer name : %s"), TCHAR_TO_ANSI(*arrKiller[0]->GetName()));
+
 }
 
 void ASurvivor::ChangeToObject(UStaticMesh* mesh, FVector fscale)
