@@ -2,6 +2,7 @@
 
 #pragma once
 #include "../../MyPropGameModeBase.h"
+#include "../Killer/Killer.h"
 
 #include <Engine/DataTable.h>
 #include "CoreMinimal.h"
@@ -43,6 +44,10 @@ public:
 
 	FSurvivorInfo* GetInfo() { return &m_Info; }
 	void SetInfo(FSurvivorInfo new_Info) { m_Info = new_Info; }
+	
+
+	//킬러 정보
+	TArray<AKiller*> arrKiller;
 
 //변신 기능
 //캐릭터의 오브젝트 전환

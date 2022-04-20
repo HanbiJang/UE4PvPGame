@@ -2,7 +2,7 @@
 
 #include "Survivor.h"
 #include "../MyPlayerObjectPawn.h"
-#include "../Killer/Killer.h"
+
 
 ASurvivor::ASurvivor() :
 	FVChange(0, 0, 0),
@@ -43,6 +43,15 @@ void ASurvivor::BeginPlay() {
 		m_PlayerObjectPawn->SetPCharacter(this); //인간폼 정보등록
 
 	}
+
+	//킬러 가져오기
+	//월드 상의 특정 클래스 Actor을 가져오기
+	TArray<AActor*> arrActor;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKiller::StaticClass(), arrActor);
+	for (int i = 0; i < arrActor.Num(); i++) {
+		arrKiller.Add(Cast<AKiller>(arrActor[i])); //형변환
+	}
+
 }
 
 void ASurvivor::Dash()
@@ -106,19 +115,32 @@ void ASurvivor::Tick(float DeltaTime) {
 	//======================================================================================
 
 	//살인마와 거리 차이에 따라서 비네팅 효과 & 화면 그레인 (지터) 증가 감소
-	//m_Cam->PostProcessSettings.VignetteIntensity 
-	//m_Cam->PostProcessSettings.GrainIntensity
-	//m_Cam->PostProcessSettings.GrainJitter
+	for (int i = 0; i < arrKiller.Num(); i++) {
+		if (GetDistanceTo(arrKiller[i]) < 1000) {
+			//m_Cam->PostProcessSettings.VignetteIntensity 
+			//m_Cam->PostProcessSettings.GrainIntensity
+			//m_Cam->PostProcessSettings.GrainJitter
+			m_Cam->PostProcessSettings.VignetteIntensity += 0.05;
+			if (m_Cam->PostProcessSettings.VignetteIntensity > 2) m_Cam->PostProcessSettings.VignetteIntensity = 2;
 
-	//월드 상의 특정 클래스 Actor을 가져오기
-	TArray<AActor*> arrActor;
-	TArray<AKiller*> arrKiller;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKiller::StaticClass(), arrActor);
-	for (int i = 0; i < arrActor.Num(); i++) {
-		arrKiller.Add(Cast<AKiller>(arrActor[i])); //형변환
+			m_Cam->PostProcessSettings.GrainIntensity += 0.05;
+			if (m_Cam->PostProcessSettings.GrainIntensity > 1) m_Cam->PostProcessSettings.GrainIntensity = 1;
+
+			m_Cam->PostProcessSettings.GrainJitter += 0.05;
+			if (m_Cam->PostProcessSettings.GrainJitter > 1) m_Cam->PostProcessSettings.GrainJitter = 1;
+
+		}
+		else {
+			m_Cam->PostProcessSettings.VignetteIntensity -= 0.05;
+			if (m_Cam->PostProcessSettings.VignetteIntensity <0 ) m_Cam->PostProcessSettings.VignetteIntensity = 0;
+
+			m_Cam->PostProcessSettings.GrainIntensity -= 0.05;
+			if (m_Cam->PostProcessSettings.GrainIntensity < 0) m_Cam->PostProcessSettings.GrainIntensity = 0;
+
+			m_Cam->PostProcessSettings.GrainJitter -= 0.05;
+			if (m_Cam->PostProcessSettings.GrainJitter < 0) m_Cam->PostProcessSettings.GrainJitter = 0;
+		}
 	}
-	//if(arrKiller.Num() != 0)
-	//UE_LOG(LogTemp, Log, TEXT("Killer name : %s"), TCHAR_TO_ANSI(*arrKiller[0]->GetName()));
 
 }
 
