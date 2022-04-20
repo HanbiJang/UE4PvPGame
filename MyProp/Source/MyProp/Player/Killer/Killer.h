@@ -32,4 +32,7 @@ public:
 
 	FKillerInfo* GetInfo() { return &m_Info; }
 	void SetInfo(FKillerInfo new_Info) { m_Info = new_Info; }
+	
+	//Q АјАн
+	void RangeAttack();
 };

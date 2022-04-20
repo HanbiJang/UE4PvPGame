@@ -29,7 +29,8 @@ void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	// 왼클릭 - 공격 키
 	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &AKiller::Attack);
-
+	// Q키 - 범위 공격
+	PlayerInputComponent->BindAction(TEXT("Q"), EInputEvent::IE_Pressed, this, &AKiller::RangeAttack);
 }
 
 void AKiller::Attack()
@@ -40,4 +41,8 @@ void AKiller::Attack()
 
 void AKiller::BeginPlay() {
 	Super::BeginPlay();
+}
+
+void AKiller::RangeAttack() {
+	ChangeState(EPLAYER_STATE::RANGEATTACK);
 }

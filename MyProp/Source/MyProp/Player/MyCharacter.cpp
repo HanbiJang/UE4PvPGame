@@ -112,8 +112,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::UpDown(float f) {
 	// 위아래로 이동
-	if (m_state != EPLAYER_STATE::ATTACK) {
-		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed && m_state != EPLAYER_STATE::ATTACK) {
+	if (m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
+		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed && m_state != EPLAYER_STATE::ATTACK
+			&& m_state != EPLAYER_STATE::RANGEATTACK) {
 			ChangeState(EPLAYER_STATE::MOVE);
 			isMoving = true;
 		}
@@ -131,8 +132,9 @@ void AMyCharacter::UpDown(float f) {
 
 void AMyCharacter::LeftRight(float f) {
 	//오른쪽, 왼쪽으로 이동
-	if (m_state != EPLAYER_STATE::ATTACK) {
-		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed) {
+	if (m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
+		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed
+			&& m_state != EPLAYER_STATE::RANGEATTACK) {
 			ChangeState(EPLAYER_STATE::MOVE);
 			isMoving = true;
 		}
