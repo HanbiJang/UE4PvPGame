@@ -110,16 +110,16 @@ void AMyPlayerObjectPawn::Jump()
 
 void AMyPlayerObjectPawn::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//벽은 ground로 치지 않기
-	//+DefaultChannelResponses=(Channel=ECC_GameTraceChannel2,DefaultResponse=ECR_Block,bTraceType=False,bStaticObject=False,Name="WallObject")
-	if (OtherComp->GetCollisionObjectType() != ECC_GameTraceChannel2) {
-		if (!isGround) { 
+	if (!isGround) {
+	//내적을 이용해 두 충돌 사이의 각을 구하기
+	float sizes = abs(HitNormal.Size() * FVector(0, 0, 1).Size()); //벡터의 크기
+	float dot = FVector::DotProduct(FVector(0, 0, 1), HitNormal); //내적값
+	float angle = FMath::RadiansToDegrees(FMath::Acos(dot / sizes));
+	if (angle <= 45) {		
 			isGround = true; 
 			JumpCnt = 0;
 		}
 	}
-	
-
 }
 
 //재변신 (연속 변신)
