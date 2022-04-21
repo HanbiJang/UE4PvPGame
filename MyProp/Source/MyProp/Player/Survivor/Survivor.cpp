@@ -84,7 +84,6 @@ void ASurvivor::Jump() {
 
 void ASurvivor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Log, TEXT("Jump? : %i"), isGround);
 	if (m_state == EPLAYER_STATE::OBJECT && !isGround) {
 		//내적을 이용해 두 충돌 사이의 각을 구하기
 		float sizes = abs(HitNormal.Size() * FVector(0, 0, 1).Size()); //벡터의 크기
@@ -104,22 +103,6 @@ void ASurvivor::Interaction()
 
 void ASurvivor::BeginPlay() {
 	Super::BeginPlay();
-
-	////======블레이어 변신용 사물 오브젝트 블루프린트======
-	////가져와서 스폰시키기
-	//UBlueprintGeneratedClass* LoadBP = LoadObject<UBlueprintGeneratedClass>(GetWorld(),
-	//	TEXT("Blueprint'/Game/Blueprints/Survivor/BP_MyPlayerObjectPawn.BP_MyPlayerObjectPawn_C'"));
-	//if (LoadBP)
-	//{
-	//	FActorSpawnParameters SpawnInfo;
-	//	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	//	m_PlayerObjectPawn = nullptr;
-	//	m_PlayerObjectPawn = GetWorld()->SpawnActor<AMyPlayerObjectPawn>(LoadBP,
-	//		FVector(0, 0, 0),//물체의 대략적 크기 구하기
-	//		FRotator(0, 0, 0),
-	//		SpawnInfo);
-	//	m_PlayerObjectPawn->SetPCharacter(this); //인간폼 정보등록
-	//}
 
 	//킬러 가져오기
 	//월드 상의 특정 클래스 Actor을 가져오기
@@ -271,29 +254,23 @@ void ASurvivor::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 
 
 	//클릭한 오브젝트 메시의 크기와 같게 설정
-	//m_PlayerObjectPawn->m_ObjectMesh->SetRelativeScale3D(fscale);
-	//m_PlayerObjectPawn->m_ObjectMesh->SetStaticMesh(mesh);
 	m_PlayerObject->SetRelativeScale3D(fscale);
 	m_PlayerObject->SetStaticMesh(mesh);
 
 	//시점 옮기기...
-	//GetWorld()->GetFirstPlayerController()->Possess(m_PlayerObjectPawn);
 	//카메라만 옮기기
 	m_Arm->DetachFromParent(true);
-	//m_Arm->SetupAttachment(m_PlayerObject);
 	m_Arm->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
 
+	//사운드 컴포넌트 이동
+	AC_HeartBeat->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
+	AC_Chase->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
+
 	//0.1초 뒤에 오브젝트 물리 켜기
-	//GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FPhysicsTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetSimulatePhysicsTrue, 0.1f, false);
 	GetWorld()->GetTimerManager().SetTimer(FPhysicsTimer, this, &ASurvivor::SetSimulatePhysicsTrue, 0.1f, false);
 
-	//변신 가능 상태 조절
-	//1.5초 뒤에 변신 가능해지기
-	//GetWorld()->GetTimerManager().SetTimer(m_PlayerObjectPawn->FChangeEnableTimer, m_PlayerObjectPawn, &AMyPlayerObjectPawn::SetbChangeEnableTrue, 1.5f, false);
+	//변신 가능 상태 조절 1.5초 뒤에 변신 가능해지기
 	GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &ASurvivor::SetbChangeEnableTrue, 1.5f, false);
-
-	//캐릭터 정보 옮기기
-	//m_PlayerObjectPawn->SetInfo(m_Info);
 
 	//변신 시 캐릭터 체력 디버프
 	//[미구현]
@@ -337,21 +314,22 @@ void ASurvivor::ChangeToPlayer() {
 		m_Arm->DetachFromParent(true);
 		m_Arm->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		m_Arm->SetRelativeLocation(FVector(0, 0, 0));
+		
+		//사운드 컴포넌트 이동
+		AC_HeartBeat->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		AC_Chase->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 		FVector originalPos = m_PlayerObject->GetRelativeLocation(); //인간폼 돌아가기 당시 원래 [메시의] 위치 저장
 
 		m_PlayerObject->SetSimulatePhysics(false); //물리 끄기
 
-		//매시의 각도 초기화 하기
-		m_PlayerObject->SetAllPhysicsRotation(FRChange);
-		//[메시] 부분 이동
-		m_PlayerObject->SetRelativeLocation(FVChange 
+		//매시 설정
+		m_PlayerObject->SetAllPhysicsRotation(FRChange); //각도
+		m_PlayerObject->SetRelativeLocation(FVChange  //위치
 			+ FVector(0, 0, m_PlayerObject->GetStaticMesh()->GetBoundingBox().GetSize().Z * GetActorScale().Z));
 
 		//인간폼의 위치를 오브젝트가 있던 액터 위치로 설정하기
 		SetActorLocation(originalPos);
-		////인간폼의 각도를 사물의 z? 각도와 일치시키기
-		//SetActorRotation(FRotator(0,m_PlayerObject->GetRelativeRotation().Yaw,0));
 
 		//1.5초 뒤에 변신 가능해지기
 		GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &ASurvivor::SetbChangeEnableTrue, 1.5f, false);
