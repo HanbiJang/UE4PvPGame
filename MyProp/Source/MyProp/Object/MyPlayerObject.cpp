@@ -47,31 +47,37 @@ void AMyPlayerObject::ChangePlayerToObject()
 
 	if (nullptr != pCharacter)
 	{	
-		//거리가 근처일 때만 실행하기
-		//GetDistanceTo(this) : 이 오브젝트와 플레이어 캐릭터의 거리
-
-		//MyCharacter 안에 있는 오브젝트 빙의 함수를 실행, 오브젝트의 매시와 스케일 크기를 넘긴다
-		if (pCharacter->GetDistanceTo(this) < 400) {
-			pCharacter->ChangeToObject(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
-		}
-
-	}
-	else {
-		//[오브젝트 -> 플레이어]
-
-		AMyPlayerObjectPawn* pPlayerObject = Cast<AMyPlayerObjectPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		
-		if (nullptr != pPlayerObject && pPlayerObject->m_ObjectMesh->GetStaticMesh() != m_Mesh->GetStaticMesh())
+		if (pCharacter->m_state != EPLAYER_STATE::OBJECT) 
 		{
-			UE_LOG(LogTemp, Log, TEXT("%f"), pPlayerObject->GetDistanceTo(this));
-
-			if (MyGetDistance(pPlayerObject->m_ObjectMesh->GetRelativeLocation(), GetActorLocation()) < 400) {
-				pPlayerObject->ChangeObjectMesh(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
+			//거리가 근처일 때만 실행하기
+			//GetDistanceTo(this) : 이 오브젝트와 플레이어 캐릭터의 거리
+			//MyCharacter 안에 있는 오브젝트 빙의 함수를 실행, 오브젝트의 매시와 스케일 크기를 넘긴다
+			if (pCharacter->GetDistanceTo(this) < 400) {
+				pCharacter->ChangeToObject(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
 			}
-			
 		}
+		else 
+		{ //사물상태 -> 사물상태 
+			if (pCharacter->m_PlayerObject->GetStaticMesh() != m_Mesh->GetStaticMesh())
+			{
+				if (MyGetDistance(pCharacter->m_PlayerObject->GetRelativeLocation(), GetActorLocation()) < 400)
+					pCharacter->ChangeObjectMesh(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
+			}
+		}		
 	}
-
+	//else {
+	//	//[오브젝트 -> 오브젝트]
+	//	AMyPlayerObjectPawn* pPlayerObject = Cast<AMyPlayerObjectPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	//	
+	//	if (nullptr != pPlayerObject && pPlayerObject->m_ObjectMesh->GetStaticMesh() != m_Mesh->GetStaticMesh())
+	//	{
+	//		UE_LOG(LogTemp, Log, TEXT("%f"), pPlayerObject->GetDistanceTo(this));
+	//		if (MyGetDistance(pPlayerObject->m_ObjectMesh->GetRelativeLocation(), GetActorLocation()) < 400) {
+	//			pPlayerObject->ChangeObjectMesh(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
+	//		}
+	//		
+	//	}
+	//}
 }
 
 

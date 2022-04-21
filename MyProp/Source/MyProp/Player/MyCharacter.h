@@ -40,13 +40,9 @@ public:
 	/// <param name="PlayerInputComponent"></param>
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
-	//매시 변수
-	//인간 형태 변수
-
 	//Moving
-	void UpDown(float f);
-	void LeftRight(float f);
+	virtual void UpDown(float f);
+	virtual void LeftRight(float f);
 
 	//대시
 	virtual void Dash();
@@ -61,7 +57,7 @@ public:
 	void Interaction();
 
 	//Jump
-	void Jump();
+	virtual void Jump();
 	void JumpAction();
 
 
@@ -77,10 +73,10 @@ private:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* m_Cam;
-private:
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* m_Arm;
-
+private:
 	float fLeftRight;
 	float fUpdown;
 

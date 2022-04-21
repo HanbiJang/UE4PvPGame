@@ -8,10 +8,10 @@
 
 // Sets default values
 AMyCharacter::AMyCharacter() :
+	isMoving(false),
+	isDashed(false),
 	isDashPressed(false),
 	isDashEnable(true),
-	isDashed(false),
-	isMoving(false),
 	m_state(EPLAYER_STATE::IDLE)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -110,7 +110,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::UpDown(float f) {
 	// 위아래로 이동
-	if (m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
+	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
 		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed && m_state != EPLAYER_STATE::ATTACK
 			&& m_state != EPLAYER_STATE::RANGEATTACK) {
 			ChangeState(EPLAYER_STATE::MOVE);
@@ -130,7 +130,7 @@ void AMyCharacter::UpDown(float f) {
 
 void AMyCharacter::LeftRight(float f) {
 	//오른쪽, 왼쪽으로 이동
-	if (m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
+	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
 		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed
 			&& m_state != EPLAYER_STATE::RANGEATTACK) {
 			ChangeState(EPLAYER_STATE::MOVE);
@@ -168,7 +168,7 @@ void AMyCharacter::Interaction()
 }
 
 void AMyCharacter::Jump() {
-	if (m_state != EPLAYER_STATE::DASH) {
+	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::DASH) {
 		UE_LOG(LogTemp, Log, TEXT("Jump"))
 		ChangeState(EPLAYER_STATE::JUMP);
 	}

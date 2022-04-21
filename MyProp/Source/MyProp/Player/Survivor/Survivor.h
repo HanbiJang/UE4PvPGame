@@ -52,18 +52,52 @@ public:
 //변신 기능
 //캐릭터의 오브젝트 전환
 public:
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+	//	AMyPlayerObjectPawn* m_PlayerObjectPawn; //사물형 폰
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		AMyPlayerObjectPawn* m_PlayerObjectPawn; //사물형 폰
+		UStaticMeshComponent* m_PlayerObject; //사물형 스테틱 매시 (물리 기능 있음)
+
+	FTimerHandle FPhysicsTimer; //물리 작용 끔/켬 타이머
+	FTimerHandle FChangeEnableTimer; //변신 가능 시간 끔/켬 타이머
+	void SetSimulatePhysicsTrue() { m_PlayerObject->SetSimulatePhysics(true); }
+
+	//변신 가능 상태 나타내는 변수 (변신 과다 사용 조절용)
+	bool bChangeEnable;
+	void SetbChangeEnableTrue() { bChangeEnable = true; }
 
 	//변신 초기화 각도, 초기화 위치
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FVector FVChange;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FRotator FRChange;
+	void ChangeToObject(UStaticMesh* mesh, FVector fscale); //사람->오브젝트 변신
+	void ChangeObjectMesh(UStaticMesh* mesh, FVector scale); //오브젝트 -> 새오브젝트 변신
+	void ChangeToPlayer(); //오브젝트->사람 변신
 
-	void ChangeToObject(UStaticMesh* mesh, FVector fscale);
+	//변신용 이동
+	virtual void UpDown(float f) override;
+	virtual void LeftRight(float f) override;
+	virtual void Jump() override;
+	//이동 속도
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float fRunPower;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float fRoPower;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float fJumpPower;
+	//Jump 관련 변수
+	bool isGround;
+	//2단 점프 제한
+	int JumpCnt = 0;
+	//땅과 닿았을 시 isGround를 true로 만든다
+protected:
+	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 
+	//거리구하기 함수
+	float MyGetDistance(FVector a, FVector b);
+
+public:
 	//사운드
 	//추격 심장박동 사운드 에셋
 	USoundWave* SW_HeartBeat;
