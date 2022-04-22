@@ -6,6 +6,7 @@
 #include "../MyCharacter.h"
 #include "Killer.generated.h"
 
+class ASurvivor;
 /**
  * 
  */
@@ -20,8 +21,13 @@ public:
 private:
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	void Attack();
+
 	void BeginPlay() override;
+
+	void OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult);
+	void OnEndOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex);
+	void OnHit(UPrimitiveComponent* _HitComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, FVector _NormalImpulse, const FHitResult& Hit);
+
 
 public:
 	//캐릭터 정보
@@ -35,4 +41,6 @@ public:
 	
 	//Q 공격
 	void RangeAttack();
+	void Attack();
+	void AttackAction();
 };

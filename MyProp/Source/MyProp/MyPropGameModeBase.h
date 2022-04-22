@@ -27,8 +27,10 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 	//UI
 	TSubclassOf<UUserWidget>	m_MainHUDClass;
 	UMyMainHUD* m_MainHUD;
-
 	UMyMainHUD* GetMainHUD() { return m_MainHUD; }
+
+	//Character
+
 
 public:
 	void UpdatePlayHUD(float _CurHPRatio, float _CurMPRatio);

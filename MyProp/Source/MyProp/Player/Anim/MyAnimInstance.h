@@ -40,4 +40,7 @@ public:
 	UFUNCTION()
 		void AnimNotify_JumpAction();
 
+	UFUNCTION()
+		void AnimNotify_AttackAction();
+
 };

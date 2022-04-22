@@ -2,6 +2,7 @@
 
 #include "MyAnimInstance.h"
 #include "../MyCharacter.h"
+#include "../Killer/Killer.h"
 
 
 UMyAnimInstance::UMyAnimInstance() {
@@ -48,5 +49,13 @@ void UMyAnimInstance::AnimNotify_JumpAction()
 	if (nullptr != pCharacter)
 	{
 		pCharacter->JumpAction();
+	}
+}
+
+void UMyAnimInstance::AnimNotify_AttackAction() {
+	AKiller* pKiller = Cast<AKiller>(TryGetPawnOwner());
+
+	if (nullptr != pKiller) {
+		pKiller->AttackAction();
 	}
 }

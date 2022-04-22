@@ -8,24 +8,23 @@
 #include <MyProp/Player/Survivor/Survivor.h>
 
 AMyPropGameModeBase::AMyPropGameModeBase() {
-
 	//캐릭터 블루프린트 클래스 가져오기
 
 	//[1] 생존자 코드
 	ConstructorHelpers::FClassFinder<APawn>
-		MainCharacterClass(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
-	if (MainCharacterClass.Succeeded())
+		Survivor(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
+	if (Survivor.Succeeded())
 	{
-		DefaultPawnClass = MainCharacterClass.Class;
+		//DefaultPawnClass = Survivor.Class;
 	}
 
-	////[2] 살인마 코드
-	//ConstructorHelpers::FClassFinder<APawn>
-	//	MainCharacterClass(TEXT("Blueprint'/Game/Blueprints/Killer/BP_Killer.BP_Killer_C'"));
-	//if (MainCharacterClass.Succeeded())
-	//{
-	//	DefaultPawnClass = MainCharacterClass.Class;
-	//}
+	//[2] 살인마 코드
+	ConstructorHelpers::FClassFinder<APawn>
+		Killer(TEXT("Blueprint'/Game/Blueprints/Killer/BP_Killer.BP_Killer_C'"));
+	if (Killer.Succeeded())
+	{
+		DefaultPawnClass = Killer.Class;
+	}
 
 	//메인UI 가져오기
 	//_C 포함해주기!
@@ -49,18 +48,21 @@ void AMyPropGameModeBase::BeginPlay()
 	//======플레이어 (초기) 데이터 설정======
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
-	//[1] 생존자
-	if (GI != nullptr) {
-		ASurvivor* Character = Cast<ASurvivor>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		Character->SetInfo(*(GI->GetSurvivorInfo(TEXT("Survivor1"))));
-	}
+	FString TypeName_ = typeid(DefaultPawnClass).name();
+	UE_LOG(LogTemp, Log, TEXT("%s"), *TypeName_);
 
-	////======플레이어 (초기) 데이터 설정======
-	////[2] 킬러
+	//[1] 생존자
 	//if (GI != nullptr) {
-	//	AKiller* Character = Cast<AKiller>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	//	Character->SetInfo(*(GI->GetKillerInfo(TEXT("Killer1"))));
+	//	ASurvivor* Character = Cast<ASurvivor>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	//	Character->SetInfo(*(GI->GetSurvivorInfo(TEXT("Survivor1"))));
 	//}
+
+	//======플레이어 (초기) 데이터 설정======
+	//[2] 킬러
+	if (GI != nullptr) {
+		AKiller* Character = Cast<AKiller>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		Character->SetInfo(*(GI->GetKillerInfo(TEXT("Killer1"))));
+	}
 
 
 }
