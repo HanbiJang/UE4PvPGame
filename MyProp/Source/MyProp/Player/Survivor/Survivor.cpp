@@ -17,6 +17,7 @@ ASurvivor::ASurvivor() :
 	isGround(false),
 	JumpCnt(0)
 {
+
 	//변신용 매시 생성==================================================================
 	m_PlayerObject = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ObjectMesh"));
 	m_PlayerObject->SetupAttachment(RootComponent);
@@ -74,7 +75,13 @@ void ASurvivor::Interaction()
 void ASurvivor::BeginPlay() {
 	Super::BeginPlay();
 
-	//킬러 가져오기
+	//======플레이어 (초기) 데이터 설정==================================================
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr) {
+		SetInfo(*(GI->GetSurvivorInfo(TEXT("Survivor1"))));
+	}
+
+	//킬러 가져오기 =====================================================================
 	//월드 상의 특정 클래스 Actor을 가져오기
 	TArray<AActor*> arrActor;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKiller::StaticClass(), arrActor);
@@ -179,6 +186,8 @@ void ASurvivor::Tick(float DeltaTime) {
 		}
 	}
 
+	//죽기=======================================================================
+	if (GetInfo()->fCurHP <= 0) ChangeState(EPLAYER_STATE::DEAD);
 }
 
 void ASurvivor::OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult)

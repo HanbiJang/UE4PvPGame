@@ -46,10 +46,7 @@ void AMyPropGameModeBase::BeginPlay()
 		m_MainHUD->AddToViewport();
 
 	//======플레이어 (초기) 데이터 설정======
-	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-
-	FString TypeName_ = typeid(DefaultPawnClass).name();
-	UE_LOG(LogTemp, Log, TEXT("%s"), *TypeName_);
+	//UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	//[1] 생존자
 	//if (GI != nullptr) {
@@ -57,12 +54,12 @@ void AMyPropGameModeBase::BeginPlay()
 	//	Character->SetInfo(*(GI->GetSurvivorInfo(TEXT("Survivor1"))));
 	//}
 
-	//======플레이어 (초기) 데이터 설정======
-	//[2] 킬러
-	if (GI != nullptr) {
-		AKiller* Character = Cast<AKiller>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		Character->SetInfo(*(GI->GetKillerInfo(TEXT("Killer1"))));
-	}
+	////======플레이어 (초기) 데이터 설정======
+	////[2] 킬러
+	//if (GI != nullptr) {
+	//	AKiller* Character = Cast<AKiller>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	//	Character->SetInfo(*(GI->GetKillerInfo(TEXT("Killer1"))));
+	//}
 
 
 }
@@ -77,7 +74,7 @@ void AMyPropGameModeBase::UpdatePlayHUD(float _CurHPRatio, float _CurSPRatio) {
 
 	if (pHPHUD) {
 		pHPHUD->SetHP(_CurHPRatio);
-		pHPHUD->SetText(TEXT("MyPlayerName"));
+		pHPHUD->SetText(TEXT("Survivor 1"));
 	}
 	if (pSPHUD) {
 		pSPHUD->SetSP(_CurSPRatio);
