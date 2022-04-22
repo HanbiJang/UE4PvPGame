@@ -9,6 +9,10 @@
 #include "../MyCharacter.h"
 #include "Survivor.generated.h"
 
+//분할구현 / 중복 헤더 포함 문제 해결
+class Survivor_Move; 
+class Survivor_Change;
+
 /**
  * 
  */
@@ -22,16 +26,19 @@ public:
 
 private:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	void BeginPlay() override;
+	void Tick(float DeltaTime) override;
+
+	void OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult);
+	void OnEndOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex);
+	void OnHit(UPrimitiveComponent* _HitComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, FVector _NormalImpulse, const FHitResult& Hit);
 
 	//이동 (대시)
 	void Dash() override;
 	void DashStop() override;
 
+	//상호작용
 	void Interaction();
-
-	void BeginPlay() override;
-
-	void Tick(float DeltaTime) override;
 
 public:
 
@@ -95,7 +102,10 @@ protected:
 	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
 
 	//거리구하기 함수
-	float MyGetDistance(FVector a, FVector b);
+	float MyGetDistance(FVector a, FVector b) {
+		float res = sqrtf(powf(a.X - b.X, 2) + powf(a.Y - b.Y, 2) + powf(a.Z - b.Z, 2));
+		return res;
+	}
 
 public:
 	//사운드
