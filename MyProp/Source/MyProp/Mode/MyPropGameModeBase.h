@@ -3,9 +3,9 @@
 #pragma once
 
 //UI
-#include "UI/MyMainHUD.h"
-#include "UI/MyHPBarWidget.h"
-#include "UI/MySPWidget.h"
+#include <MyProp/UI/MyMainHUD.h>
+#include <MyProp/UI/MyHPBarWidget.h>
+#include <MyProp/UI/MySPWidget.h>
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"

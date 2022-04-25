@@ -5,7 +5,10 @@
 #include <DrawDebugHelpers.h>
 #include "../Survivor/Survivor.h" 
 
-AKiller::AKiller() {
+AKiller::AKiller():
+	bAttackEnable(true),
+	attackSpeed(2.f)
+{
 }
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -31,8 +34,13 @@ void AKiller::BeginPlay() {
 void AKiller::Attack()
 {
 	//공격 모션
-	ChangeState(EPLAYER_STATE::ATTACK);
-	//AttackAction();
+	if (bAttackEnable) {
+		ChangeState(EPLAYER_STATE::ATTACK);
+		bAttackEnable = false;
+
+		//attackSpeed초 뒤에 Timer 켜기
+		GetWorld()->GetTimerManager().SetTimer(FAttackTimer, this, &AKiller::SetAttackEnable, attackSpeed, false);
+	}	
 }
 
 void AKiller::AttackAction() 

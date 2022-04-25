@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include "../../MyPropGameModeBase.h"
+
+#include <MyProp/Mode/MyPropGameModeBase.h>
 #include "../Killer/Killer.h"
 
 #include <Engine/DataTable.h>

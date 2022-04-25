@@ -40,7 +40,15 @@ public:
 	void SetInfo(FKillerInfo new_Info) { m_Info = new_Info; }
 	
 	//Q 공격
+
+public:
 	void RangeAttack();
 	void Attack();
 	void AttackAction();
+
+private:
+	bool bAttackEnable;
+	FTimerHandle FAttackTimer; //공격 타이머
+	void SetAttackEnable(){ bAttackEnable = true; }
+	float attackSpeed;
 };

@@ -30,6 +30,14 @@ enum class EPLAYER_STATE : uint8
 	LOCK, //최면의자에 묶기
 };
 
+UENUM(BlueprintType)
+enum class EPLAYER_TYPE : uint8
+{
+	KILLER,
+	SURVIVOR,
+	RANDOM,
+};
+
 class MYPROP_API MyCharacterState
 {
 

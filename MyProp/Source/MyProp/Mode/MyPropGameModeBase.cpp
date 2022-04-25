@@ -2,7 +2,8 @@
 
 
 #include "MyPropGameModeBase.h"
-#include "MyGameInstance.h"
+#include <MyProp/MyGameInstance.h>
+
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #include <MyProp/Player/Killer/Killer.h>
 #include <MyProp/Player/Survivor/Survivor.h>
