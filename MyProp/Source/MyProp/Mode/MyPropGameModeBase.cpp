@@ -15,8 +15,15 @@ AMyPropGameModeBase::AMyPropGameModeBase() {
 	ConstructorHelpers::FClassFinder<APawn>
 		Killer(TEXT("Blueprint'/Game/Blueprints/Killer/BP_Killer.BP_Killer_C'"));
 
+	//생존자 메인UI 가져오기
+	ConstructorHelpers::FClassFinder<UUserWidget> SurvivorMainHUD
+	(TEXT("WidgetBlueprint'/Game/Blueprints/UI/InGameUI/BP_MyMainHUD.BP_MyMainHUD_C'")); //_C 포함해주기!
+	//살인마 메인UI
+	ConstructorHelpers::FClassFinder<UUserWidget> KillerMainHUD
+	(TEXT("WidgetBlueprint'/Game/Blueprints/UI/InGameUI/Killer/BP_KillerMainHUD.BP_KillerMainHUD_C'")); //_C 포함해주기!
+
 	//선택 상태 가져오기
-	EPLAYER_TYPE m_SelectType;
+	EPLAYER_TYPE m_SelectType ;
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
 		m_SelectType = GI->GetSelectType();
@@ -28,29 +35,29 @@ AMyPropGameModeBase::AMyPropGameModeBase() {
 	{
 	case EPLAYER_TYPE::KILLER:
 		if (Killer.Succeeded()) DefaultPawnClass = Killer.Class;
+		if (KillerMainHUD.Succeeded()) m_MainHUDClass = KillerMainHUD.Class; //UI
 		break;
 	case EPLAYER_TYPE::SURVIVOR:
 		if (Survivor.Succeeded()) DefaultPawnClass = Survivor.Class;
+		if (SurvivorMainHUD.Succeeded()) m_MainHUDClass = SurvivorMainHUD.Class; //UI
 		break;
 	case EPLAYER_TYPE::RANDOM:
 		int irandom = rand() % 2;
 		if (irandom == 0) {
 			//살인마
 			if (Killer.Succeeded()) DefaultPawnClass = Killer.Class;
+			if (KillerMainHUD.Succeeded()) m_MainHUDClass = KillerMainHUD.Class;
+			//살인마로 설정
+			GI->SetSelectType(EPLAYER_TYPE::KILLER);
 		}
 		else {
 			//생존자
 			if (Survivor.Succeeded()) DefaultPawnClass = Survivor.Class;
+			if (SurvivorMainHUD.Succeeded()) m_MainHUDClass = SurvivorMainHUD.Class;
+			//생존자로 선택 설정
+			GI->SetSelectType(EPLAYER_TYPE::SURVIVOR);
 		}
 		break;
-	}
-
-	//메인UI 가져오기
-	//_C 포함해주기!
-	ConstructorHelpers::FClassFinder<UUserWidget> MainHUD(TEXT("WidgetBlueprint'/Game/Blueprints/UI/InGameUI/BP_MyMainHUD.BP_MyMainHUD_C'"));
-	if (MainHUD.Succeeded())
-	{
-		m_MainHUDClass = MainHUD.Class;
 	}
 }
 
@@ -59,26 +66,42 @@ void AMyPropGameModeBase::BeginPlay()
 	Super::BeginPlay();
 
 	//메인 UI 설정하기
-	m_MainHUD = Cast<UMyMainHUD>(CreateWidget(GetWorld(), m_MainHUDClass));
-
-	if (nullptr != m_MainHUD)
-		m_MainHUD->AddToViewport();
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr) {
+		if (GI->GetSelectType() == EPLAYER_TYPE::SURVIVOR) {
+			m_MainHUD = Cast<UMyMainHUD>(CreateWidget(GetWorld(), m_MainHUDClass));
+			if (nullptr != m_MainHUD) m_MainHUD->AddToViewport();
+		}
+		else {
+			m_KillerMainHUD = Cast<UMyKillerMainHUD>(CreateWidget(GetWorld(), m_MainHUDClass));
+			if (nullptr != m_KillerMainHUD) m_KillerMainHUD->AddToViewport();
+		}
+		
+	}
 
 }
 
 void AMyPropGameModeBase::UpdatePlayHUD(float _CurHPRatio, float _CurSPRatio) {
 
-	//체력 UI
-	UMyHPBarWidget* pHPHUD = m_MainHUD->GetHPHUD();
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr) {
+		if (GI->GetSelectType() == EPLAYER_TYPE::SURVIVOR) {
+			//체력 UI
+			UMyHPBarWidget* pHPHUD = m_MainHUD->GetHPHUD();
 
-	//스테미나 UI
-	UMySPWidget* pSPHUD = m_MainHUD->GetSPHUD();
+			//스테미나 UI
+			UMySPWidget* pSPHUD = m_MainHUD->GetSPHUD();
 
-	if (pHPHUD) {
-		pHPHUD->SetHP(_CurHPRatio);
-		pHPHUD->SetText(TEXT("Survivor 1"));
-	}
-	if (pSPHUD) {
-		pSPHUD->SetSP(_CurSPRatio);
+			if (pHPHUD) {
+				pHPHUD->SetHP(_CurHPRatio);
+				pHPHUD->SetText(TEXT("Survivor 1"));
+			}
+			if (pSPHUD) {
+				pSPHUD->SetSP(_CurSPRatio);
+			}
+		}
+		else {
+
+		}
 	}
 }

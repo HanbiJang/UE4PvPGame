@@ -27,9 +27,11 @@ public:
 	const FKillerInfo* GetKillerInfo(const FString& _RowName);
 
 	//캐릭터 선택
+private:
 	EPLAYER_TYPE m_SelectType;
+public:
 	EPLAYER_TYPE GetSelectType() { return m_SelectType; };
-
+	void SetSelectType(EPLAYER_TYPE value) { m_SelectType = value; }
 
 public:
 	UMyGameInstance();

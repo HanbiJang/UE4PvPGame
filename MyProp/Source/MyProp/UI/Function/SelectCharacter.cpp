@@ -15,7 +15,7 @@ void UMyStartGameWidget::RandomBtnPressed() {
 
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
-		GI->m_SelectType = EPLAYER_TYPE::RANDOM;
+		GI->SetSelectType(EPLAYER_TYPE::RANDOM);
 	}
 }
 void UMyStartGameWidget::KillerBtnPressed() {
@@ -26,7 +26,7 @@ void UMyStartGameWidget::KillerBtnPressed() {
 
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
-		GI->m_SelectType = EPLAYER_TYPE::KILLER;
+		GI->SetSelectType(EPLAYER_TYPE::KILLER);
 	}
 }
 void UMyStartGameWidget::SurvivorBtnPressed() {
@@ -37,7 +37,7 @@ void UMyStartGameWidget::SurvivorBtnPressed() {
 
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
-		GI->m_SelectType = EPLAYER_TYPE::SURVIVOR;
+		GI->SetSelectType(EPLAYER_TYPE::SURVIVOR);
 	}
 }
 void UMyStartGameWidget::StartGameBtnPressed() {

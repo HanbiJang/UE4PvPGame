@@ -9,6 +9,9 @@
 
 #include <MyProp/UI/MyStartGameWidget.h>
 
+
+#include <MyProp/UI/Killer/MyKillerMainHUD.h>
+
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "MyPropGameModeBase.generated.h"
@@ -31,7 +34,8 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 	UMyMainHUD* m_MainHUD;
 	UMyMainHUD* GetMainHUD() { return m_MainHUD; }
 
-	//Select Character
+	UMyKillerMainHUD* m_KillerMainHUD;
+	UMyKillerMainHUD* GetKillerMainHUD() { return m_KillerMainHUD; }
 
 
 public:
