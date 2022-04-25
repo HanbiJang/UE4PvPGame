@@ -7,6 +7,8 @@
 #include <MyProp/UI/MyHPBarWidget.h>
 #include <MyProp/UI/MySPWidget.h>
 
+#include <MyProp/UI/MyStartGameWidget.h>
+
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "MyPropGameModeBase.generated.h"
@@ -29,7 +31,7 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 	UMyMainHUD* m_MainHUD;
 	UMyMainHUD* GetMainHUD() { return m_MainHUD; }
 
-	//Character
+	//Select Character
 
 
 public:

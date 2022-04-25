@@ -2,13 +2,16 @@
 
 #pragma once
 
+#include <MyProp/Player/MyCharacterState.h>
 #include "Components/Button.h"
+#include <MyProp/MyGameInstance.h>
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MyStartGameWidget.generated.h"
 
 class UMyStartHUD;
+class USelectCharacter;
 
 /**
  * 
@@ -34,6 +37,7 @@ private:
 	UButton* m_StartGameBtn;
 
 public:
+
 	//홈 버튼 : 홈화면으로 되돌아가기
 	UButton* GetHomeBtn() { return m_HomeBtn; }
 	UButton* GetRandomBtn() { return m_RandomBtn; }
@@ -41,6 +45,7 @@ public:
 	UButton* GetSurvivorBtn() { return m_SurvivorBtn; }
 	UButton* GetStartGameBtn() { return m_StartGameBtn; }
 
+public:
 	//버튼 당 기능
 	UFUNCTION()
 		void RandomBtnPressed();

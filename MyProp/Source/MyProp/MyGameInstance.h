@@ -4,6 +4,7 @@
 
 #include "Player/MyInfo.h"
 #include <Engine/DataTable.h>
+#include <MyProp/Player/MyCharacterState.h>
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
@@ -24,6 +25,11 @@ private:
 public:
 	const FSurvivorInfo* GetSurvivorInfo(const FString& _RowName);
 	const FKillerInfo* GetKillerInfo(const FString& _RowName);
+
+	//캐릭터 선택
+	EPLAYER_TYPE m_SelectType;
+	EPLAYER_TYPE GetSelectType() { return m_SelectType; };
+
 
 public:
 	UMyGameInstance();

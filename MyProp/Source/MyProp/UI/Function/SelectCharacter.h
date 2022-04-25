@@ -2,19 +2,20 @@
 
 #pragma once
 
-#include <MyProp/Player/MyCharacterState.h>
 #include <MyProp/UI/MyStartGameWidget.h>
 
 #include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "SelectCharacter.generated.h"
 
+
+class UMyStartGameWidget;
 /**
  * 
  */
-class MYPROP_API MySelectCharacter
+UCLASS()
+class MYPROP_API USelectCharacter : public UObject
 {
-public:
-	MySelectCharacter();
-	~MySelectCharacter();
-
+	GENERATED_BODY()
 
 };
