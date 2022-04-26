@@ -4,8 +4,7 @@
 //분할구현
 #include "Survivor_Move.h"
 #include "Survivor_Change.h"
-//#include "../MyPlayerObjectPawn.h"
-
+#include "Multi/Survivor_Multi.h"
 
 ASurvivor::ASurvivor() :
 	FVChange(0, 0, 0),
@@ -42,6 +41,7 @@ ASurvivor::ASurvivor() :
 	AC_Chase = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio_Chase"));
 	AC_HeartBeat->AttachTo(GetMesh());
 	AC_Chase->AttachTo(GetMesh());
+
 }
 
 void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -110,6 +110,7 @@ void ASurvivor::Tick(float DeltaTime) {
 
 		float HPRatio = m_Info.fCurHP / m_Info.fMaxHP;
 		float MPRatio = m_Info.fCurSP / m_Info.fMaxSP;
+		if (GM != nullptr)
 		GM->UpdatePlayHUD(HPRatio, MPRatio);
 	}
 

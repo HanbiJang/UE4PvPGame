@@ -13,6 +13,7 @@
 //분할구현 / 중복 헤더 포함 문제 해결
 class Survivor_Move; 
 class Survivor_Change;
+class Survivor_Multi;
 
 /**
  * 
@@ -117,4 +118,24 @@ public:
 	//사운드 컴포넌트
 	UAudioComponent* AC_HeartBeat;
 	UAudioComponent* AC_Chase;
+
+	//멀티플레이==============================
+	//체력을 공유하기
+	UFUNCTION()
+		void OnRep_CurrentHealth();
+
+	/** Property replication */
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	/** Response to health being updated. 
+	Called on the server immediately after modification, and on clients in response to a RepNotify*/
+	void OnHealthUpdate();
+
+	/** Setter for Current Health. Clamps the value between 0 and MaxHealth and calls OnHealthUpdate. Should only be called on the server.*/
+	UFUNCTION(BlueprintCallable, Category = "Health")
+		void SetCurrentHealth(float healthValue);
+
+	/** Event for taking damage. Overridden from APawn.*/
+	UFUNCTION(BlueprintCallable, Category = "Health")
+		float TakeDamage(float DamageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };
