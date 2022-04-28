@@ -9,13 +9,6 @@
 #include <MyProp/Player/Survivor/Survivor.h>
 
 AMyPropGameModeBase::AMyPropGameModeBase() {
-	//캐릭터 블루프린트 클래스 가져오기
-	ConstructorHelpers::FClassFinder<APawn>
-		Killer(TEXT("Blueprint'/Game/Blueprints/Killer/BP_Killer.BP_Killer_C'"));
-
-	ConstructorHelpers::FClassFinder<APawn>
-		Survivor(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
-
 
 	//생존자 메인UI 가져오기
 	ConstructorHelpers::FClassFinder<UUserWidget> SurvivorMainHUD
@@ -23,28 +16,27 @@ AMyPropGameModeBase::AMyPropGameModeBase() {
 	//살인마 메인UI
 	ConstructorHelpers::FClassFinder<UUserWidget> KillerMainHUD
 	(TEXT("WidgetBlueprint'/Game/Blueprints/UI/InGameUI/Killer/BP_KillerMainHUD.BP_KillerMainHUD_C'")); //_C 포함해주기!
+	
+	DefaultPawnClass = nullptr;
 
 	//선택 상태 가져오기
 	EPLAYER_TYPE m_SelectType;
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
 		m_SelectType = GI->GetSelectType();
-		UE_LOG(LogTemp, Log, TEXT("m_SelectTypem_SelectType %i"), m_SelectType);
-	}
 
-	DefaultPawnClass = nullptr;
-
-	//[1] 생존자 코드
-	switch (m_SelectType)
-	{
-	case EPLAYER_TYPE::KILLER:
-		if (Killer.Succeeded()) DefaultPawnClass = Killer.Class;
-		if (KillerMainHUD.Succeeded()) m_MainHUDClass = KillerMainHUD.Class; //UI
-		break;
-	case EPLAYER_TYPE::SURVIVOR:
-		if (Survivor.Succeeded()) DefaultPawnClass = Survivor.Class;
-		if (SurvivorMainHUD.Succeeded()) m_MainHUDClass = SurvivorMainHUD.Class; //UI
-		break;
+		//[1] 생존자 코드
+		switch (m_SelectType)
+		{
+		case EPLAYER_TYPE::KILLER:
+			DefaultPawnClass = GI->GetKiller();
+			if (KillerMainHUD.Succeeded()) m_MainHUDClass = KillerMainHUD.Class; //UI
+			break;
+		case EPLAYER_TYPE::SURVIVOR:
+			DefaultPawnClass = GI->GetSurvivor();
+			if (SurvivorMainHUD.Succeeded()) m_MainHUDClass = SurvivorMainHUD.Class; //UI
+			break;
+		}
 	}
 }
 

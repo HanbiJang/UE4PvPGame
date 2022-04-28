@@ -31,6 +31,18 @@ UMyGameInstance::UMyGameInstance()
 	{
 		m_KillerTable = KillerTable.Object;
 	}
+
+	//캐릭터 블루프린트 클래스 가져오기 (게임 인스턴스)
+	ConstructorHelpers::FClassFinder<APawn>
+		Killer(TEXT("Blueprint'/Game/Blueprints/Killer/BP_Killer.BP_Killer_C'"));
+	if (Killer.Succeeded())
+		m_Killer = Killer.Class;
+
+
+	ConstructorHelpers::FClassFinder<APawn>
+		Survivor(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
+	if (Survivor.Succeeded())
+		m_Survivor = Survivor.Class;
 }
 
 UMyGameInstance::~UMyGameInstance()

@@ -62,6 +62,8 @@ void UMyStartGameWidget::StartGameBtnPressed() {
 		}	
 	}
 	
+	//서버에 참여하기
+
 	if(m_SelectType == EPLAYER_TYPE::KILLER)
 		UGameplayStatics::OpenLevel(GetWorld(), TEXT("InGame"),true, TEXT("Listen")); //서버
 
