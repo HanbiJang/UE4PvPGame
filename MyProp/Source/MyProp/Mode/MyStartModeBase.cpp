@@ -23,12 +23,13 @@ void AMyStartModeBase::BeginPlay() {
 		return;
 
 	m_HUD->AddToViewport();
-	m_HUD->GetStartGameWidget()->SetVisibility(ESlateVisibility::Hidden); //화면에서 안보이게 하기
-
+	m_HUD->GetStartGameWidget()->SetVisibility(ESlateVisibility::Hidden); // 게임 시작 - 화면에서 안보이게 하기
+	
 	// InputMode 설정
-	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	APlayerController* Controller = GetWorld()->GetFirstPlayerController();		
 	FInputModeGameAndUI mode;
 
 	Controller->SetInputMode(mode);
 	Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
+	
 }

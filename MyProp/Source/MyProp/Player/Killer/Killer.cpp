@@ -9,6 +9,9 @@ AKiller::AKiller():
 	bAttackEnable(true),
 	attackSpeed(2.f)
 {
+	//멀티플레이 - 리플리케이션 설정
+	bReplicates = true;
+	GetMesh()->SetIsReplicated(true); //스켈레탈 매시
 }
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

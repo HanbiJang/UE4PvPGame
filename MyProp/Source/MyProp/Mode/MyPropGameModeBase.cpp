@@ -11,9 +11,11 @@
 AMyPropGameModeBase::AMyPropGameModeBase() {
 	//캐릭터 블루프린트 클래스 가져오기
 	ConstructorHelpers::FClassFinder<APawn>
-		Survivor(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
-	ConstructorHelpers::FClassFinder<APawn>
 		Killer(TEXT("Blueprint'/Game/Blueprints/Killer/BP_Killer.BP_Killer_C'"));
+
+	ConstructorHelpers::FClassFinder<APawn>
+		Survivor(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
+
 
 	//생존자 메인UI 가져오기
 	ConstructorHelpers::FClassFinder<UUserWidget> SurvivorMainHUD
@@ -27,8 +29,10 @@ AMyPropGameModeBase::AMyPropGameModeBase() {
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
 		m_SelectType = GI->GetSelectType();
-		UE_LOG(LogTemp, Log, TEXT("m_SelectTypem_SelectType"));
+		UE_LOG(LogTemp, Log, TEXT("m_SelectTypem_SelectType %i"), m_SelectType);
 	}
+
+	DefaultPawnClass = nullptr;
 
 	//[1] 생존자 코드
 	switch (m_SelectType)
@@ -78,6 +82,13 @@ void AMyPropGameModeBase::BeginPlay()
 		}
 		
 	}
+
+	// InputMode 설정
+	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	FInputModeGameAndUI mode;
+
+	Controller->SetInputMode(mode);
+	Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
 
 }
 

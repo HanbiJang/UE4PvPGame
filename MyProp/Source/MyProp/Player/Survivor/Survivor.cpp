@@ -42,6 +42,11 @@ ASurvivor::ASurvivor() :
 	AC_HeartBeat->AttachTo(GetMesh());
 	AC_Chase->AttachTo(GetMesh());
 
+	//멀티플레이 리플리케이션 설정
+	bReplicates = true;
+	GetMesh()->SetIsReplicated(true); //스켈레탈 매시
+	m_PlayerObject->SetIsReplicated(true); //사물 매시
+
 }
 
 void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -55,14 +60,17 @@ void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ASurvivor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (m_state == EPLAYER_STATE::OBJECT && !isGround) {
-		//내적을 이용해 두 충돌 사이의 각을 구하기
-		float sizes = abs(HitNormal.Size() * FVector(0, 0, 1).Size()); //벡터의 크기
-		float dot = FVector::DotProduct(FVector(0, 0, 1), HitNormal); //내적값
-		float angle = FMath::RadiansToDegrees(FMath::Acos(dot / sizes));
-		if (angle <= 45) {
-			isGround = true;
-			JumpCnt = 0;
+	//서버의 물리 기준으로 함
+	if (HasAuthority()) {
+		if (m_state == EPLAYER_STATE::OBJECT && !isGround) {
+			//내적을 이용해 두 충돌 사이의 각을 구하기
+			float sizes = abs(HitNormal.Size() * FVector(0, 0, 1).Size()); //벡터의 크기
+			float dot = FVector::DotProduct(FVector(0, 0, 1), HitNormal); //내적값
+			float angle = FMath::RadiansToDegrees(FMath::Acos(dot / sizes));
+			if (angle <= 45) {
+				isGround = true;
+				JumpCnt = 0;
+			}
 		}
 	}
 }
