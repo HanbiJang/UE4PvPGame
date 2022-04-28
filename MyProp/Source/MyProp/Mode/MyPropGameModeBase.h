@@ -16,6 +16,9 @@
 #include "GameFramework/GameModeBase.h"
 #include "MyPropGameModeBase.generated.h"
 
+class AKiller;
+class ASurvivor;
+
 /**
  * 
  */
@@ -30,15 +33,34 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 	void BeginPlay();
 
 	//UI
-	TSubclassOf<UUserWidget>	m_MainHUDClass;
-	UMyMainHUD* m_MainHUD;
-	UMyMainHUD* GetMainHUD() { return m_MainHUD; }
+	//TSubclassOf<UUserWidget>	m_MainHUDClass;
+
+	TSubclassOf<UUserWidget>	m_KillerMainHUDClass;
+	TSubclassOf<UUserWidget>	m_SurvivorMainHUDClass;
+
+	UMyMainHUD* m_SurvivorMainHUD;
+	UMyMainHUD* GetMainHUD() { return m_SurvivorMainHUD; }
 
 	UMyKillerMainHUD* m_KillerMainHUD;
 	UMyKillerMainHUD* GetKillerMainHUD() { return m_KillerMainHUD; }
 
+	//플레이어들
+	int maxPlayerNum = 2;
+	AKiller* pKillerPlayer;
+	ASurvivor* pSurvivorPlayer1;
+	ASurvivor* pSurvivorPlayer2;
+	ASurvivor* pSurvivorPlayer3;
+	ASurvivor* pSurvivorPlayer4;
+
+	FVector vKillerSpawnLocation = FVector(240,570,200);
+	FVector vSurvivor1SpawnLocation = FVector(240,940,200);
+
 
 public:
 	void UpdatePlayHUD(float _CurHPRatio, float _CurMPRatio);
+
+private:
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+	//로그인이 성공한뒤에 호출됨
 
 };

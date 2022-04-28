@@ -29,6 +29,10 @@ private:
 	TSubclassOf<APawn> m_Survivor;
 
 public:
+	//플레이어 수
+	int iPlayerCnt = 0;
+
+public:
 	const TSubclassOf<APawn> GetKiller() {
 		return m_Killer;
 	};
