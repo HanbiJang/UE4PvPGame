@@ -25,7 +25,7 @@ AMyPropGameModeBase::AMyPropGameModeBase() {
 	(TEXT("WidgetBlueprint'/Game/Blueprints/UI/InGameUI/Killer/BP_KillerMainHUD.BP_KillerMainHUD_C'")); //_C 포함해주기!
 
 	//선택 상태 가져오기
-	EPLAYER_TYPE m_SelectType ;
+	EPLAYER_TYPE m_SelectType;
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
 		m_SelectType = GI->GetSelectType();
@@ -44,23 +44,6 @@ AMyPropGameModeBase::AMyPropGameModeBase() {
 	case EPLAYER_TYPE::SURVIVOR:
 		if (Survivor.Succeeded()) DefaultPawnClass = Survivor.Class;
 		if (SurvivorMainHUD.Succeeded()) m_MainHUDClass = SurvivorMainHUD.Class; //UI
-		break;
-	case EPLAYER_TYPE::RANDOM:
-		int irandom = rand() % 2;
-		if (irandom == 0) {
-			//살인마
-			if (Killer.Succeeded()) DefaultPawnClass = Killer.Class;
-			if (KillerMainHUD.Succeeded()) m_MainHUDClass = KillerMainHUD.Class;
-			//살인마로 설정
-			GI->SetSelectType(EPLAYER_TYPE::KILLER);
-		}
-		else {
-			//생존자
-			if (Survivor.Succeeded()) DefaultPawnClass = Survivor.Class;
-			if (SurvivorMainHUD.Succeeded()) m_MainHUDClass = SurvivorMainHUD.Class;
-			//생존자로 선택 설정
-			GI->SetSelectType(EPLAYER_TYPE::SURVIVOR);
-		}
 		break;
 	}
 }

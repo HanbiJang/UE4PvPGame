@@ -33,6 +33,7 @@ enum class EPLAYER_STATE : uint8
 UENUM(BlueprintType)
 enum class EPLAYER_TYPE : uint8
 {
+	NONE,
 	KILLER,
 	SURVIVOR,
 	RANDOM,
