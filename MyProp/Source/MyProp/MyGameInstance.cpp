@@ -3,7 +3,6 @@
 
 #include "MyGameInstance.h"
 
-
 const FSurvivorInfo* UMyGameInstance::GetSurvivorInfo(const FString& _RowName)
 {
 	FSurvivorInfo* Info = m_SurvivorTable->FindRow<FSurvivorInfo>(FName(_RowName), TEXT(""));
@@ -38,11 +37,23 @@ UMyGameInstance::UMyGameInstance()
 	if (Killer.Succeeded())
 		m_Killer = Killer.Class;
 
-
 	ConstructorHelpers::FClassFinder<APawn>
 		Survivor(TEXT("Blueprint'/Game/Blueprints/Survivor/BP_Survivor.BP_Survivor_C'"));
 	if (Survivor.Succeeded())
 		m_Survivor = Survivor.Class;
+
+	//캐릭터 UI 가져오기
+	ConstructorHelpers::FClassFinder<UUserWidget>
+		KillerWidget(TEXT("WidgetBlueprint'/Game/Blueprints/UI/InGameUI/Killer/BP_KillerMainHUD.BP_KillerMainHUD_C'"));
+	if (KillerWidget.Succeeded())
+		m_KillerWidgetClass = KillerWidget.Class;
+
+	ConstructorHelpers::FClassFinder<UUserWidget>
+		SurvivorWidget(TEXT("WidgetBlueprint'/Game/Blueprints/UI/InGameUI/BP_MyMainHUD.BP_MyMainHUD_C'"));
+	if (SurvivorWidget.Succeeded())
+		m_SurvivorWidgetClass = SurvivorWidget.Class;
+
+
 }
 
 UMyGameInstance::~UMyGameInstance()

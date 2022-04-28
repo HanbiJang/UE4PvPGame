@@ -7,6 +7,7 @@
 #include <MyProp/Player/MyCharacterState.h>
 //#include <MyProp/Player/Killer/Killer.h>
 //#include <MyProp/Player/Survivor/Survivor.h>
+#include <MyProp/UI/MyMainHUD.h>
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
@@ -28,6 +29,10 @@ private:
 	TSubclassOf<APawn> m_Killer;
 	TSubclassOf<APawn> m_Survivor;
 
+	//UI
+	TSubclassOf<UUserWidget> m_KillerWidgetClass;
+	TSubclassOf<UUserWidget> m_SurvivorWidgetClass;
+
 public:
 	//플레이어 수
 	int iPlayerCnt = 0;
@@ -41,6 +46,10 @@ public:
 	};
 	const FSurvivorInfo* GetSurvivorInfo(const FString& _RowName);
 	const FKillerInfo* GetKillerInfo(const FString& _RowName);
+
+	//UI
+	const TSubclassOf<UUserWidget> GetSurvivorWidgetClass() { return m_SurvivorWidgetClass; };
+	const TSubclassOf<UUserWidget> GetKillerWidgetClass() { return m_KillerWidgetClass; };
 
 	//캐릭터 선택
 private:
