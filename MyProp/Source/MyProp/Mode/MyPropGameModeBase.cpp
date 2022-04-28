@@ -19,20 +19,9 @@ AMyPropGameModeBase::AMyPropGameModeBase() {
 	
 	DefaultPawnClass = nullptr;
 
-	//캐릭터들 미리 스폰해두기 (오류남)
-	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GI != nullptr) {
-		////캐릭터
-		//FActorSpawnParameters spawnInfo; //스폰 인포
-		//spawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		//pKillerPlayer = GetWorld()->SpawnActor<AKiller>(GI->GetKiller(), vKillerSpawnLocation, FRotator(0, 0, 0), spawnInfo);
-		//pSurvivorPlayer1 = GetWorld()->SpawnActor<ASurvivor>(GI->GetSurvivor(), vSurvivor1SpawnLocation, FRotator(0, 0, 0), spawnInfo);
-	
-		//UI
-		m_SurvivorMainHUDClass = SurvivorMainHUD.Class;
-		m_KillerMainHUDClass = KillerMainHUD.Class;
-	
-	}
+	//UI
+	m_SurvivorMainHUDClass = SurvivorMainHUD.Class;
+	m_KillerMainHUDClass = KillerMainHUD.Class;
 
 	////선택 상태 가져오기
 	//EPLAYER_TYPE m_SelectType;
@@ -131,12 +120,12 @@ void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {
 
 		//스폰한 캐릭터에 설정 (빙의)
 		if (GI->iPlayerCnt == 1) {
-			//pKillerPlayer = GetWorld()->SpawnActor<AKiller>(GI->GetKiller(), vKillerSpawnLocation, FRotator(0, 0, 0), spawnInfo);
+			pKillerPlayer = GetWorld()->SpawnActor<AKiller>(GI->GetKiller(), vKillerSpawnLocation, FRotator(0, 0, 0), spawnInfo);
 			GetWorld()->GetFirstPlayerController()->Possess(pKillerPlayer); //서버 캐릭터 설정
 		}
 		else if (GI->iPlayerCnt >= 2) { //클라이언트 캐릭터 설정
-			//pSurvivorPlayer1 = GetWorld()->SpawnActor<ASurvivor>(GI->GetSurvivor(), vSurvivor1SpawnLocation, FRotator(0, 0, 0), spawnInfo);
-			//NewPlayer->Possess(pSurvivorPlayer1);
+			pSurvivorPlayer1 = GetWorld()->SpawnActor<ASurvivor>(GI->GetSurvivor(), vSurvivor1SpawnLocation, FRotator(0, 0, 0), spawnInfo);
+			NewPlayer->Possess(pSurvivorPlayer1);
 		}
 		if (HasAuthority()) {
 			m_KillerMainHUD = Cast<UMyKillerMainHUD>(CreateWidget(GetWorld(), m_KillerMainHUDClass));
