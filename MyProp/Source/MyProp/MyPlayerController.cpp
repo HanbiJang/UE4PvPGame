@@ -14,6 +14,12 @@ void AMyPlayerController::DrawHUD_Client_Implementation() {
 		m_SurvivorMainHUD = Cast<UMyMainHUD>(CreateWidget(this, m_SurvivorMainHUDClass));
 		m_SurvivorMainHUD->AddToViewport();
 	}
+
+	// InputMode 설정
+	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	FInputModeGameAndUI mode;
+	Controller->SetInputMode(mode); //변경필요
+	Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
 }
 
 

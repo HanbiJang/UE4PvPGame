@@ -95,11 +95,11 @@ void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {
 			if (newPlayer_ != nullptr)
 				newPlayer_->DrawHUD_Client();
 
-			// InputMode 설정
-			APlayerController* Controller = NewPlayer;
-			FInputModeGameAndUI mode;
-			Controller->SetInputMode(mode); //변경필요
-			Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
+			//// InputMode 설정
+			//APlayerController* Controller = NewPlayer;
+			//FInputModeGameAndUI mode;
+			//Controller->SetInputMode(mode); //변경필요
+			//Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
 		}
 		
 	}
