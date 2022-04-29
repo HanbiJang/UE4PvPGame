@@ -68,7 +68,9 @@ void AKiller::AttackAction()
 			if (survivor != nullptr) { //cast 실패시 null
 				//bSurvivor = true;
 				//생존자가 맞게하기
-				survivor->GetInfo()->fCurHP -= 30.f;
+				UGameplayStatics::ApplyDamage(survivor,30.f,NULL,GetOwner(),NULL);
+
+				//survivor->GetInfo()->fCurHP -= 30.f;
 				FString text = FString::Printf(TEXT("Survivor HP: %f"), survivor->GetInfo()->fCurHP);
 				GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, text);
 				break;

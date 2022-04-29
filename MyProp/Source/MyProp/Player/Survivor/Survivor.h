@@ -45,7 +45,8 @@ private:
 public:
 
 	//캐릭터 정보
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+	//리플리케이션 설정
+	UPROPERTY(ReplicatedUsing = OnRep_Info, EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FSurvivorInfo m_Info;
 
 	float m_PrevHP;
@@ -124,14 +125,14 @@ public:
 	//멀티플레이==============================
 	//체력을 공유하기
 	UFUNCTION()
-		void OnRep_CurrentHealth();
+		void OnRep_Info();
 
 	/** Property replication */
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	/** Response to health being updated. 
 	Called on the server immediately after modification, and on clients in response to a RepNotify*/
-	void OnHealthUpdate();
+	void OnInfoUpdate();
 
 	/** Setter for Current Health. Clamps the value between 0 and MaxHealth and calls OnHealthUpdate. Should only be called on the server.*/
 	UFUNCTION(BlueprintCallable, Category = "Health")

@@ -14,19 +14,19 @@ Survivor_Multi::~Survivor_Multi()
 {
 }
 
-void ASurvivor::OnRep_CurrentHealth() {
+void ASurvivor::OnRep_Info() {
 
-    OnHealthUpdate();
+    OnInfoUpdate();
 }
 
 void ASurvivor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	//Replicate current health.
-	//DOREPLIFETIME(ASurvivor, GetInfo()->fCurHP);
+	DOREPLIFETIME(ASurvivor, m_Info);
 }
 
-void ASurvivor::OnHealthUpdate()
+void ASurvivor::OnInfoUpdate()
 {
     //Client-specific functionality
     if (IsLocallyControlled())
@@ -55,17 +55,18 @@ void ASurvivor::OnHealthUpdate()
     */
 }
 
-/** Setter for Current Health. Clamps the value between 0 and MaxHealth and calls OnHealthUpdate. Should only be called on the server.*/
+/** Setter for Current Health. Clamps the value between 0 and MaxHealth and calls OnInfoUpdate. Should only be called on the server.*/
 void ASurvivor::SetCurrentHealth(float healthValue) {
 
     if (HasAuthority()) {
         //Clamp: 0과 maxHP 값 사이에서 설정함
         GetInfo()->fCurHP = FMath::Clamp(healthValue, 0.f, GetInfo()->fMaxHP);
-        OnHealthUpdate();
+        OnInfoUpdate();
     }
 }
 
 /** Event for taking damage. Overridden from APawn.*/
+//내장된 ApplyDamage로 충돌 시, 데미지를 줄수가 있다
 float ASurvivor::TakeDamage(float DamageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
 
     float damageApplied = GetInfo()->fCurHP - DamageTaken;
