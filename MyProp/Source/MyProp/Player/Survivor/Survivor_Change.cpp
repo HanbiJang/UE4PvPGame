@@ -103,7 +103,7 @@ void ASurvivor::ChangeToPlayer_Implementation() {
 
 void ASurvivor::ChangeToPlayer_Multicast_Implementation() {
 
-	if (bChangeEnable) {
+	if (bChangeEnable && isObject) {
 		isObject = false;
 		bChangeEnable = false; //과다변신 막기
 

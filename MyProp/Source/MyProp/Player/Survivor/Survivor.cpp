@@ -198,7 +198,14 @@ void ASurvivor::Tick(float DeltaTime) {
 	}
 
 	//Á×±â=======================================================================
-	if (GetInfo()->fCurHP <= 0) ChangeState(EPLAYER_STATE::DEAD);
+	if (GetInfo()->fCurHP <= 0) {
+		
+		ChangeState(EPLAYER_STATE::DEAD);
+		if (isObject) {
+			ChangeToPlayer(); //»ç¹°ÆûÀÌ¸é ÀÎ°£ÇüÀ¸·Î ¹Ù²î°í Á×±â 
+		}
+
+	}
 }
 
 void ASurvivor::OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult)

@@ -5,6 +5,21 @@
 
 void ASurvivor::UpDown(float f) {
 	Super::UpDown(f);
+	UpDown_Server(f);
+}
+
+void ASurvivor::LeftRight(float f) {
+	Super::LeftRight(f);
+	LeftRight_Server(f);
+}
+
+void ASurvivor::MyJump() {
+	Super::MyJump();
+	MyJump_Server();
+}
+
+//멀티캐스트
+void ASurvivor::UpDown_Multicast_Implementation(float f) {
 	if (m_state == EPLAYER_STATE::OBJECT) {
 		if (f != 0 && m_PlayerObject->IsSimulatingPhysics()) {
 			m_PlayerObject->AddImpulse(FVector(fRunPower * f, 0, 0), NAME_None, true);
@@ -13,8 +28,7 @@ void ASurvivor::UpDown(float f) {
 	}
 }
 
-void ASurvivor::LeftRight(float f) {
-	Super::LeftRight(f);
+void ASurvivor::LeftRight_Multicast_Implementation(float f) {
 	if (m_state == EPLAYER_STATE::OBJECT) {
 		if (f != 0 && m_PlayerObject->IsSimulatingPhysics()) {
 			m_PlayerObject->AddImpulse(FVector(0, fRunPower * f, 0.f), NAME_None, true);
@@ -23,8 +37,7 @@ void ASurvivor::LeftRight(float f) {
 	}
 }
 
-void ASurvivor::MyJump() {
-	Super::MyJump();
+void ASurvivor::MyJump_Multicast_Implementation() {
 	if (m_state == EPLAYER_STATE::OBJECT) {
 		if (JumpCnt < 2 && m_PlayerObject->IsSimulatingPhysics()) {
 			JumpCnt++;
@@ -33,6 +46,19 @@ void ASurvivor::MyJump() {
 			UE_LOG(LogTemp, Log, TEXT("Jump!"));
 		}
 	}
+}
+
+
+void ASurvivor::UpDown_Server_Implementation(float f) {
+	UpDown_Multicast(f);
+}
+
+void ASurvivor::LeftRight_Server_Implementation(float f) {
+	LeftRight_Multicast(f);
+}
+
+void ASurvivor::MyJump_Server_Implementation() {
+	MyJump_Multicast();
 }
 
 void ASurvivor::Dash()
