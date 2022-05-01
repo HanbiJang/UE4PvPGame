@@ -123,7 +123,7 @@ public:
 	UAudioComponent* AC_Chase;
 
 	//멀티플레이==============================
-	//체력을 공유하기
+	//캐릭터 Info를 공유하기
 	UFUNCTION()
 		void OnRep_Info();
 

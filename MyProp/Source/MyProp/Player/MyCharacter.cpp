@@ -71,13 +71,6 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//멈춤
-	if (fLeftRight == 0.f && fUpdown == 0.f && (m_state == EPLAYER_STATE::MOVE || m_state == EPLAYER_STATE::DASH)) {
-		ChangeState(EPLAYER_STATE::IDLE);
-		isMoving = false;
-	}
-
 }
 
 // Called to bind functionality to input
@@ -109,42 +102,50 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 }
 
 void AMyCharacter::UpDown(float f) {
+	fUpdown = f;
+
 	// 위아래로 이동
 	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
-		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed && m_state != EPLAYER_STATE::ATTACK
-			&& m_state != EPLAYER_STATE::RANGEATTACK) {
-			ChangeState(EPLAYER_STATE::MOVE);
+
+		if (f != 0.f && m_state != EPLAYER_STATE::JUMP /*&& !isDashed*/) {
+			if (!isDashed) ChangeState(EPLAYER_STATE::MOVE);
 			isMoving = true;
+
+			//캐릭터 회전과 이동
+			FRotator Rotation = Controller->GetControlRotation();
+			FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+
+			FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+			AddMovementInput(Direction, f);
 		}
 
-		fLeftRight = f;
+		else if (fUpdown == 0 && fLeftRight == 0) {
+			ChangeState(EPLAYER_STATE::IDLE);
+		}
 
-		//캐릭터 회전과 이동
-		FRotator Rotation = Controller->GetControlRotation();
-		FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
-		FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, f);
 	}
 }
 
 void AMyCharacter::LeftRight(float f) {
+	
+	fLeftRight = f;
 	//오른쪽, 왼쪽으로 이동
 	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
-		if (f != 0.f && m_state != EPLAYER_STATE::JUMP && !isDashed
-			&& m_state != EPLAYER_STATE::RANGEATTACK) {
-			ChangeState(EPLAYER_STATE::MOVE);
+		if (f != 0.f && m_state != EPLAYER_STATE::JUMP /*&& !isDashed */&& m_state != EPLAYER_STATE::RANGEATTACK) {
+			if(!isDashed) ChangeState(EPLAYER_STATE::MOVE);
 			isMoving = true;
+
+			//캐릭터 회전과 이동
+			FRotator Rotation = Controller->GetControlRotation();
+			FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+
+			FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			AddMovementInput(Direction, f);
 		}
 
-		fUpdown = f;
-
-		//캐릭터 회전과 이동
-		FRotator Rotation = Controller->GetControlRotation();
-		FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
-		FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Direction, f);
+		else if (fUpdown == 0 && fLeftRight == 0) {
+			ChangeState(EPLAYER_STATE::IDLE);
+		}
 	}
 }
 
@@ -189,15 +190,58 @@ void AMyCharacter::Item2() {
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("item2 used"));
 }
 
-void AMyCharacter::ChangeState(EPLAYER_STATE newState)
+void AMyCharacter::ChangeState_Implementation(EPLAYER_STATE newState)
 {
+	//if (m_state == newState) {
+	//	return;
+	//}
+	////else
+	//m_state = newState;
+	//UE_LOG(LogTemp, Log, TEXT("state: %i"), m_state);
+	ChangeState_Multicast(newState);
+}
+
+void AMyCharacter::ChangeState_Multicast_Implementation(EPLAYER_STATE newState) {
+
 	if (m_state == newState) {
 		return;
 	}
-
 	//else
-
 	m_state = newState;
 	UE_LOG(LogTemp, Log, TEXT("state: %i"), m_state);
+
 }
 
+void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//캐릭터 상태를 리플리케이트한다
+	DOREPLIFETIME(AMyCharacter, m_state);
+
+	//캐릭터 이동 멈춤 (Idle 상태로 바꾸기 위한)
+	DOREPLIFETIME(AMyCharacter, isMoving);
+	DOREPLIFETIME(AMyCharacter, fLeftRight);
+	DOREPLIFETIME(AMyCharacter, fUpdown);
+}
+
+//state값이 바뀌면 호출됨
+void AMyCharacter::OnRep_State() {
+
+	//Client-specific functionality
+	if (IsLocallyControlled())
+	{
+		FString stateMessage = FString::Printf(TEXT("Survivor State Changed: %i"), m_state);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, stateMessage);
+	}
+
+	//Server-specific functionality
+	//if (Role == ROLE_Authority)
+	if (HasAuthority())
+	{
+		FString stateMessage = FString::Printf(TEXT("Killer State Changed: %i"), m_state);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, stateMessage);
+	}
+
+	//서버, 클라이언트 공통 부분
+
+}

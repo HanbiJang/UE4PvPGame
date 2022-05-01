@@ -73,6 +73,9 @@ void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {
 
 		//스폰한 캐릭터에 설정 (빙의)
 		if (GI->iPlayerCnt == 1) { //서버 - 살인마 캐릭터 설정
+			FString str = FString::Printf(TEXT("You Server"));
+
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, str); // 화면출력
 			pKillerPlayer = GetWorld()->SpawnActor<AKiller>(GI->GetKiller(), vKillerSpawnLocation, FRotator(0, 0, 0), spawnInfo);
 			GetWorld()->GetFirstPlayerController()->Possess(pKillerPlayer); //서버 캐릭터 설정
 
@@ -94,13 +97,20 @@ void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {
 			AMyPlayerController* newPlayer_ = Cast<AMyPlayerController>(NewPlayer);
 			if (newPlayer_ != nullptr)
 				newPlayer_->DrawHUD_Client();
-
-			//// InputMode 설정
-			//APlayerController* Controller = NewPlayer;
-			//FInputModeGameAndUI mode;
-			//Controller->SetInputMode(mode); //변경필요
-			//Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
 		}
+		////테스트용
+		//else if (GI->iPlayerCnt == 1 && !HasAuthority()) {
+		//	FString str = FString::Printf(TEXT("You Client"));
+		//	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, str); // 화면출력
+
+		//	pSurvivorPlayer1 = GetWorld()->SpawnActor<ASurvivor>(GI->GetSurvivor(), vSurvivor1SpawnLocation, FRotator(0, 0, 0), spawnInfo);
+		//	NewPlayer->Possess(pSurvivorPlayer1);
+
+		//	//HUD 설정 
+		//	AMyPlayerController* newPlayer_ = Cast<AMyPlayerController>(NewPlayer);
+		//	if (newPlayer_ != nullptr)
+		//		newPlayer_->DrawHUD_Client();
+		//}
 		
 	}
 }

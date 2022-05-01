@@ -3,9 +3,6 @@
 
 #include "Survivor_Multi.h"
 
-#include "Engine/Engine.h"
-#include "Net/UnrealNetwork.h"
-
 Survivor_Multi::Survivor_Multi()
 {
 }
@@ -42,7 +39,6 @@ void ASurvivor::OnInfoUpdate()
     }
 
     //Server-specific functionality
-    //if (Role == ROLE_Authority)
     if(HasAuthority())
     {
         FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), GetInfo()->fCurHP);

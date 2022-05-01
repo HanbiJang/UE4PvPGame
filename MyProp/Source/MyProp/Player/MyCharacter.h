@@ -7,6 +7,10 @@
 #include "MyCharacterState.h"
 #include "../MyGameInstance.h"
 
+//멀티플레이
+#include "Engine/Engine.h"
+#include "Net/UnrealNetwork.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
@@ -48,7 +52,9 @@ public:
 	virtual void Dash();
 	virtual void DashStop();
 
+	UPROPERTY(replicated)
 	bool isMoving;
+
 	bool isDashed;
 	bool isDashPressed;
 	bool isDashEnable;
@@ -59,8 +65,6 @@ public:
 	//Jump
 	virtual void Jump();
 	void JumpAction();
-
-
 
 	//ItemBtn
 	void Item1();
@@ -77,7 +81,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* m_Arm;
 private:
+	UPROPERTY(replicated)
 	float fLeftRight;
+	UPROPERTY(replicated)
 	float fUpdown;
 
 
@@ -87,11 +93,17 @@ protected:
 
 public:
 	//캐릭터의 상태
+		//리플리케이션 설정
+	UPROPERTY(ReplicatedUsing = OnRep_State, EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 	EPLAYER_STATE m_state;
 
 public:
 	//캐릭터 상태 전환
-	virtual void ChangeState(EPLAYER_STATE newState);
+	UFUNCTION(Reliable, Server)
+		virtual void ChangeState(EPLAYER_STATE newState);
+
+	UFUNCTION(Reliable, NetMulticast)
+		void ChangeState_Multicast(EPLAYER_STATE newState);
 
 public:
 	EPLAYER_STATE GetState() { return m_state; }
@@ -104,4 +116,12 @@ public:
 	//캐릭터 정보 옮기기
 	virtual void ShareInfoToObject(AMyPlayerObjectPawn* m_PlayerObjectPawn, FTableRowBase data) {}; //인간 -> 사물
 	virtual void SetInfoToCharacter(AMyPlayerObjectPawn* m_PlayerObjectPawn,FTableRowBase data) {}; //사물 -> 인간
+
+	//멀티플레이==============================================
+	UFUNCTION()
+		void OnRep_State();
+
+	/** Property replication */
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 };
