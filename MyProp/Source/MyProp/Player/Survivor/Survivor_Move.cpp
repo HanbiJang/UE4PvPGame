@@ -45,6 +45,7 @@ void ASurvivor::Dash()
 
 	if (m_state != EPLAYER_STATE::OBJECT && GetInfo()->fCurSP > 10) {
 		isDashEnable = true;
+		UE_LOG(LogTemp, Log, TEXT("DashEnable!!!"));
 	}
 }
 

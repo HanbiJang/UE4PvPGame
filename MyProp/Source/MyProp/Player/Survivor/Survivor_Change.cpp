@@ -5,6 +5,7 @@
 //인간에서 사물로 변신
 void ASurvivor::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 {
+	isObject = true;
 	//플레이어 상태 변경
 	ChangeState(EPLAYER_STATE::OBJECT);
 
@@ -13,6 +14,7 @@ void ASurvivor::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 	//원래 [인간형] 오브젝트 다른 곳으로 치우기 && 각도 시작과 같이 설정하기
 	SetActorLocation(FVChange);
 	SetActorRotation(FRChange);
+
 
 	//물리 끄기
 	//m_PlayerObjectPawn->m_ObjectMesh->SetSimulatePhysics(false);
@@ -78,6 +80,7 @@ void ASurvivor::ChangeObjectMesh(UStaticMesh* mesh, FVector scale)
 void ASurvivor::ChangeToPlayer() {
 
 	if (bChangeEnable) {
+		isObject = false;
 		bChangeEnable = false; //과다변신 막기
 
 		//시점 변경

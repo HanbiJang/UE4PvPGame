@@ -55,24 +55,23 @@ public:
 	FSurvivorInfo* GetInfo() { return &m_Info; }
 	void SetInfo(FSurvivorInfo new_Info) { m_Info = new_Info; }
 	
-
 	//킬러 정보
 	TArray<AKiller*> arrKiller;
 
 //변신 기능
 //캐릭터의 오브젝트 전환
 public:
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-	//	AMyPlayerObjectPawn* m_PlayerObjectPawn; //사물형 폰
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* m_PlayerObject; //사물형 스테틱 매시 (물리 기능 있음)
 
+	UPROPERTY(replicated)
 	FTimerHandle FPhysicsTimer; //물리 작용 끔/켬 타이머
+	UPROPERTY(replicated)
 	FTimerHandle FChangeEnableTimer; //변신 가능 시간 끔/켬 타이머
 	void SetSimulatePhysicsTrue() { m_PlayerObject->SetSimulatePhysics(true); }
 
 	//변신 가능 상태 나타내는 변수 (변신 과다 사용 조절용)
+	UPROPERTY(replicated)
 	bool bChangeEnable;
 	void SetbChangeEnableTrue() { bChangeEnable = true; }
 
@@ -96,10 +95,15 @@ public:
 		float fRoPower;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		float fJumpPower;
+	
 	//Jump 관련 변수
+	UPROPERTY(replicated)
 	bool isGround;
+
 	//2단 점프 제한
+	UPROPERTY(replicated)
 	int JumpCnt = 0;
+
 	//땅과 닿았을 시 isGround를 true로 만든다
 protected:
 	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;

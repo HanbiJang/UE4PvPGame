@@ -60,17 +60,19 @@ void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ASurvivor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//서버의 물리 기준으로 함
-	if (HasAuthority()) {
-		if (m_state == EPLAYER_STATE::OBJECT && !isGround) {
-			//내적을 이용해 두 충돌 사이의 각을 구하기
-			float sizes = abs(HitNormal.Size() * FVector(0, 0, 1).Size()); //벡터의 크기
-			float dot = FVector::DotProduct(FVector(0, 0, 1), HitNormal); //내적값
-			float angle = FMath::RadiansToDegrees(FMath::Acos(dot / sizes));
-			if (angle <= 45) {
-				isGround = true;
-				JumpCnt = 0;
-			}
+	////서버의 물리 기준으로 함
+	//if (HasAuthority()) {
+
+	//}
+
+	if (m_state == EPLAYER_STATE::OBJECT && !isGround) {
+		//내적을 이용해 두 충돌 사이의 각을 구하기
+		float sizes = abs(HitNormal.Size() * FVector(0, 0, 1).Size()); //벡터의 크기
+		float dot = FVector::DotProduct(FVector(0, 0, 1), HitNormal); //내적값
+		float angle = FMath::RadiansToDegrees(FMath::Acos(dot / sizes));
+		if (angle <= 45) {
+			isGround = true;
+			JumpCnt = 0;
 		}
 	}
 }
@@ -169,8 +171,8 @@ void ASurvivor::Tick(float DeltaTime) {
 
 			//사운드 조절
 			if (UGameplayStatics::GetPlayerCharacter(GetWorld(), 0) == this && !AC_HeartBeat->IsPlaying() && !AC_Chase->IsPlaying()) {
-				UE_LOG(LogTemp, Log, TEXT("Killer Name!!! : %s"), *(arrKiller[i]->GetName()));
-				UE_LOG(LogTemp, Log, TEXT("Killer distance!!! : %f"), GetDistanceTo(arrKiller[i]));
+				//UE_LOG(LogTemp, Log, TEXT("Killer Name!!! : %s"), *(arrKiller[i]->GetName()));
+				//UE_LOG(LogTemp, Log, TEXT("Killer distance!!! : %f"), GetDistanceTo(arrKiller[i]));
 
 				AC_HeartBeat->Play();
 				AC_Chase->Play();

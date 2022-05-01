@@ -58,9 +58,15 @@ public:
 	UPROPERTY(replicated)
 		bool isJumping;
 
+	UPROPERTY(replicated)
 	bool isDashed;
+	UPROPERTY(replicated)
 	bool isDashPressed;
+	UPROPERTY(replicated)
 	bool isDashEnable;
+
+	UPROPERTY(replicated)
+		bool isObject = false; //사물형태인지 아닌지
 
 	//Machine Interaction
 	void Interaction();
@@ -97,7 +103,7 @@ protected:
 public:
 	//캐릭터의 상태
 		//리플리케이션 설정
-	UPROPERTY(ReplicatedUsing = OnRep_State, EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(replicated, ReplicatedUsing = OnRep_State, EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 	EPLAYER_STATE m_state;
 
 public:

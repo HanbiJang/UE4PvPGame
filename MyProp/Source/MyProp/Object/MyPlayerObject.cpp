@@ -65,19 +65,6 @@ void AMyPlayerObject::ChangePlayerToObject()
 			}
 		}		
 	}
-	//else {
-	//	//[오브젝트 -> 오브젝트]
-	//	AMyPlayerObjectPawn* pPlayerObject = Cast<AMyPlayerObjectPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	//	
-	//	if (nullptr != pPlayerObject && pPlayerObject->m_ObjectMesh->GetStaticMesh() != m_Mesh->GetStaticMesh())
-	//	{
-	//		UE_LOG(LogTemp, Log, TEXT("%f"), pPlayerObject->GetDistanceTo(this));
-	//		if (MyGetDistance(pPlayerObject->m_ObjectMesh->GetRelativeLocation(), GetActorLocation()) < 400) {
-	//			pPlayerObject->ChangeObjectMesh(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
-	//		}
-	//		
-	//	}
-	//}
 }
 
 

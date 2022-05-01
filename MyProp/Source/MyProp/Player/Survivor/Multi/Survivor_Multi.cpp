@@ -21,6 +21,12 @@ void ASurvivor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 
 	//Replicate current health.
 	DOREPLIFETIME(ASurvivor, m_Info);
+    DOREPLIFETIME(ASurvivor, isGround);
+    DOREPLIFETIME(ASurvivor, JumpCnt);
+
+    DOREPLIFETIME(ASurvivor, FPhysicsTimer);
+    DOREPLIFETIME(ASurvivor, FChangeEnableTimer);
+    DOREPLIFETIME(ASurvivor, bChangeEnable);
 }
 
 void ASurvivor::OnInfoUpdate()
