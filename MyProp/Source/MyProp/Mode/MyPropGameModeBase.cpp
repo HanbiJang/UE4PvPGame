@@ -3,7 +3,6 @@
 
 #include "MyPropGameModeBase.h"
 #include <MyProp/MyGameInstance.h>
-#include <MyProp/MyPlayerController.h>
 
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #include <MyProp/Player/Killer/Killer.h>
@@ -26,7 +25,7 @@ void AMyPropGameModeBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AMyPropGameModeBase::UpdatePlayHUD(float _CurHPRatio, float _CurSPRatio) {
+void AMyPropGameModeBase::UpdatePlayHUD_Survivor_Implementation(float _CurHPRatio, float _CurSPRatio) {
 
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
@@ -94,23 +93,9 @@ void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {
 			NewPlayer->Possess(pSurvivorPlayer1);
 			
 			//HUD 설정 
-			AMyPlayerController* newPlayer_ = Cast<AMyPlayerController>(NewPlayer);
-			if (newPlayer_ != nullptr)
-				newPlayer_->DrawHUD_Client();
+			Survivor1Controller = Cast<AMyPlayerController>(NewPlayer);
+			if (Survivor1Controller != nullptr)
+				Survivor1Controller->DrawHUD_Client();
 		}
-		////테스트용
-		//else if (GI->iPlayerCnt == 1 && !HasAuthority()) {
-		//	FString str = FString::Printf(TEXT("You Client"));
-		//	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, str); // 화면출력
-
-		//	pSurvivorPlayer1 = GetWorld()->SpawnActor<ASurvivor>(GI->GetSurvivor(), vSurvivor1SpawnLocation, FRotator(0, 0, 0), spawnInfo);
-		//	NewPlayer->Possess(pSurvivorPlayer1);
-
-		//	//HUD 설정 
-		//	AMyPlayerController* newPlayer_ = Cast<AMyPlayerController>(NewPlayer);
-		//	if (newPlayer_ != nullptr)
-		//		newPlayer_->DrawHUD_Client();
-		//}
-		
 	}
 }

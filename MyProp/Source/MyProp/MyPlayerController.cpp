@@ -5,6 +5,8 @@
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #include <MyProp/MyGameInstance.h>
 
+#include <MyProp/Mode/MyPropGameModeBase.h>
+
 void AMyPlayerController::DrawHUD_Client_Implementation() {
 	//UI
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
@@ -21,5 +23,19 @@ void AMyPlayerController::DrawHUD_Client_Implementation() {
 	Controller->SetInputMode(mode); //변경필요
 	Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
 }
+
+void AMyPlayerController::PlayerTick(float DeltaTime) {
+	Super::PlayerTick(DeltaTime);
+
+	//스태미나 UI 업데이트
+
+
+}
+
+void AMyPlayerController::ClientM_Implementation() {
+	FString str = FString::Printf(TEXT("Controller UIUI yesyes"));
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, str); // 화면출력
+}
+
 
 

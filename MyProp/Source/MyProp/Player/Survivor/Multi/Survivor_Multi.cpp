@@ -27,6 +27,9 @@ void ASurvivor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
     DOREPLIFETIME(ASurvivor, FPhysicsTimer);
     DOREPLIFETIME(ASurvivor, FChangeEnableTimer);
     DOREPLIFETIME(ASurvivor, bChangeEnable);
+
+    DOREPLIFETIME(ASurvivor, m_PrevHP);
+    DOREPLIFETIME(ASurvivor, m_PrevSP);
 }
 
 void ASurvivor::OnInfoUpdate()

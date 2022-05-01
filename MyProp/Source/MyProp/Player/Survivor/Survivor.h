@@ -49,7 +49,9 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_Info, EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FSurvivorInfo m_Info;
 
+	UPROPERTY(replicated)
 	float m_PrevHP;
+	UPROPERTY(replicated)
 	float m_PrevSP;
 
 	FSurvivorInfo* GetInfo() { return &m_Info; }
@@ -182,4 +184,23 @@ public:
 	UFUNCTION(Reliable, NetMulticast)
 		void SetBodyLocation_Multicast();
 
+	//스태미나 업데이트
+	UFUNCTION(Reliable, Server)
+		void UpdateSP();
+
+	UFUNCTION(Reliable, Server)
+		void UseSP();
+
+	//비네팅 공포 효과
+	UFUNCTION(Reliable, Server)
+		void ShowVinetting();
+
+	UFUNCTION(Reliable, Client)
+		void UpdateSP_Client();
+
+	UFUNCTION(Reliable, Client)
+		void UseSP_Client();
+
+	UFUNCTION(Reliable, Client)
+		void ShowVinetting_Client();
 };

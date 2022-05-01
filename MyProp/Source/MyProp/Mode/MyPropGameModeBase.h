@@ -8,8 +8,6 @@
 #include <MyProp/UI/MySPWidget.h>
 
 #include <MyProp/UI/MyStartGameWidget.h>
-
-
 #include <MyProp/UI/Killer/MyKillerMainHUD.h>
 
 #include "CoreMinimal.h"
@@ -18,6 +16,7 @@
 
 class AKiller;
 class ASurvivor;
+class AMyPlayerController;
 
 /**
  * 
@@ -48,13 +47,17 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 	int maxPlayerNum = 2;
 	AKiller* pKillerPlayer;
 	ASurvivor* pSurvivorPlayer1;
+	AMyPlayerController* Survivor1Controller;
 
 	FVector vKillerSpawnLocation = FVector(240,570,200);
 	FVector vSurvivor1SpawnLocation = FVector(240,940,200);
 
 
 public:
-	void UpdatePlayHUD(float _CurHPRatio, float _CurMPRatio);
+	void UpdatePlayHUD_Killer();
+
+	UFUNCTION(Reliable, Client)
+	void UpdatePlayHUD_Survivor(float _CurHPRatio, float _CurMPRatio);
 
 private:
 	virtual void PostLogin(APlayerController* NewPlayer) override; //로그인이 성공한뒤에 호출됨

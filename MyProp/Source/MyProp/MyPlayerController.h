@@ -5,11 +5,13 @@
 #include <MyProp/UI/MyMainHUD.h>
 //#include <MyProp/UI/MyHPBarWidget.h>
 //#include <MyProp/UI/MySPWidget.h>
+#include <MyProp/Player/Survivor/Survivor.h>
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "MyPlayerController.generated.h"
 
+class AMyPropGameModeBase;
 /**
  * 
  */
@@ -28,4 +30,9 @@ public:
 
 	UMyMainHUD* GetMainHUD(){ return m_SurvivorMainHUD; };
 
+public:
+	virtual void PlayerTick(float DeltaTime) override;
+
+	UFUNCTION(Reliable, Client)
+		void ClientM();
 };
