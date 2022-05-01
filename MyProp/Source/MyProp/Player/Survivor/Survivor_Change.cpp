@@ -2,9 +2,23 @@
 
 #include "Survivor_Change.h"
 
+
+void ASurvivor::SetBodyLocation_Implementation() {
+	SetBodyLocation_Multicast();
+}
+
+void ASurvivor::SetBodyLocation_Multicast_Implementation() {
+	SetActorLocation(FVChange);
+	SetActorRotation(FRChange);
+}
+
 //인간에서 사물로 변신
-void ASurvivor::ChangeToObject(UStaticMesh* mesh, FVector fscale)
+void ASurvivor::ChangeToObject_Implementation(UStaticMesh* mesh, FVector fscale)
 {
+	ChangeToObject_Multicast(mesh, fscale);
+}
+
+void ASurvivor::ChangeToObject_Multicast_Implementation(UStaticMesh* mesh, FVector fscale) {
 	isObject = true;
 	//플레이어 상태 변경
 	ChangeState(EPLAYER_STATE::OBJECT);
@@ -12,9 +26,12 @@ void ASurvivor::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 	FVector originalPos = GetActorLocation(); //변신 당시 원래 위치 저장
 
 	//원래 [인간형] 오브젝트 다른 곳으로 치우기 && 각도 시작과 같이 설정하기
+	//SetBodyLocation();
 	SetActorLocation(FVChange);
 	SetActorRotation(FRChange);
 
+	FString stateMessage = FString::Printf(TEXT("Survivor Body Location X: %f"), GetActorLocation().X);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, stateMessage);
 
 	//물리 끄기
 	//m_PlayerObjectPawn->m_ObjectMesh->SetSimulatePhysics(false);
@@ -47,9 +64,12 @@ void ASurvivor::ChangeToObject(UStaticMesh* mesh, FVector fscale)
 	//변신 시 캐릭터 체력 디버프
 	//[미구현]
 }
-
 //사물에서 새 사물로 변신
-void ASurvivor::ChangeObjectMesh(UStaticMesh* mesh, FVector scale)
+void ASurvivor::ChangeObjectMesh_Implementation(UStaticMesh* mesh, FVector scale)
+{
+	ChangeObjectMesh_Multicast(mesh, scale);
+}
+void ASurvivor::ChangeObjectMesh_Multicast_Implementation(UStaticMesh* mesh, FVector scale)
 {
 	if (bChangeEnable) {
 		bChangeEnable = false; //과다변신 막기
@@ -77,7 +97,11 @@ void ASurvivor::ChangeObjectMesh(UStaticMesh* mesh, FVector scale)
 }
 
 //사물에서 사람으로 변신
-void ASurvivor::ChangeToPlayer() {
+void ASurvivor::ChangeToPlayer_Implementation() {
+	ChangeToPlayer_Multicast();
+}
+
+void ASurvivor::ChangeToPlayer_Multicast_Implementation() {
 
 	if (bChangeEnable) {
 		isObject = false;

@@ -5,7 +5,6 @@
 
 void ASurvivor::UpDown(float f) {
 	Super::UpDown(f);
-
 	if (m_state == EPLAYER_STATE::OBJECT) {
 		if (f != 0 && m_PlayerObject->IsSimulatingPhysics()) {
 			m_PlayerObject->AddImpulse(FVector(fRunPower * f, 0, 0), NAME_None, true);
@@ -16,7 +15,6 @@ void ASurvivor::UpDown(float f) {
 
 void ASurvivor::LeftRight(float f) {
 	Super::LeftRight(f);
-
 	if (m_state == EPLAYER_STATE::OBJECT) {
 		if (f != 0 && m_PlayerObject->IsSimulatingPhysics()) {
 			m_PlayerObject->AddImpulse(FVector(0, fRunPower * f, 0.f), NAME_None, true);
@@ -25,9 +23,8 @@ void ASurvivor::LeftRight(float f) {
 	}
 }
 
-void ASurvivor::Jump() {
-	Super::Jump();
-
+void ASurvivor::MyJump() {
+	Super::MyJump();
 	if (m_state == EPLAYER_STATE::OBJECT) {
 		if (JumpCnt < 2 && m_PlayerObject->IsSimulatingPhysics()) {
 			JumpCnt++;

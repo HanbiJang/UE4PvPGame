@@ -88,7 +88,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 
 	//Jump
-	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyCharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyCharacter::MyJump);
 
 	//ItemBtn
 	PlayerInputComponent->BindAction(TEXT("Item1"), EInputEvent::IE_Pressed, this, &AMyCharacter::Item1);
@@ -135,7 +135,7 @@ void AMyCharacter::UpDown(float f) {
 }
 
 void AMyCharacter::LeftRight(float f) {
-	
+
 	fLeftRight = f;
 	//오른쪽, 왼쪽으로 이동
 	if (!isObject) {
@@ -163,6 +163,18 @@ void AMyCharacter::LeftRight(float f) {
 	}
 }
 
+void AMyCharacter::MyJump() {
+	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::DASH) {
+		isJumping = true;
+		UE_LOG(LogTemp, Log, TEXT("Jump"))
+		ChangeState(EPLAYER_STATE::JUMP);
+	}
+}
+
+void AMyCharacter::JumpAction() {
+	ACharacter::Jump();
+}
+
 void AMyCharacter::Dash()
 {
 
@@ -182,17 +194,7 @@ void AMyCharacter::Interaction()
 
 }
 
-void AMyCharacter::Jump() {
-	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::DASH) {
-		isJumping = true;
-		UE_LOG(LogTemp, Log, TEXT("Jump"))
-		ChangeState(EPLAYER_STATE::JUMP);
-	}
-}
 
-void AMyCharacter::JumpAction() {
-	ACharacter::Jump();
-}
 
 void AMyCharacter::Item1() {
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, TEXT("item1 used"));

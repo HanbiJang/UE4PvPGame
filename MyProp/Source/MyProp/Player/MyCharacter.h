@@ -44,10 +44,6 @@ public:
 	/// <param name="PlayerInputComponent"></param>
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//Moving
-	virtual void UpDown(float f);
-	virtual void LeftRight(float f);
-
 	//대시
 	virtual void Dash();
 	virtual void DashStop();
@@ -72,7 +68,15 @@ public:
 	void Interaction();
 
 	//Jump
-	virtual void Jump();
+	//UFUNCTION(Reliable, Server)
+	//virtual void myJump();
+
+	//변신용 이동 ==========
+	virtual void UpDown(float f);
+	virtual void LeftRight(float f);
+	virtual void MyJump();
+
+	//=======
 	void JumpAction();
 
 	//ItemBtn

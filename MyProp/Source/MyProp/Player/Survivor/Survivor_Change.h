@@ -13,4 +13,5 @@ class MYPROP_API Survivor_Change
 public:
 	Survivor_Change() {};
 	~Survivor_Change() {};
+
 };

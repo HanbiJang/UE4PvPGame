@@ -80,14 +80,28 @@ public:
 		FVector FVChange;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FRotator FRChange;
-	void ChangeToObject(UStaticMesh* mesh, FVector fscale); //사람->오브젝트 변신
-	void ChangeObjectMesh(UStaticMesh* mesh, FVector scale); //오브젝트 -> 새오브젝트 변신
+
+	UFUNCTION(Reliable, Server)
+	void ChangeToObject(UStaticMesh* myMesh, FVector fscale); //사람->오브젝트 변신
+	UFUNCTION(Reliable, NetMulticast)
+	void ChangeToObject_Multicast(UStaticMesh* myMesh, FVector fscale); //사람->오브젝트 변신
+
+	UFUNCTION(Reliable, Server)
+	void ChangeObjectMesh(UStaticMesh* myMesh, FVector scale); //오브젝트 -> 새오브젝트 변신
+	UFUNCTION(Reliable, NetMulticast)
+	void ChangeObjectMesh_Multicast(UStaticMesh* myMesh, FVector scale); //오브젝트 -> 새오브젝트 변신
+	
+	UFUNCTION(Reliable, Server)
 	void ChangeToPlayer(); //오브젝트->사람 변신
+	UFUNCTION(Reliable, NetMulticast)
+	void ChangeToPlayer_Multicast(); //오브젝트 -> 새오브젝트 변신
 
 	//변신용 이동
 	virtual void UpDown(float f) override;
 	virtual void LeftRight(float f) override;
-	virtual void Jump() override;
+	virtual void MyJump() override;
+
+
 	//이동 속도
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		float fRunPower;
@@ -145,4 +159,12 @@ public:
 	/** Event for taking damage. Overridden from APawn.*/
 	UFUNCTION(BlueprintCallable, Category = "Health")
 		float TakeDamage(float DamageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	//변신
+	UFUNCTION(Reliable, Server)
+		void SetBodyLocation();
+
+	UFUNCTION(Reliable, NetMulticast)
+		void SetBodyLocation_Multicast();
+
 };
