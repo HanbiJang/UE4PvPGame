@@ -55,6 +55,9 @@ public:
 	UPROPERTY(replicated)
 	bool isMoving;
 
+	UPROPERTY(replicated)
+		bool isJumping;
+
 	bool isDashed;
 	bool isDashPressed;
 	bool isDashEnable;

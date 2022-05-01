@@ -12,6 +12,7 @@ AMyCharacter::AMyCharacter() :
 	isDashed(false),
 	isDashPressed(false),
 	isDashEnable(true),
+	isJumping(false),
 	m_state(EPLAYER_STATE::IDLE)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -105,21 +106,23 @@ void AMyCharacter::UpDown(float f) {
 	fUpdown = f;
 
 	// 위아래로 이동
-	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
+	if (m_state == EPLAYER_STATE::CATCH || m_state == EPLAYER_STATE::DASH
+		|| m_state == EPLAYER_STATE::HIT || m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
+		|| m_state == EPLAYER_STATE::MOVE) {
 
-		if (f != 0.f && m_state != EPLAYER_STATE::JUMP /*&& !isDashed*/) {
-			if (!isDashed) ChangeState(EPLAYER_STATE::MOVE);
+		if (f != 0.f) {
+			//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
+			if (!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
 			isMoving = true;
 
 			//캐릭터 회전과 이동
 			FRotator Rotation = Controller->GetControlRotation();
 			FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
 			FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 			AddMovementInput(Direction, f);
 		}
 
-		else if (fUpdown == 0 && fLeftRight == 0) {
+		else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
 			ChangeState(EPLAYER_STATE::IDLE);
 		}
 
@@ -130,20 +133,22 @@ void AMyCharacter::LeftRight(float f) {
 	
 	fLeftRight = f;
 	//오른쪽, 왼쪽으로 이동
-	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::ATTACK && m_state != EPLAYER_STATE::RANGEATTACK) {
-		if (f != 0.f && m_state != EPLAYER_STATE::JUMP /*&& !isDashed */&& m_state != EPLAYER_STATE::RANGEATTACK) {
-			if(!isDashed) ChangeState(EPLAYER_STATE::MOVE);
+	if(m_state == EPLAYER_STATE::CATCH || m_state == EPLAYER_STATE::DASH
+	|| m_state == EPLAYER_STATE::HIT || m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
+		|| m_state == EPLAYER_STATE::MOVE){
+		if (f != 0.f) {
+			//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
+			if(!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
 			isMoving = true;
 
 			//캐릭터 회전과 이동
 			FRotator Rotation = Controller->GetControlRotation();
 			FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-
 			FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 			AddMovementInput(Direction, f);
 		}
 
-		else if (fUpdown == 0 && fLeftRight == 0) {
+		else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
 			ChangeState(EPLAYER_STATE::IDLE);
 		}
 	}
@@ -170,12 +175,10 @@ void AMyCharacter::Interaction()
 
 void AMyCharacter::Jump() {
 	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::DASH) {
+		isJumping = true;
 		UE_LOG(LogTemp, Log, TEXT("Jump"))
 		ChangeState(EPLAYER_STATE::JUMP);
 	}
-
-	//ACharacter::Jump();
-
 }
 
 void AMyCharacter::JumpAction() {
@@ -207,6 +210,8 @@ void AMyCharacter::ChangeState_Multicast_Implementation(EPLAYER_STATE newState) 
 		return;
 	}
 	//else
+	//점프에서 Idle로 돌아올 시 점프중이 아님을 알림
+	if(m_state == EPLAYER_STATE::JUMP && newState == EPLAYER_STATE::IDLE) isJumping = false;
 	m_state = newState;
 	UE_LOG(LogTemp, Log, TEXT("state: %i"), m_state);
 
@@ -222,6 +227,7 @@ void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	DOREPLIFETIME(AMyCharacter, isMoving);
 	DOREPLIFETIME(AMyCharacter, fLeftRight);
 	DOREPLIFETIME(AMyCharacter, fUpdown);
+	DOREPLIFETIME(AMyCharacter, isJumping);
 }
 
 //state값이 바뀌면 호출됨
