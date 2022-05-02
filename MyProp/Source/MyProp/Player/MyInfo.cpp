@@ -10,3 +10,4 @@ MyInfo::MyInfo()
 MyInfo::~MyInfo()
 {
 }
+

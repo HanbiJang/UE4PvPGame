@@ -5,6 +5,7 @@
 #include "Survivor_Move.h"
 #include "Survivor_Change.h"
 #include "Multi/Survivor_Multi.h"
+#include <MyProp/MyPlayerController.h>
 
 ASurvivor::ASurvivor() :
 	FVChange(0, 0, 0),
@@ -51,6 +52,9 @@ ASurvivor::ASurvivor() :
 
 void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Pressed, this, &ASurvivor::Dash); //누를때 대시 실행
+	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Released, this, &ASurvivor::DashStop); //대시 멈춤
+
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &ASurvivor::Interaction);
 
@@ -162,12 +166,12 @@ void ASurvivor::UpdateSP_Client_Implementation() {
 	{
 		// 이전 체력과 현제 체력이 다르다.
 		// HUD 갱신
-		AMyPropGameModeBase* GM = Cast<AMyPropGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+		AMyPlayerController* PC = Cast<AMyPlayerController>(this->GetInstigatorController());
 
 		float HPRatio = m_Info.fCurHP / m_Info.fMaxHP;
-		float MPRatio = m_Info.fCurSP / m_Info.fMaxSP;
-		if (GM != nullptr)
-			GM->UpdatePlayHUD_Survivor(HPRatio, MPRatio); //클라이언트에게 게임모드가 없음
+		float SPRatio = m_Info.fCurSP / m_Info.fMaxSP;
+
+		if (PC != nullptr) PC->UpdatePlayHUD_Survivor(HPRatio, SPRatio, m_Info.fCurHP, m_Info.fMaxHP);
 	}
 
 	// 현재 체력, 스태미너를 이전프레임 체력으로 갱신

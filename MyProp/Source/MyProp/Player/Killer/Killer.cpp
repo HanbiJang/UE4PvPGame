@@ -4,6 +4,7 @@
 #include "Killer.h"
 #include <DrawDebugHelpers.h>
 #include "../Survivor/Survivor.h" 
+#include <MyProp/Player/MyEffectManager.h>
 
 AKiller::AKiller():
 	bAttackEnable(true),
@@ -12,6 +13,15 @@ AKiller::AKiller():
 	//멀티플레이 - 리플리케이션 설정
 	bReplicates = true;
 	GetMesh()->SetIsReplicated(true); //스켈레탈 매시
+
+	//평타 이펙트
+	ConstructorHelpers::FObjectFinder<UParticleSystem> AttackEffectAsset(
+		TEXT("ParticleSystem'/Game/FXVarietyPack/Particles/P_ky_hit2.P_ky_hit2'"));
+	if (AttackEffectAsset.Succeeded())
+	{
+		//m_AttackEffect->SetTemplate(AttackEffectAsset.Object);
+		//m_AttackEffect->OnSystemFinished.AddDynamic(this, &AKiller::OnFinish); //재생 후 삭제
+	}
 }
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -65,45 +75,44 @@ void AKiller::AttackAction()
 	{
 		for (int i = 0; i < arrHit.Num(); i++) {
 			survivor = Cast<ASurvivor>(arrHit[i].GetActor());
+			
+			//생존자든 아니든, 맞은 부위에 이펙트 표시하기
+			FTransform trans(GetActorRotation(), arrHit[i].Location);
+			UMyEffectManager::GetInst(GetWorld())->CreateEffect(EKillerEffect::ATTACK, trans, GetLevel());
+
 			if (survivor != nullptr) { //cast 실패시 null
-				//bSurvivor = true;
 				//생존자가 맞게하기
 				UGameplayStatics::ApplyDamage(survivor,30.f,NULL,GetOwner(),NULL);
 
-				//survivor->GetInfo()->fCurHP -= 30.f;
-				FString text = FString::Printf(TEXT("Survivor HP: %f"), survivor->GetInfo()->fCurHP);
-				GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Black, text);
 				break;
 			}
 		}
-
-		//if (bSurvivor) {
-		//	//생존자가 맞게하기
-		//	for (int i = 0; i < arrHit.Num(); i++) {
-		//		//AMyMonster* m_mon = Cast<AMyMonster>(arrHit[i].GetActor());
-		//		//if (nullptr != m_mon) m_mon->HitFunc();
-		//		UE_LOG(LogTemp, Log, TEXT("Attack Hit!!"));	
-		//	}
-		//}
-		////충돌 이름 출력
-		//for (int i = 0; i < arrHit.Num(); ++i)
-		//{
-		//	UE_LOG(LogTemp, Log, TEXT("collision : %i"), arrHit.Num());
-		//	UE_LOG(LogTemp, Log, TEXT("%s"), *arrHit[i].GetActor()->GetName());
-		//}
 	}
 
 #ifdef ENABLE_DRAW_DEBUG //범위를 눈으로 확인
-	FColor color;
-	arrHit.Num() ? color = FColor::Red : color = FColor::Green;
-	DrawDebugSphere(GetWorld(), attackPos, fRadius, 12, color, false, 2.5f);
+	//FColor color;
+	//arrHit.Num() ? color = FColor::Red : color = FColor::Green;
+	//DrawDebugSphere(GetWorld(), attackPos, fRadius, 12, color, false, 2.5f);
 #endif
 
 }
 
 void AKiller::RangeAttack() {
 	ChangeState(EPLAYER_STATE::RANGEATTACK);
+	RangeAttackEffect_Server();
 }
+
+void AKiller::RangeAttackEffect_Server_Implementation() {
+	RangeAttackEffect_Multicast();
+}
+
+void AKiller::RangeAttackEffect_Multicast_Implementation() {
+	
+	//이펙트 재생	
+	FTransform trans(GetActorRotation(), GetActorLocation() - FVector(0, 0, (GetMesh()->Bounds.GetBox().GetSize().Z) / 2));
+	UMyEffectManager::GetInst(GetWorld())->CreateEffect(EKillerEffect::Q, trans, GetLevel());
+}
+
 
 void AKiller::OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult) {
 

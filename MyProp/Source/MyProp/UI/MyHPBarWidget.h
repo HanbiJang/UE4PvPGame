@@ -20,10 +20,14 @@ class MYPROP_API UMyHPBarWidget : public UUserWidget
 private:
 	UProgressBar* m_HPBar;
 	UTextBlock* m_PlayerName;
+	UTextBlock* m_CurHP;
+	UTextBlock* m_MaxHP;
 	
 public:
 	void SetHP(float _CurHPRatio);
-	void SetText(const FString& _Name);
+	void SetText_PlayerName(const FString& _Name);
+	void SetText_CurHP(const FString& _Name);
+	void SetText_MaxHP(const FString& _Name);
 
 
 public:

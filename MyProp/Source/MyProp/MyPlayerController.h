@@ -7,6 +7,9 @@
 //#include <MyProp/UI/MySPWidget.h>
 #include <MyProp/Player/Survivor/Survivor.h>
 
+#include <MyProp/UI/Killer/MyKillerMainHUD.h>
+#include <MyProp/Player/Killer/Killer.h>
+
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "MyPlayerController.generated.h"
@@ -24,15 +27,28 @@ public:
 	UFUNCTION(Client, reliable)
 		void DrawHUD_Client();
 
+	UFUNCTION(Server, reliable)
+		void DrawHUD_Server();
+
 	//HUD
 	TSubclassOf<UUserWidget> m_SurvivorMainHUDClass;
 	UMyMainHUD* m_SurvivorMainHUD;
 
 	UMyMainHUD* GetMainHUD(){ return m_SurvivorMainHUD; };
 
+	//Killer (Server) HUD
+	TSubclassOf<UUserWidget> m_KillerMainHUDClass;
+	UMyKillerMainHUD* m_KillerMainHUD;
+	UMyKillerMainHUD* GetKillerMainHUD() { return m_KillerMainHUD; };
+
 public:
 	virtual void PlayerTick(float DeltaTime) override;
 
+public:
+	UFUNCTION(Reliable, Server) //구현해야함
+		void UpdatePlayHUD_Killer(float _CurHPRatio, float _CurMPRatio);
+
 	UFUNCTION(Reliable, Client)
-		void ClientM();
+		void UpdatePlayHUD_Survivor(float _CurHPRatio, float _CurSPRatio, float _CurHP, float _MaxHP);
+
 };

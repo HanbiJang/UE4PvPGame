@@ -78,3 +78,14 @@ public:
 		float fAllHit; //[살인마] 총 입힌 피해
 
 };
+
+//킬러 공격 이펙트
+UENUM(BlueprintType)
+enum class EKillerEffect : uint8
+{
+	ATTACK,
+	Q,
+	E,
+	RIGHTCLICK,
+
+};

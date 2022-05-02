@@ -26,39 +26,32 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-	//MyCharacter에게 폰 빙의 시키기
-	AMyPropGameModeBase();
+		//MyCharacter에게 폰 빙의 시키기
+		AMyPropGameModeBase();
 
 	void BeginPlay();
 
 	//UI
-	TSubclassOf<UUserWidget>	m_MainHUDClass;
+	//TSubclassOf<UUserWidget>	m_MainHUDClass;
+	//TSubclassOf<UUserWidget>	m_KillerMainHUDClass;
+	//TSubclassOf<UUserWidget>	m_SurvivorMainHUDClass;
 
-	TSubclassOf<UUserWidget>	m_KillerMainHUDClass;
-	TSubclassOf<UUserWidget>	m_SurvivorMainHUDClass;
-
-	UMyMainHUD* m_SurvivorMainHUD;
+	//UMyMainHUD* m_SurvivorMainHUD;
 	//UMyMainHUD* GetMainHUD() { return m_SurvivorMainHUD; }
-
-	UMyKillerMainHUD* m_KillerMainHUD;
-	UMyKillerMainHUD* GetKillerMainHUD() { return m_KillerMainHUD; }
+	//UMyKillerMainHUD* m_KillerMainHUD;
+	//UMyKillerMainHUD* GetKillerMainHUD() { return m_KillerMainHUD; }
 
 	//플레이어들
 	int maxPlayerNum = 2;
 	AKiller* pKillerPlayer;
 	ASurvivor* pSurvivorPlayer1;
 	AMyPlayerController* Survivor1Controller;
+	AMyPlayerController* Killer1Controller;
 
-	FVector vKillerSpawnLocation = FVector(240,570,200);
-	FVector vSurvivor1SpawnLocation = FVector(240,940,200);
-
-
-public:
-	void UpdatePlayHUD_Killer();
-
-	UFUNCTION(Reliable, Client)
-	void UpdatePlayHUD_Survivor(float _CurHPRatio, float _CurMPRatio);
+	//플레이어 스폰 위치
+	FVector vKillerSpawnLocation = FVector(240, 570, 200);
+	FVector vSurvivor1SpawnLocation = FVector(240, 940, 200);
 
 private:
-	virtual void PostLogin(APlayerController* NewPlayer) override; //로그인이 성공한뒤에 호출됨
+	virtual void PostLogin(APlayerController* NewPlayer) override; //로그인이 성공한뒤에 호출
 };

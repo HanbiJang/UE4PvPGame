@@ -12,42 +12,17 @@
 AMyPropGameModeBase::AMyPropGameModeBase() {
 	DefaultPawnClass = nullptr;
 
-	//UI
-	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GI != nullptr) {
-		m_SurvivorMainHUDClass = GI->GetSurvivorWidgetClass();
-		m_KillerMainHUDClass = GI->GetKillerWidgetClass();
-	}
+	////UI
+	//UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	//if (GI != nullptr) {
+	//	m_SurvivorMainHUDClass = GI->GetSurvivorWidgetClass();
+	//	m_KillerMainHUDClass = GI->GetKillerWidgetClass();
+	//}
 }
 
 void AMyPropGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
-}
-
-void AMyPropGameModeBase::UpdatePlayHUD_Survivor_Implementation(float _CurHPRatio, float _CurSPRatio) {
-
-	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GI != nullptr) {
-		if (GI->GetSelectType() == EPLAYER_TYPE::SURVIVOR) {
-			//체력 UI
-			UMyHPBarWidget* pHPHUD = m_SurvivorMainHUD->GetHPHUD();
-
-			//스테미나 UI
-			UMySPWidget* pSPHUD = m_SurvivorMainHUD->GetSPHUD();
-
-			if (pHPHUD) {
-				pHPHUD->SetHP(_CurHPRatio);
-				pHPHUD->SetText(TEXT("Survivor 1"));
-			}
-			if (pSPHUD) {
-				pSPHUD->SetSP(_CurSPRatio);
-			}
-		}
-		else {
-
-		}
-	}
 }
 
 void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {
@@ -78,15 +53,10 @@ void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {
 			pKillerPlayer = GetWorld()->SpawnActor<AKiller>(GI->GetKiller(), vKillerSpawnLocation, FRotator(0, 0, 0), spawnInfo);
 			GetWorld()->GetFirstPlayerController()->Possess(pKillerPlayer); //서버 캐릭터 설정
 
-			//UI 설정
-			m_KillerMainHUD = Cast<UMyKillerMainHUD>(CreateWidget(GetWorld(), m_KillerMainHUDClass));
-			if (nullptr != m_KillerMainHUD) m_KillerMainHUD->AddToViewport();
-
-			// InputMode 설정
-			APlayerController* Controller = GetWorld()->GetFirstPlayerController();
-			FInputModeGameAndUI mode;
-			Controller->SetInputMode(mode);
-			Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
+			//HUD 설정 
+			Killer1Controller = Cast<AMyPlayerController>(NewPlayer);
+			if (Killer1Controller != nullptr)
+				Killer1Controller->DrawHUD_Server();
 		}
 		else if (GI->iPlayerCnt == 2) { //클라이언트 - 생존자 캐릭터 설정
 			pSurvivorPlayer1 = GetWorld()->SpawnActor<ASurvivor>(GI->GetSurvivor(), vSurvivor1SpawnLocation, FRotator(0, 0, 0), spawnInfo);

@@ -1,10 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include <MyProp/Player/MyInfo.h>
+
 #include <Engine/DataTable.h>
 #include "CoreMinimal.h"
 #include "../MyCharacter.h"
 #include "Killer.generated.h"
+
 
 class ASurvivor;
 /**
@@ -51,4 +54,14 @@ private:
 	FTimerHandle FAttackTimer; //공격 타이머
 	void SetAttackEnable(){ bAttackEnable = true; }
 	float attackSpeed;
+
+	//attack effect
+	UParticleSystem* m_AttackEffect;
+
+private:
+	UFUNCTION(Reliable, Server)
+		void RangeAttackEffect_Server();
+	UFUNCTION(Reliable, NetMulticast)
+		void RangeAttackEffect_Multicast();
 };
+
