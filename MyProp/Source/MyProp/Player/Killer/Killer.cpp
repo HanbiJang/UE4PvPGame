@@ -100,9 +100,7 @@ void AKiller::RangeAttack() {
 
 		//rangeAttackSpeed초 뒤에 Timer 켜기
 		GetWorld()->GetTimerManager().SetTimer(FRangeAttackTimer, this, &AKiller::SetRangeAttackEnable, rangeAttackSpeed, false);
-	}
-
-	
+	}	
 }
 
 void AKiller::RangeAttackAction() {
@@ -125,8 +123,10 @@ void AKiller::RangeAttackAction() {
 			survivor = Cast<ASurvivor>(arrHit[i].GetActor());
 
 			//생존자든 아니든, 맞은 부위에 이펙트 표시하기
-			FTransform trans(GetActorRotation(), arrHit[i].Location);
+			FTransform trans(GetActorRotation(), arrHit[i].ImpactPoint);
 			UMyEffectManager::GetInst(GetWorld())->CreateEffect(EKillerEffect::ATTACK, trans, GetLevel());
+
+			UE_LOG(LogTemp, Log, TEXT("%s"), *(arrHit[i].GetActor()->GetName()) );
 
 			if (survivor != nullptr) { //cast 실패시 null
 				//생존자가 맞게하기
