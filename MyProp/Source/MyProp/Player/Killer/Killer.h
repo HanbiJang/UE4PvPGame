@@ -46,14 +46,23 @@ public:
 
 public:
 	void RangeAttack();
+	void RangeAttackAction(); //실제 구현부
 	void Attack();
 	void AttackAction();
 
 private:
+	//공격 쿨타임 관련
+	//[1] 평타
 	bool bAttackEnable;
 	FTimerHandle FAttackTimer; //공격 타이머
 	void SetAttackEnable(){ bAttackEnable = true; }
 	float attackSpeed;
+
+	//[2] Q공격
+	bool bRangeAttackEnable;
+	FTimerHandle FRangeAttackTimer; //공격 타이머
+	void SetRangeAttackEnable() { bRangeAttackEnable = true; }
+	float rangeAttackSpeed;
 
 	//attack effect
 	UParticleSystem* m_AttackEffect;

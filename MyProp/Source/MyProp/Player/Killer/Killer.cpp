@@ -8,20 +8,13 @@
 
 AKiller::AKiller():
 	bAttackEnable(true),
-	attackSpeed(2.f)
+	attackSpeed(2.f),
+	rangeAttackSpeed(5.f),
+	bRangeAttackEnable(true)
 {
 	//멀티플레이 - 리플리케이션 설정
 	bReplicates = true;
 	GetMesh()->SetIsReplicated(true); //스켈레탈 매시
-
-	//평타 이펙트
-	ConstructorHelpers::FObjectFinder<UParticleSystem> AttackEffectAsset(
-		TEXT("ParticleSystem'/Game/FXVarietyPack/Particles/P_ky_hit2.P_ky_hit2'"));
-	if (AttackEffectAsset.Succeeded())
-	{
-		//m_AttackEffect->SetTemplate(AttackEffectAsset.Object);
-		//m_AttackEffect->OnSystemFinished.AddDynamic(this, &AKiller::OnFinish); //재생 후 삭제
-	}
 }
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -98,8 +91,57 @@ void AKiller::AttackAction()
 }
 
 void AKiller::RangeAttack() {
-	ChangeState(EPLAYER_STATE::RANGEATTACK);
-	RangeAttackEffect_Server();
+	//공격 모션
+	if (bRangeAttackEnable) {
+		ChangeState(EPLAYER_STATE::RANGEATTACK);
+		bRangeAttackEnable = false;
+
+		RangeAttackEffect_Server(); //시전 이펙트
+
+		//rangeAttackSpeed초 뒤에 Timer 켜기
+		GetWorld()->GetTimerManager().SetTimer(FRangeAttackTimer, this, &AKiller::SetRangeAttackEnable, rangeAttackSpeed, false);
+	}
+
+	
+}
+
+void AKiller::RangeAttackAction() {
+
+	//공격 (충돌) Trace 채널을 이용한 범위 체크	
+	float fRadius = 300.f; //구의 크기
+	FVector attackPos = GetActorLocation();
+	ASurvivor* survivor;
+
+	TArray<FHitResult> arrHit; //충돌 결과
+	FCollisionQueryParams param(NAME_None, false, this);
+	//레이
+	GetWorld()->SweepMultiByChannel(arrHit, attackPos, attackPos, FQuat::Identity
+		, ECC_GameTraceChannel3/*Attack Trace Channel*/
+		, FCollisionShape::MakeSphere(fRadius), param);
+
+	if (arrHit.Num())
+	{
+		for (int i = 0; i < arrHit.Num(); i++) {
+			survivor = Cast<ASurvivor>(arrHit[i].GetActor());
+
+			//생존자든 아니든, 맞은 부위에 이펙트 표시하기
+			FTransform trans(GetActorRotation(), arrHit[i].Location);
+			UMyEffectManager::GetInst(GetWorld())->CreateEffect(EKillerEffect::ATTACK, trans, GetLevel());
+
+			if (survivor != nullptr) { //cast 실패시 null
+				//생존자가 맞게하기
+				UGameplayStatics::ApplyDamage(survivor, 5.f, NULL, GetOwner(), NULL);
+				break;
+			}
+		}
+	}
+
+#ifdef ENABLE_DRAW_DEBUG //범위를 눈으로 확인
+	FColor color;
+	arrHit.Num() ? color = FColor::Red : color = FColor::Green;
+	DrawDebugSphere(GetWorld(), attackPos, fRadius, 12, color, false, 2.5f);
+#endif
+
 }
 
 void AKiller::RangeAttackEffect_Server_Implementation() {
