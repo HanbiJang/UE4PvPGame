@@ -25,9 +25,13 @@ enum class EPLAYER_STATE : uint8
 
 	//킬러 전용
 	ATTACK,
-	RANGEATTACK, //범위 공격
+	RANGEATTACK, //범위 공격 Q버튼
 	CATCH, //생존자를 끌고가기
 	LOCK, //최면의자에 묶기
+	//+)
+	RCATTACK,
+	EATTACK,
+	EATTACK_,
 };
 
 UENUM(BlueprintType)

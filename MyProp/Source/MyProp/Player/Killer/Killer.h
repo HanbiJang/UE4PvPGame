@@ -45,10 +45,16 @@ public:
 	//Q 공격
 
 public:
+	//무기
+	UStaticMeshComponent* m_Weapon;
+	UStaticMesh* BasicWeaponMesh;
+
 	void RangeAttack();
 	void RangeAttackAction(); //실제 구현부
 	void Attack();
 	void AttackAction();
+	void RCAttack();
+	void RCAttackAction(); //실제 구현부
 
 private:
 	//공격 쿨타임 관련
@@ -63,6 +69,12 @@ private:
 	FTimerHandle FRangeAttackTimer; //공격 타이머
 	void SetRangeAttackEnable() { bRangeAttackEnable = true; }
 	float rangeAttackSpeed;
+
+	//[3] 우클릭 공격
+	bool bRCAttackEnable;
+	FTimerHandle FRCAttackTimer; //공격 타이머
+	void SetRCAttackEnable() { bRCAttackEnable = true; }
+	float rCAttackSpeed;
 
 	//attack effect
 	UParticleSystem* m_AttackEffect;

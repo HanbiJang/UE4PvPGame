@@ -10,11 +10,24 @@ AKiller::AKiller():
 	bAttackEnable(true),
 	attackSpeed(2.f),
 	rangeAttackSpeed(5.f),
-	bRangeAttackEnable(true)
+	bRangeAttackEnable(true),
+	rCAttackSpeed(3.f),
+	bRCAttackEnable(true)
+
 {
 	//멀티플레이 - 리플리케이션 설정
 	bReplicates = true;
 	GetMesh()->SetIsReplicated(true); //스켈레탈 매시
+
+	//칼들고 있게 하기
+	m_Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	m_Weapon->SetupAttachment(GetMesh(), TEXT("hand_r_weapon"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh> BasicWeapon(TEXT("StaticMesh'/Game/PolygonPrototype/Meshes/Props/SM_Prop_Knife_01.SM_Prop_Knife_01'"));
+
+	if (BasicWeapon.Succeeded()) {
+		BasicWeaponMesh = BasicWeapon.Object;
+		m_Weapon->SetStaticMesh(BasicWeaponMesh);
+	}	
 }
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -25,6 +38,8 @@ void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &AKiller::Attack);
 	// Q키 - 범위 공격
 	PlayerInputComponent->BindAction(TEXT("Q"), EInputEvent::IE_Pressed, this, &AKiller::RangeAttack);
+	// 우클릭 - 투척 공격
+	PlayerInputComponent->BindAction(TEXT("RCAttack"), EInputEvent::IE_Pressed, this, &AKiller::RCAttack);
 }
 
 void AKiller::BeginPlay() {
@@ -141,6 +156,22 @@ void AKiller::RangeAttackAction() {
 	arrHit.Num() ? color = FColor::Red : color = FColor::Green;
 	DrawDebugSphere(GetWorld(), attackPos, fRadius, 12, color, false, 2.5f);
 #endif
+
+}
+
+void AKiller::RCAttack() {
+	//공격 모션
+	if (bRCAttackEnable) {
+		ChangeState(EPLAYER_STATE::RCATTACK);
+		bRCAttackEnable = false;
+
+		//attackSpeed초 뒤에 Timer 켜기
+		GetWorld()->GetTimerManager().SetTimer(FRCAttackTimer, this, &AKiller::SetRCAttackEnable, rCAttackSpeed, false);
+	}
+}
+void AKiller::RCAttackAction() {
+	//실제 구현부
+	//투사체 소환, 투사체가 날아가서 생존자 맞기 판정
 
 }
 
