@@ -35,6 +35,9 @@ void AMyEffect::BeginPlay()
 	case EKillerEffect::RIGHTCLICK:
 		ParticleAsset = LoadObject<UParticleSystem>(GetWorld(), TEXT(""));
 		break;
+	case EKillerEffect::PARTICLEHIT:
+		ParticleAsset = LoadObject<UParticleSystem>(GetWorld(), TEXT("ParticleSystem'/Game/Blueprints/Killer/Projectile/P_ky_ThunderBallHit_NoThunder.P_ky_ThunderBallHit_NoThunder'"));
+		break;
 	}
 
 	if (nullptr != ParticleAsset)

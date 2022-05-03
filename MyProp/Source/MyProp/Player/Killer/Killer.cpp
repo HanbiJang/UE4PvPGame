@@ -5,6 +5,7 @@
 #include <DrawDebugHelpers.h>
 #include "../Survivor/Survivor.h" 
 #include <MyProp/Player/MyEffectManager.h>
+#include <MyProp/Player/Killer/KillerRCProjectile.h>
 
 AKiller::AKiller():
 	bAttackEnable(true),
@@ -28,6 +29,14 @@ AKiller::AKiller():
 		BasicWeaponMesh = BasicWeapon.Object;
 		m_Weapon->SetStaticMesh(BasicWeaponMesh);
 	}	
+
+	//투사체 블루프린트 설정 
+	ConstructorHelpers::FClassFinder<AMyProjectile> BPProjectile(
+		TEXT("Blueprint'/Game/Blueprints/Killer/Projectile/BP_KillerRCAttackProjectile.BP_KillerRCAttackProjectile_C'"));
+
+	if (BPProjectile.Succeeded()) {
+		m_RCAttackProjectile = BPProjectile.Class;
+	}
 }
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -172,6 +181,24 @@ void AKiller::RCAttack() {
 void AKiller::RCAttackAction() {
 	//실제 구현부
 	//투사체 소환, 투사체가 날아가서 생존자 맞기 판정
+
+	// 투사체 생성
+	FActorSpawnParameters SpawnParam = {};
+	SpawnParam.OverrideLevel = GetLevel();
+	SpawnParam.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParam.bDeferConstruction = true;
+
+	//블루프린트로 투사체 설정
+	if (m_RCAttackProjectile != nullptr) {
+		AKillerRCProjectile* pRCAttackProjectile = GetWorld()->SpawnActor<AKillerRCProjectile>(m_RCAttackProjectile
+			, GetActorLocation() + GetActorForwardVector() * 50.f
+			, GetActorForwardVector().Rotation()
+			, SpawnParam);
+		if (pRCAttackProjectile != nullptr) {
+			// begin play 호출
+			pRCAttackProjectile->FinishSpawning(pRCAttackProjectile->GetTransform());
+		}
+	}
 
 }
 

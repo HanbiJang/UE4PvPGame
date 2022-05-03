@@ -2,6 +2,7 @@
 
 #pragma once
 #include <MyProp/Player/MyInfo.h>
+#include <MyProp/Player/Killer/MyProjectile.h>
 
 #include <Engine/DataTable.h>
 #include "CoreMinimal.h"
@@ -46,6 +47,7 @@ public:
 
 public:
 	//무기
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* m_Weapon;
 	UStaticMesh* BasicWeaponMesh;
 
@@ -71,6 +73,8 @@ private:
 	float rangeAttackSpeed;
 
 	//[3] 우클릭 공격
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AMyProjectile> m_RCAttackProjectile; //우클공격 파티클
 	bool bRCAttackEnable;
 	FTimerHandle FRCAttackTimer; //공격 타이머
 	void SetRCAttackEnable() { bRCAttackEnable = true; }

@@ -87,5 +87,6 @@ enum class EKillerEffect : uint8
 	Q,
 	E,
 	RIGHTCLICK,
+	PARTICLEHIT,
 
 };

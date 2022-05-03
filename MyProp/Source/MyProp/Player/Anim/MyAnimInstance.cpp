@@ -67,3 +67,11 @@ void UMyAnimInstance::AnimNotify_RangeAttackAction() {
 		pKiller->RangeAttackAction();
 	}
 }
+
+void UMyAnimInstance::AnimNotify_RCAttackAction() {
+	AKiller* pKiller = Cast<AKiller>(TryGetPawnOwner());
+
+	if (nullptr != pKiller) {
+		pKiller->RCAttackAction();
+	}
+}

@@ -47,6 +47,9 @@ public:
 		void AnimNotify_RangeAttackAction();
 
 	UFUNCTION()
+		void AnimNotify_RCAttackAction();
+
+	UFUNCTION()
 		void AnimNotify_DoNotThing() {};
 
 };
