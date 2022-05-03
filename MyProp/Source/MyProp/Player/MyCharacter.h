@@ -76,12 +76,31 @@ public:
 	virtual void LeftRight(float f);
 	virtual void MyJump();
 
-	//=======
-	void JumpAction();
+protected:
+	//서버
+	UFUNCTION(Reliable, Server)
+		virtual void UpDown_Server(float f);
+	UFUNCTION(Reliable, Server)
+		virtual void LeftRight_Server(float f);
+	UFUNCTION(Reliable, Server)
+		virtual void MyJump_Server();
 
+	//멀티캐스트
+	UFUNCTION(Reliable, NetMulticast)
+		virtual void UpDown_Multicast(float f);
+	UFUNCTION(Reliable, NetMulticast)
+		virtual void LeftRight_Multicast(float f);
+	UFUNCTION(Reliable, NetMulticast)
+		virtual void MyJump_Multicast();
+
+	//=======	
+	
 	//ItemBtn
 	void Item1();
 	void Item2();
+
+public:
+	void JumpAction();
 
 private:
 	float jumpCntTime = 0.f; //점프 할 때마다 시간을 잰다 

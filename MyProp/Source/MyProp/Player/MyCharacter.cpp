@@ -81,10 +81,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	//Moving
-
 	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &AMyCharacter::UpDown);
 	PlayerInputComponent->BindAxis(TEXT("LeftRight"),this, &AMyCharacter::LeftRight);
-
 
 	//Jump
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AMyCharacter::MyJump);
@@ -103,6 +101,89 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 }
 
 void AMyCharacter::UpDown(float f) {
+	UpDown_Server(f);
+	//fUpdown = f;
+
+	//// 위아래로 이동
+	//if (!isObject) {
+	//	if (m_state == EPLAYER_STATE::CATCH || m_state == EPLAYER_STATE::DASH
+	//		|| m_state == EPLAYER_STATE::HIT || m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
+	//		|| m_state == EPLAYER_STATE::MOVE) {
+
+	//		if (f != 0.f) {
+	//			//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
+	//			if (!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
+	//			isMoving = true;
+
+	//			//캐릭터 회전과 이동
+	//			FRotator Rotation = Controller->GetControlRotation();
+	//			FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+	//			FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	//			AddMovementInput(Direction, f);
+	//		}
+
+	//		else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
+	//			if (m_state != EPLAYER_STATE::IDLE) {
+	//				ChangeState(EPLAYER_STATE::IDLE);
+	//			}
+	//		}
+
+	//	}
+	//}
+}
+
+void AMyCharacter::LeftRight(float f) {
+	LeftRight_Server(f);
+	//fLeftRight = f;
+	////오른쪽, 왼쪽으로 이동
+	//if (!isObject) {
+	//	if (m_state == EPLAYER_STATE::CATCH || m_state == EPLAYER_STATE::DASH
+	//		|| m_state == EPLAYER_STATE::HIT || m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
+	//		|| m_state == EPLAYER_STATE::MOVE) {
+	//		if (f != 0.f) {
+	//			//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
+	//			if (!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
+	//			isMoving = true;
+
+	//			//캐릭터 회전과 이동
+	//			FRotator Rotation = Controller->GetControlRotation();
+	//			FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+	//			FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	//			AddMovementInput(Direction, f);
+	//		}
+
+	//		else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
+	//			if (m_state != EPLAYER_STATE::IDLE) {
+	//				ChangeState(EPLAYER_STATE::IDLE);
+	//			}
+	//		}
+	//	}
+	//}
+}
+
+void AMyCharacter::MyJump() {
+	MyJump_Server();
+
+	//if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::DASH) {
+	//	isJumping = true;
+	//	UE_LOG(LogTemp, Log, TEXT("Jump"))
+	//	ChangeState(EPLAYER_STATE::JUMP);
+	//}
+}
+
+//서버
+void AMyCharacter::UpDown_Server_Implementation(float f) {
+	UpDown_Multicast(f);
+}
+void AMyCharacter::LeftRight_Server_Implementation(float f) {
+	LeftRight_Multicast(f);
+}
+void AMyCharacter::MyJump_Server_Implementation() {
+	MyJump_Multicast();
+}
+
+//멀티캐스트
+void AMyCharacter::UpDown_Multicast_Implementation(float f) {
 	fUpdown = f;
 
 	// 위아래로 이동
@@ -117,10 +198,12 @@ void AMyCharacter::UpDown(float f) {
 				isMoving = true;
 
 				//캐릭터 회전과 이동
-				FRotator Rotation = Controller->GetControlRotation();
-				FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-				FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-				AddMovementInput(Direction, f);
+				if (GetInstigatorController() != nullptr) {
+					FRotator Rotation = GetInstigatorController()->GetControlRotation();
+					FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+					FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+					AddMovementInput(Direction, f);
+				}
 			}
 
 			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
@@ -132,9 +215,7 @@ void AMyCharacter::UpDown(float f) {
 		}
 	}
 }
-
-void AMyCharacter::LeftRight(float f) {
-
+void AMyCharacter::LeftRight_Multicast_Implementation(float f) {
 	fLeftRight = f;
 	//오른쪽, 왼쪽으로 이동
 	if (!isObject) {
@@ -147,10 +228,12 @@ void AMyCharacter::LeftRight(float f) {
 				isMoving = true;
 
 				//캐릭터 회전과 이동
-				FRotator Rotation = Controller->GetControlRotation();
-				FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-				FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-				AddMovementInput(Direction, f);
+				if (GetInstigatorController() != nullptr) {
+					FRotator Rotation = /*Controller->GetControlRotation(); */GetInstigatorController()->GetControlRotation();
+					FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+					FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+					AddMovementInput(Direction, f);
+				}
 			}
 
 			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
@@ -161,12 +244,11 @@ void AMyCharacter::LeftRight(float f) {
 		}
 	}
 }
-
-void AMyCharacter::MyJump() {
+void AMyCharacter::MyJump_Multicast_Implementation(){
 	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::DASH) {
 		isJumping = true;
 		UE_LOG(LogTemp, Log, TEXT("Jump"))
-		ChangeState(EPLAYER_STATE::JUMP);
+			ChangeState(EPLAYER_STATE::JUMP);
 	}
 }
 

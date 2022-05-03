@@ -105,20 +105,14 @@ public:
 	virtual void MyJump() override;
 
 	//오브젝트용 이동 (서버에서만 동작)
-	UFUNCTION(Reliable, Server)
-		virtual void UpDown_Server(float f);
-	UFUNCTION(Reliable, Server)
-		virtual void LeftRight_Server(float f);
-	UFUNCTION(Reliable, Server)
-		virtual void MyJump_Server();
+	virtual void UpDown_Server(float f) override;
+	virtual void LeftRight_Server(float f) override;
+	virtual void MyJump_Server() override;
 
 	//오브젝트용 이동 (서버, 클라이언트 동시 동작)
-	UFUNCTION(Reliable, NetMulticast)
-	virtual void UpDown_Multicast(float f);
-	UFUNCTION(Reliable, NetMulticast)
-	virtual void LeftRight_Multicast(float f);
-	UFUNCTION(Reliable, NetMulticast)
-	virtual void MyJump_Multicast();
+	virtual void UpDown_Multicast(float f) override;
+	virtual void LeftRight_Multicast(float f) override;
+	virtual void MyJump_Multicast() override;
 
 	//이동 속도
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
