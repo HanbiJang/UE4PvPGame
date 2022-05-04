@@ -7,6 +7,8 @@
 #include "MyCharacterState.h"
 #include "../MyGameInstance.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
 //멀티플레이
 #include "Engine/Engine.h"
 #include "Net/UnrealNetwork.h"
@@ -75,6 +77,10 @@ public:
 	virtual void UpDown(float f);
 	virtual void LeftRight(float f);
 	virtual void MyJump();
+
+	//카메라
+	virtual void Turn(float f);
+	virtual void LookUp(float f);
 
 	//=======
 	void JumpAction();

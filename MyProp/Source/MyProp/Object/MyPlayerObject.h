@@ -36,7 +36,8 @@ public:
 	
 	//플레이어를 변신 시킨다 (블루프린트에서 부른다)
 	UFUNCTION(BlueprintCallable, Category = "PlayerObject")
-		void ChangePlayerToObject();
+		void ChangePlayerToObject(ASurvivor* pCharacter);
 
-
+	//UFUNCTION(BlueprintCallable, Category = "PlayerObject")
+	//	bool bChanableObject = true;
 };

@@ -31,7 +31,6 @@ void AMyPlayerObject::BeginPlay()
 void AMyPlayerObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 float MyGetDistance(FVector a, FVector b) {
@@ -40,10 +39,8 @@ float MyGetDistance(FVector a, FVector b) {
 }
 
 //(클릭한 대상) 플레이어, 오브젝트를 폰으로 빙의 시킨다
-void AMyPlayerObject::ChangePlayerToObject()
+void AMyPlayerObject::ChangePlayerToObject(ASurvivor* pCharacter)
 {
-	//[플레이어 -> 오브젝트] 월드에서 플레이어 pawn 인 녀석을 가져오기
-	ASurvivor* pCharacter = Cast<ASurvivor>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 
 	if (nullptr != pCharacter)
 	{	
@@ -52,8 +49,8 @@ void AMyPlayerObject::ChangePlayerToObject()
 			//거리가 근처일 때만 실행하기
 			//GetDistanceTo(this) : 이 오브젝트와 플레이어 캐릭터의 거리
 			//MyCharacter 안에 있는 오브젝트 빙의 함수를 실행, 오브젝트의 매시와 스케일 크기를 넘긴다
-			if (pCharacter->GetDistanceTo(this) < 400) {
-				pCharacter->ChangeToObject(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
+			if (pCharacter->GetDistanceTo(this) < 500) {
+				pCharacter->ChangeToObject(/*m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D()*/);
 			}
 		}
 		else 
@@ -61,7 +58,7 @@ void AMyPlayerObject::ChangePlayerToObject()
 			if (pCharacter->m_PlayerObject->GetStaticMesh() != m_Mesh->GetStaticMesh())
 			{
 				if (MyGetDistance(pCharacter->m_PlayerObject->GetRelativeLocation(), GetActorLocation()) < 400)
-					pCharacter->ChangeObjectMesh(m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D());
+					pCharacter->ChangeObjectMesh(/*m_Mesh->GetStaticMesh(), m_Mesh->GetRelativeScale3D()*/);
 			}
 		}		
 	}

@@ -6,11 +6,12 @@
 #include "Survivor_Change.h"
 #include "Multi/Survivor_Multi.h"
 #include <MyProp/MyPlayerController.h>
+#include <MyProp/Object/MyPlayerObject.h>
 
 ASurvivor::ASurvivor() :
 	FVChange(0, 0, 0),
 	fRunPower(5),
-	bChangeEnable(false),
+	bChangeEnable(true),
 	fJumpPower(500),
 	FRChange(0, 0, 0),
 	fRoPower(0.1f),
@@ -45,8 +46,8 @@ ASurvivor::ASurvivor() :
 
 	//멀티플레이 리플리케이션 설정
 	bReplicates = true;
-	GetMesh()->SetIsReplicated(true); //스켈레탈 매시
-	m_PlayerObject->SetIsReplicated(true); //사물 매시
+	//GetMesh()->SetIsReplicated(true); //스켈레탈 매시
+	//m_PlayerObject->SetIsReplicated(true); //사물 매시
 
 }
 
@@ -57,6 +58,9 @@ void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &ASurvivor::Interaction);
+
+	//사물폼 변신 
+	PlayerInputComponent->BindAction(TEXT("Change"), EInputEvent::IE_Pressed, this, &ASurvivor::ChangeToObject);
 
 	//인간폼 변신
 	PlayerInputComponent->BindAction(TEXT("PlayerObject"), EInputEvent::IE_Pressed, this, &ASurvivor::ChangeToPlayer);
@@ -114,6 +118,11 @@ void ASurvivor::BeginPlay() {
 
 void ASurvivor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+
+	//레이캐스트로 변신가능 오브젝트 판별
+	SelectObject();
+
+	//====================
 
 	//스태미너 업데이트
 	UpdateSP();

@@ -17,11 +17,18 @@ void AMyPlayerController::DrawHUD_Client_Implementation() {
 		if (nullptr != m_SurvivorMainHUD) m_SurvivorMainHUD->AddToViewport();
 	}
 
+	//// InputMode 설정
+	//APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	//FInputModeGameAndUI mode;
+	//Controller->SetInputMode(mode); //변경필요
+	//Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
+
 	// InputMode 설정
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
-	FInputModeGameAndUI mode;
+	//FInputModeGameAndUI mode;
+	FInputModeGameOnly mode; //UI 클릭 불가
 	Controller->SetInputMode(mode); //변경필요
-	Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
+	//Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
 }
 
 void AMyPlayerController::PlayerTick(float DeltaTime) {
@@ -43,9 +50,10 @@ void AMyPlayerController::DrawHUD_Server_Implementation() {
 
 	// InputMode 설정
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
-	FInputModeGameAndUI mode;
+	//FInputModeGameAndUI mode;
+	FInputModeGameOnly mode; //UI 클릭 불가
 	Controller->SetInputMode(mode);
-	Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
+	//Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
 }
 
 

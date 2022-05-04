@@ -14,6 +14,7 @@
 class Survivor_Move; 
 class Survivor_Change;
 class Survivor_Multi;
+class AMyPlayerObject;
 
 /**
  * 
@@ -78,6 +79,13 @@ public:
 	bool bChangeEnable;
 	void SetbChangeEnableTrue() { bChangeEnable = true; }
 
+	//3인칭 변신 (사물 선택 레이캐스트)
+	void SelectObject();
+
+	bool isChangableObject = false;
+	bool isChangableObjectSelected = false;
+	AMyPlayerObject* pPlayerObject;
+
 	//변신 초기화 각도, 초기화 위치
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FVector FVChange;
@@ -85,14 +93,14 @@ public:
 		FRotator FRChange;
 
 	UFUNCTION(Reliable, Server)
-	void ChangeToObject(UStaticMesh* myMesh, FVector fscale); //사람->오브젝트 변신
+	void ChangeToObject(/*UStaticMesh* myMesh, FVector fscale*/); //사람->오브젝트 변신
 	UFUNCTION(Reliable, NetMulticast)
-	void ChangeToObject_Multicast(UStaticMesh* myMesh, FVector fscale); //사람->오브젝트 변신
+	void ChangeToObject_Multicast(/*UStaticMesh* myMesh, FVector fscale*/); //사람->오브젝트 변신
 
 	UFUNCTION(Reliable, Server)
-	void ChangeObjectMesh(UStaticMesh* myMesh, FVector scale); //오브젝트 -> 새오브젝트 변신
+	void ChangeObjectMesh(/*UStaticMesh* myMesh, FVector scale*/); //오브젝트 -> 새오브젝트 변신
 	UFUNCTION(Reliable, NetMulticast)
-	void ChangeObjectMesh_Multicast(UStaticMesh* myMesh, FVector scale); //오브젝트 -> 새오브젝트 변신
+	void ChangeObjectMesh_Multicast(/*UStaticMesh* myMesh, FVector scale*/); //오브젝트 -> 새오브젝트 변신
 	
 	UFUNCTION(Reliable, Server)
 	void ChangeToPlayer(); //오브젝트->사람 변신

@@ -41,9 +41,11 @@ AMyCharacter::AMyCharacter() :
 	m_Arm->SetupAttachment(RootComponent); //컴포넌트에 카메라 붙이기
 
 	//카메라 위치 세팅
-	m_Arm->TargetArmLength = 800.f;
-	m_Arm->TargetOffset = FVector(300, 0, 500);
-	m_Cam->SetWorldRotation(FRotator(-50, 0, 0));
+	//m_Arm->TargetArmLength = 800.f;
+	//m_Arm->TargetOffset = FVector(300, 0, 500);
+	//m_Cam->SetWorldRotation(FRotator(-50, 0, 0));
+	m_Arm->TargetArmLength = 300.f;
+	m_Arm->TargetOffset = FVector(0, 0, 40);
 	m_Cam->SetupAttachment(m_Arm, USpringArmComponent::SocketName); //카메라암에 카메라 붙이기
 
 	m_Arm->bUsePawnControlRotation = true;
@@ -81,7 +83,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	//Moving
-
 	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &AMyCharacter::UpDown);
 	PlayerInputComponent->BindAxis(TEXT("LeftRight"),this, &AMyCharacter::LeftRight);
 
@@ -93,6 +94,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction(TEXT("Item1"), EInputEvent::IE_Pressed, this, &AMyCharacter::Item1);
 	PlayerInputComponent->BindAction(TEXT("Item2"), EInputEvent::IE_Pressed, this, &AMyCharacter::Item2);
 
+	//camera
+	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &AMyCharacter::Turn);
+	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AMyCharacter::LookUp);
 
 	//상호작용
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &AMyCharacter::Interaction);
@@ -100,6 +104,14 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	// 살인마 (공격 스킬 추가)
 	// 생존자 (Interaction 추가)
 
+}
+
+void AMyCharacter::Turn(float f) {
+	AddControllerYawInput(f);
+}
+
+void AMyCharacter::LookUp(float f) {
+	AddControllerPitchInput(f);
 }
 
 void AMyCharacter::UpDown(float f) {
@@ -110,27 +122,28 @@ void AMyCharacter::UpDown(float f) {
 		if (m_state == EPLAYER_STATE::CATCH || m_state == EPLAYER_STATE::DASH
 			|| m_state == EPLAYER_STATE::HIT || m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
 			|| m_state == EPLAYER_STATE::MOVE) {
-
 			if (f != 0.f) {
 				//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
 				if (!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
 				isMoving = true;
-
 				//캐릭터 회전과 이동
-				FRotator Rotation = Controller->GetControlRotation();
-				FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-				FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-				AddMovementInput(Direction, f);
-			}
+				//FRotator Rotation = Controller->GetControlRotation();
+				//FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+				//FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+				//AddMovementInput(Direction, f);
 
+				FRotator r = FRotator(0, GetControlRotation().Yaw, 0);
+				//GetForwardVector: r만큼 월드 정방향 벡터를 회전
+				AddMovementInput(UKismetMathLibrary::GetForwardVector(r), f);
+			}
 			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
 				if (m_state != EPLAYER_STATE::IDLE) {
 					ChangeState(EPLAYER_STATE::IDLE);
 				}
 			}
-
 		}
 	}
+
 }
 
 void AMyCharacter::LeftRight(float f) {
@@ -147,10 +160,14 @@ void AMyCharacter::LeftRight(float f) {
 				isMoving = true;
 
 				//캐릭터 회전과 이동
-				FRotator Rotation = Controller->GetControlRotation();
-				FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-				FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-				AddMovementInput(Direction, f);
+				//FRotator Rotation = Controller->GetControlRotation();
+				//FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
+				//FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+				//AddMovementInput(Direction, f);
+
+				FRotator r = FRotator(0, GetControlRotation().Yaw, 0);
+				//GetForwardVector: r만큼 월드 정방향 벡터를 회전
+				AddMovementInput(UKismetMathLibrary::GetRightVector(r), f);
 			}
 
 			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
