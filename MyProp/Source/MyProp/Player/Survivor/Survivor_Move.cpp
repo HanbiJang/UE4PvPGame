@@ -22,8 +22,14 @@ void ASurvivor::MyJump() {
 void ASurvivor::UpDown_Multicast_Implementation(float f) {
 	if (m_state == EPLAYER_STATE::OBJECT) {
 		if (f != 0 && m_PlayerObject->IsSimulatingPhysics()) {
-			m_PlayerObject->AddImpulse(FVector(fRunPower * f, 0, 0), NAME_None, true);
-			m_PlayerObject->AddAngularImpulseInDegrees(FVector(0, fRoPower * f, 0.f), NAME_None, true);
+			FRotator r = FRotator(0, GetControlRotation().Yaw, 0);
+			//GetForwardVector: r만큼 월드 정방향 벡터를 회전
+			m_PlayerObject->AddImpulse(UKismetMathLibrary::GetForwardVector(r) * f * fRunPower, NAME_None, true);
+			//m_PlayerObject->AddAngularImpulseInDegrees(UKismetMathLibrary::GetForwardVector(r), NAME_None, true);
+			//AddMovementInput(UKismetMathLibrary::GetForwardVector(r), f);
+
+	/*		m_PlayerObject->AddImpulse(FVector(fRunPower * f, 0, 0), NAME_None, true);
+			m_PlayerObject->AddAngularImpulseInDegrees(FVector(0, fRoPower * f, 0.f), NAME_None, true);*/
 		}
 	}
 }
@@ -31,8 +37,11 @@ void ASurvivor::UpDown_Multicast_Implementation(float f) {
 void ASurvivor::LeftRight_Multicast_Implementation(float f) {
 	if (m_state == EPLAYER_STATE::OBJECT) {
 		if (f != 0 && m_PlayerObject->IsSimulatingPhysics()) {
-			m_PlayerObject->AddImpulse(FVector(0, fRunPower * f, 0.f), NAME_None, true);
-			m_PlayerObject->AddAngularImpulseInDegrees(FVector(fRoPower * f, 0, 0.f), NAME_None, true);
+			FRotator r = FRotator(0, GetControlRotation().Yaw, 0);
+			m_PlayerObject->AddImpulse(UKismetMathLibrary::GetRightVector(r)*f* fRunPower, NAME_None, true);
+			//m_PlayerObject->AddAngularImpulseInDegrees(UKismetMathLibrary::GetForwardVector(r), NAME_None, true);
+			//m_PlayerObject->AddImpulse(FVector(0, fRunPower * f, 0.f), NAME_None, true);
+			//m_PlayerObject->AddAngularImpulseInDegrees(FVector(fRoPower * f, 0, 0.f), NAME_None, true);
 		}
 	}
 }
