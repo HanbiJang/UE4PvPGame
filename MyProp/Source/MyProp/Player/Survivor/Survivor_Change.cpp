@@ -3,6 +3,19 @@
 #include "Survivor_Change.h"
 #include <MyProp/Object/MyPlayerObject.h>
 
+void ASurvivor::DrawOutLine_Implementation() {
+
+	if (pPlayerObject != nullptr) //플레이어 변신가능 오브젝트면
+	{
+		//항상 변신 가능 사물의 아웃라인을 그리기
+		pPlayerObject->GetMyMesh()->SetRenderCustomDepth(true);
+		pPlayerObject_old = pPlayerObject;
+	}
+	else {
+		if (pPlayerObject_old)
+			pPlayerObject_old->GetMyMesh()->SetRenderCustomDepth(false);
+	}
+}
 //사물을 선택해서 함수 실행까지
 void ASurvivor::SelectObject() {
 
@@ -17,8 +30,10 @@ void ASurvivor::SelectObject() {
 	//레이캐스트 (자신무시, SelectObj 트레이스 타입)
 	GetWorld()->LineTraceSingleByChannel(hit,start,end, ECC_GameTraceChannel7, param);
 	pPlayerObject = Cast<AMyPlayerObject>(hit.Actor);
+
 	if (pPlayerObject != nullptr) //플레이어 변신가능 오브젝트면
 	{
+
 		if (isObject) {
 			if (m_PlayerObject->GetStaticMesh() != pPlayerObject->GetMyMesh()->GetStaticMesh()) {
 				isChangableObject = true;
@@ -32,6 +47,9 @@ void ASurvivor::SelectObject() {
 	else { //플레이어 변신가능 오브젝트가 아님
 		isChangableObject = false;
 	}
+
+	//사물 그리기
+	DrawOutLine();
 
 }
 

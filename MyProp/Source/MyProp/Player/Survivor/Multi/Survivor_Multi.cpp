@@ -34,25 +34,24 @@ void ASurvivor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 
 void ASurvivor::OnInfoUpdate()
 {
-    //Client-specific functionality
-    if (IsLocallyControlled())
-    {
-        FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), GetInfo()->fCurHP);
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+    ////Client-specific functionality
+    //if (IsLocallyControlled())
+    //{
+    //    FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), GetInfo()->fCurHP);
+    //    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+    //    if (GetInfo()->fCurHP <= 0)
+    //    {
+    //        FString deathMessage = FString::Printf(TEXT("You have been killed."));
+    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
+    //    }
+    //}
 
-        if (GetInfo()->fCurHP <= 0)
-        {
-            FString deathMessage = FString::Printf(TEXT("You have been killed."));
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
-        }
-    }
-
-    //Server-specific functionality
-    if(HasAuthority())
-    {
-        FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), GetInfo()->fCurHP);
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
-    }
+    ////Server-specific functionality
+    //if(HasAuthority())
+    //{
+    //    FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), GetInfo()->fCurHP);
+    //    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
+    //}
 
     //Functions that occur on all machines. 
     /*
@@ -66,7 +65,7 @@ void ASurvivor::SetCurrentHealth(float healthValue) {
     if (HasAuthority()) {
         //Clamp: 0과 maxHP 값 사이에서 설정함
         GetInfo()->fCurHP = FMath::Clamp(healthValue, 0.f, GetInfo()->fMaxHP);
-        OnInfoUpdate();
+        //OnInfoUpdate();
     }
 }
 

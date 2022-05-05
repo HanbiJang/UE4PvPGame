@@ -40,7 +40,6 @@ private:
 	void Dash() override;
 	void DashStop() override;
 
-
 	//상호작용
 	void Interaction();
 
@@ -48,7 +47,7 @@ public:
 
 	//캐릭터 정보
 	//리플리케이션 설정
-	UPROPERTY(ReplicatedUsing = OnRep_Info, EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(/*ReplicatedUsing = OnRep_Info,*/replicated,EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FSurvivorInfo m_Info;
 
 	UPROPERTY(replicated)
@@ -81,10 +80,14 @@ public:
 
 	//3인칭 변신 (사물 선택 레이캐스트)
 	void SelectObject();
+	//사물 외곽선 그리기 기능
+	UFUNCTION(Reliable, Client)
+		void DrawOutLine();
 
 	bool isChangableObject = false;
 	bool isChangableObjectSelected = false;
-	AMyPlayerObject* pPlayerObject;
+	AMyPlayerObject* pPlayerObject; //new
+	AMyPlayerObject* pPlayerObject_old; //old
 
 	//변신 초기화 각도, 초기화 위치
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
@@ -197,8 +200,8 @@ public:
 	UFUNCTION(Reliable, Server)
 		void UpdateSP();
 
-	UFUNCTION(Reliable, Server)
-		void UseSP();
+	//UFUNCTION(Reliable, Server)
+	//	void UseSP();
 
 	//비네팅 공포 효과
 	UFUNCTION(Reliable, Server)
@@ -207,9 +210,21 @@ public:
 	UFUNCTION(Reliable, Client)
 		void UpdateSP_Client();
 
-	UFUNCTION(Reliable, Client)
-		void UseSP_Client();
+	/*UFUNCTION(Reliable, Client)*/
+		void UseSP/*_Client*/();
 
+	UFUNCTION(Reliable, Server)
+		void DashSpeedUp_Server();
+	UFUNCTION(Reliable, NetMulticast)
+		void DashSpeedUp_Multicast();
+
+	UFUNCTION(Reliable, Server)
+		void DashSpeedDown_Server();
+	UFUNCTION(Reliable, NetMulticast)
+		void DashSpeedDown_Multicast();
+
+	//비네팅 효과
 	UFUNCTION(Reliable, Client)
 		void ShowVinetting_Client();
+	
 };

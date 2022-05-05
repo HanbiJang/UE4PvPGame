@@ -73,15 +73,18 @@ void ASurvivor::MyJump_Server_Implementation() {
 void ASurvivor::Dash()
 {
 	UE_LOG(LogTemp, Log, TEXT("Dasu!!!"));
-	isDashPressed = true;
+	SetisDashPressed_Server(true);
+	//isDashPressed = true;
 
 	if (m_state != EPLAYER_STATE::OBJECT && GetInfo()->fCurSP > 10) {
-		isDashEnable = true;
+		//isDashEnable = true;
+		SetisDashEnable_Server(true);
 		UE_LOG(LogTemp, Log, TEXT("DashEnable!!!"));
 	}
 }
 
 void ASurvivor::DashStop()
 {
-	isDashPressed = false;
+	SetisDashPressed_Server(false);
+	//isDashPressed = false;
 }

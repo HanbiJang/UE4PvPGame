@@ -122,7 +122,7 @@ void ASurvivor::Tick(float DeltaTime) {
 	//레이캐스트로 변신가능 오브젝트 판별
 	SelectObject();
 
-	//====================
+	//======================================================================================
 
 	//스태미너 업데이트
 	UpdateSP();
@@ -135,7 +135,7 @@ void ASurvivor::Tick(float DeltaTime) {
 	//살인마와 거리 차이에 따라서 비네팅 효과 & 화면 그레인 (지터) 증가 감소
 	ShowVinetting();
 
-	//죽기=======================================================================
+	//죽기==================================================================================
 	if (GetInfo()->fCurHP <= 0) {
 		
 		ChangeState(EPLAYER_STATE::DEAD);
@@ -233,36 +233,71 @@ void ASurvivor::ShowVinetting_Client_Implementation(){
 	}
 }
 
-void ASurvivor::UseSP_Implementation() {
-	UseSP_Client();
-}
 
-void ASurvivor::UseSP_Client_Implementation() {
+void ASurvivor::UseSP/*_Client_Implementation*/() {
 	//대시 가능 여부)
 	if (GetInfo()->fCurSP < 0.1) {
-		isDashEnable = false;
+		SetisDashEnable_Server(false);
+		//isDashEnable = false;
 	}
+	//UE_LOG(LogTemp, Log, TEXT("isDashEnable : %i"), isDashEnable);
+	//UE_LOG(LogTemp, Log, TEXT("isMoving : %i"), isMoving);
+	//UE_LOG(LogTemp, Log, TEXT("isDashPressed : %i"), isDashPressed);
+	//UE_LOG(LogTemp, Log, TEXT("isDashed : %i"), isDashed);
 
 	//대시 중)
 	//[1] 스태미너 감소
 	if (isDashEnable && isDashPressed && isMoving) {
-		GetCharacterMovement()->MaxWalkSpeed = 1200.f; //속도 증가 (대시)	
+		//GetCharacterMovement()->MaxWalkSpeed = 1200.f; //속도 증가 (대시)
+		////DashSpeedUp_Server();
 		ChangeState(EPLAYER_STATE::DASH); //상태 전환
-		isDashed = true;
+		//isDashed = true;
+		SetisDashed_Server(true);
 
 		GetInfo()->fCurSP -= 0.4f;
 		if (GetInfo()->fCurSP < 0) GetInfo()->fCurSP = 0;
 	}
 	//[2] 대시 아닌 상태) 스태미너 회복
 	else {
-		GetCharacterMovement()->MaxWalkSpeed = 600.f; //속도 원상복귀
-		isDashed = false;
+		//GetCharacterMovement()->MaxWalkSpeed = 600.f; //속도 원상복귀
+		////DashSpeedDown_Server();
+
+		//UE_LOG(LogTemp, Log, TEXT("isDashEnable : %i"), isDashEnable);
+		//UE_LOG(LogTemp, Log, TEXT("isMoving : %i"), isMoving);
+		//UE_LOG(LogTemp, Log, TEXT("isDashPressed : %i"), isDashPressed);
+		//UE_LOG(LogTemp, Log, TEXT("isDashed : %i"), isDashed);
+
+		SetisDashed_Server(false);
+		//isDashed = false;
 
 		GetInfo()->fCurSP += 0.035f;
 		if (GetInfo()->fCurSP > GetInfo()->fMaxSP) GetInfo()->fCurSP = GetInfo()->fMaxSP;
 	}
+
+	//대쉬상태일때 속력 증가
+	if (isDashed) {
+		if (GetCharacterMovement()->MaxWalkSpeed != 1200.f) DashSpeedUp_Server();
+	}
+	else {
+		if (GetCharacterMovement()->MaxWalkSpeed != 600.f) DashSpeedDown_Server();
+	}
+
 }
 
+void ASurvivor::DashSpeedUp_Server_Implementation(){
+	DashSpeedUp_Multicast();
+}
+void ASurvivor::DashSpeedUp_Multicast_Implementation() {
+	GetCharacterMovement()->MaxWalkSpeed = 1200.f;
+	UE_LOG(LogTemp, Log, TEXT("MaxWalkSpeed: %f"), GetCharacterMovement()->MaxWalkSpeed);
+}
 
+void ASurvivor::DashSpeedDown_Server_Implementation(){
+	DashSpeedDown_Multicast();
+}
+void ASurvivor::DashSpeedDown_Multicast_Implementation(){
+	GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	UE_LOG(LogTemp, Log, TEXT("MaxWalkSpeed: %f"), GetCharacterMovement()->MaxWalkSpeed);
+}
 
 

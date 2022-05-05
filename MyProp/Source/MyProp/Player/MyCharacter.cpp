@@ -125,7 +125,8 @@ void AMyCharacter::UpDown(float f) {
 			if (f != 0.f) {
 				//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
 				if (!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
-				isMoving = true;
+				SetisMoving_Server(true);
+				//isMoving = true;
 				//캐릭터 회전과 이동
 				//FRotator Rotation = Controller->GetControlRotation();
 				//FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
@@ -136,8 +137,10 @@ void AMyCharacter::UpDown(float f) {
 				//GetForwardVector: r만큼 월드 정방향 벡터를 회전
 				AddMovementInput(UKismetMathLibrary::GetForwardVector(r), f);
 			}
-			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
+			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping && !isMoving) {
 				if (m_state != EPLAYER_STATE::IDLE) {
+					UE_LOG(LogTemp, Log, TEXT("state idle change"));
+					SetisMoving_Server(false);
 					ChangeState(EPLAYER_STATE::IDLE);
 				}
 			}
@@ -157,7 +160,8 @@ void AMyCharacter::LeftRight(float f) {
 			if (f != 0.f) {
 				//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
 				if (!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
-				isMoving = true;
+				SetisMoving_Server(true);
+				//isMoving = true;
 
 				//캐릭터 회전과 이동
 				//FRotator Rotation = Controller->GetControlRotation();
@@ -172,6 +176,8 @@ void AMyCharacter::LeftRight(float f) {
 
 			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
 				if (m_state != EPLAYER_STATE::IDLE) {
+					UE_LOG(LogTemp, Log, TEXT("state idle change"));
+					SetisMoving_Server(false);
 					ChangeState(EPLAYER_STATE::IDLE);
 				}
 			}
@@ -283,4 +289,42 @@ void AMyCharacter::OnRep_State() {
 
 	//서버, 클라이언트 공통 부분
 
+}
+
+//대시
+
+void AMyCharacter::SetisDashEnable_Server_Implementation(bool value) {
+	SetisDashEnable_Multicast(value);
+}
+
+void AMyCharacter::SetisDashEnable_Multicast_Implementation(bool value) {
+	isDashEnable = value;
+}
+
+void AMyCharacter::SetisDashPressed_Server_Implementation(bool value) {
+	SetisDashPressed_Multicast(value);
+}
+
+void AMyCharacter::SetisDashPressed_Multicast_Implementation(bool value) {
+	isDashPressed = value;
+}
+
+//값 바꾸기(서버)
+void AMyCharacter::SetisDashed_Server_Implementation(bool value) {
+	SetisDashed_Multicast(value);
+}
+
+//값 바꾸기(멀티캐스트)
+void AMyCharacter::SetisDashed_Multicast_Implementation(bool value) {
+	isDashed = value;
+}
+
+//값 바꾸기(서버)
+void AMyCharacter::SetisMoving_Server_Implementation(bool value) {
+	SetisMoving_Multicast(value);
+}
+
+//값 바꾸기(멀티캐스트)
+void AMyCharacter::SetisMoving_Multicast_Implementation(bool value) {
+	isMoving = value;
 }

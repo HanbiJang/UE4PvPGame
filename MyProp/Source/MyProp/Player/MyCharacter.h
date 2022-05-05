@@ -51,17 +51,49 @@ public:
 	virtual void DashStop();
 
 	UPROPERTY(replicated)
-	bool isMoving;
+		bool isMoving;
 
 	UPROPERTY(replicated)
 		bool isJumping;
 
 	UPROPERTY(replicated)
-	bool isDashed;
+		bool isDashed;
 	UPROPERTY(replicated)
-	bool isDashPressed;
+		bool isDashPressed;
 	UPROPERTY(replicated)
-	bool isDashEnable;
+		bool isDashEnable;
+
+	//값 바꾸기(서버)
+	UFUNCTION(Reliable, Server)
+		void SetisDashEnable_Server(bool value);
+
+	//값 바꾸기(멀티캐스트)
+	UFUNCTION(Reliable, NetMulticast)
+		void SetisDashEnable_Multicast(bool value);
+
+	//값 바꾸기(서버)
+	UFUNCTION(Reliable, Server)
+		void SetisDashPressed_Server(bool value);
+
+	//값 바꾸기(멀티캐스트)
+	UFUNCTION(Reliable, NetMulticast)
+		void SetisDashPressed_Multicast(bool value);
+
+	//값 바꾸기(서버)
+	UFUNCTION(Reliable, Server)
+		void SetisDashed_Server(bool value);
+
+	//값 바꾸기(멀티캐스트)
+	UFUNCTION(Reliable, NetMulticast)
+		void SetisDashed_Multicast(bool value);
+
+	//값 바꾸기(서버)
+	UFUNCTION(Reliable, Server)
+		void SetisMoving_Server(bool value);
+
+	//값 바꾸기(멀티캐스트)
+	UFUNCTION(Reliable, NetMulticast)
+		void SetisMoving_Multicast(bool value);
 
 	UPROPERTY(replicated)
 		bool isObject = false; //사물형태인지 아닌지
