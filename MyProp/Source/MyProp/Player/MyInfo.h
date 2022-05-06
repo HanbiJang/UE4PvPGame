@@ -77,6 +77,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		float fAllHit; //[살인마] 총 입힌 피해
 
+	//스킬 별 쿨타임 && 남은 시간
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float rangeAttackSpeed; //[살인마] 스킬 Q 쿨타임
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float EAttackSpeed; //[살인마] 스킬 E 쿨타임
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float rCAttackSpeed; //[살인마] 스킬 RC 쿨타임
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float fCurQLeftTime; //[살인마] 스킬 Q 쿨타임 남은 시간
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float fCurELeftTime; //[살인마] 스킬 E 쿨타임 남은 시간
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		float fCurRCLeftTime; //[살인마] 스킬 RC 쿨타임 남은 시간
+
 };
 
 //킬러 공격 이펙트

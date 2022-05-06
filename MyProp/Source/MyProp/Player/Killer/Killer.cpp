@@ -6,14 +6,14 @@
 #include "../Survivor/Survivor.h" 
 #include <MyProp/Player/MyEffectManager.h>
 #include <MyProp/Player/Killer/KillerRCProjectile.h>
+#include <MyProp/MyPlayerController.h>
 
 AKiller::AKiller():
 	bAttackEnable(true),
-	attackSpeed(2.f),
-	rangeAttackSpeed(5.f),
+	attackSpeed(2.f), //평타 쿨타임
 	bRangeAttackEnable(true),
-	rCAttackSpeed(3.f),
-	bRCAttackEnable(true)
+	bRCAttackEnable(true),
+	bEAttackEnable(true)
 
 {
 	//멀티플레이 - 리플리케이션 설정
@@ -47,6 +47,8 @@ void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &AKiller::Attack);
 	// Q키 - 범위 공격
 	PlayerInputComponent->BindAction(TEXT("Q"), EInputEvent::IE_Pressed, this, &AKiller::RangeAttack);
+	// E키 -  공격
+	PlayerInputComponent->BindAction(TEXT("E"), EInputEvent::IE_Pressed, this, &AKiller::EAttack);
 	// 우클릭 - 투척 공격
 	PlayerInputComponent->BindAction(TEXT("RCAttack"), EInputEvent::IE_Pressed, this, &AKiller::RCAttack);
 }
@@ -58,7 +60,34 @@ void AKiller::BeginPlay() {
 	//======플레이어 (초기) 데이터 설정======
 	if (GI != nullptr) {
 		SetInfo(*(GI->GetKillerInfo(TEXT("Killer1"))));
+		
+		//꼼수 쿨타임 값 변화로 UI에 표시하기 위함
+		m_Info.fCurQLeftTime = FMath::Clamp(0.1f, 0.f, m_Info.rangeAttackSpeed);
+		m_Info.fCurELeftTime = FMath::Clamp(0.1f, 0.f, m_Info.EAttackSpeed);
+		m_Info.fCurRCLeftTime = FMath::Clamp(0.1f, 0.f, m_Info.rCAttackSpeed);
 	}
+
+}
+
+void AKiller::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+
+	UpdateUI_Server();
+
+	//쿨타임 시간 계산
+	if (!bRangeAttackEnable) {
+		//Clamp: 0과 maxHP 값 사이에서 설정함
+		m_Info.fCurQLeftTime = FMath::Clamp(m_Info.fCurQLeftTime-DeltaTime, 0.f, m_Info.rangeAttackSpeed);
+	}
+
+	if (!bEAttackEnable) {
+		m_Info.fCurELeftTime = FMath::Clamp(m_Info.fCurELeftTime - DeltaTime, 0.f, m_Info.EAttackSpeed);
+	}
+
+	if (!bRCAttackEnable){
+		m_Info.fCurRCLeftTime = FMath::Clamp(m_Info.fCurRCLeftTime - DeltaTime, 0.f, m_Info.rCAttackSpeed);
+	}
+
 }
 
 void AKiller::Attack()
@@ -69,7 +98,7 @@ void AKiller::Attack()
 		bAttackEnable = false;
 
 		//attackSpeed초 뒤에 Timer 켜기
-		GetWorld()->GetTimerManager().SetTimer(FAttackTimer, this, &AKiller::SetAttackEnable, attackSpeed, false);
+		GetWorld()->GetTimerManager().SetTimer(FAttackTimer, this, &AKiller::SetAttackEnable, attackSpeed, false);		
 	}	
 }
 
@@ -122,8 +151,10 @@ void AKiller::RangeAttack() {
 
 		RangeAttackEffect_Server(); //시전 이펙트
 
+		//쿨타임 UI 초기화
+		m_Info.fCurQLeftTime = m_Info.rangeAttackSpeed;
 		//rangeAttackSpeed초 뒤에 Timer 켜기
-		GetWorld()->GetTimerManager().SetTimer(FRangeAttackTimer, this, &AKiller::SetRangeAttackEnable, rangeAttackSpeed, false);
+		GetWorld()->GetTimerManager().SetTimer(FRangeAttackTimer, this, &AKiller::SetRangeAttackEnable, m_Info.rangeAttackSpeed, false);
 	}	
 }
 
@@ -174,8 +205,10 @@ void AKiller::RCAttack() {
 		ChangeState(EPLAYER_STATE::RCATTACK);
 		bRCAttackEnable = false;
 
+		//쿨타임 UI 초기화
+		m_Info.fCurRCLeftTime = m_Info.rCAttackSpeed;
 		//attackSpeed초 뒤에 Timer 켜기
-		GetWorld()->GetTimerManager().SetTimer(FRCAttackTimer, this, &AKiller::SetRCAttackEnable, rCAttackSpeed, false);
+		GetWorld()->GetTimerManager().SetTimer(FRCAttackTimer, this, &AKiller::SetRCAttackEnable, m_Info.rCAttackSpeed, false);
 	}
 }
 void AKiller::RCAttackAction() {
@@ -213,7 +246,47 @@ void AKiller::RangeAttackEffect_Multicast_Implementation() {
 	UMyEffectManager::GetInst(GetWorld())->CreateEffect(EKillerEffect::Q, trans, GetLevel());
 }
 
+void AKiller::EAttack() {
+	//공격 모션
+	if (bEAttackEnable) {
+		ChangeState(EPLAYER_STATE::EATTACK);
+		bEAttackEnable = false;
 
+		//쿨타임 UI 초기화
+		m_Info.fCurELeftTime = m_Info.EAttackSpeed;
+		//attackSpeed초 뒤에 Timer 켜기
+		GetWorld()->GetTimerManager().SetTimer(FEAttackTimer, this, &AKiller::SetEAttackEnable, m_Info.EAttackSpeed, false);
+	}
+}
+void AKiller::EAttackAction() {
+
+}
+
+void AKiller::UpdateUI_Server_Implementation() {
+	//체력, 스테미나 실시간 업데이트
+	if (fPrevRCLeftTime != m_Info.fCurRCLeftTime || fPrevELeftTime != m_Info.fCurELeftTime
+		|| fPrevQLeftTime != m_Info.fCurQLeftTime)
+	{
+		// 이전 쿨타임이 현재 쿨타임과 다르면
+		// HUD 갱신
+		AMyPlayerController* PC = Cast<AMyPlayerController>(this->GetInstigatorController());
+
+		float CurQSkillRatio = m_Info.fCurQLeftTime / m_Info.rangeAttackSpeed;
+		float CurESkillRatio = m_Info.fCurELeftTime / m_Info.EAttackSpeed;
+		float CurRCSkillRatio = m_Info.fCurRCLeftTime / m_Info.rCAttackSpeed;
+
+		if (PC != nullptr) PC->UpdatePlayHUD_Killer(CurQSkillRatio, CurESkillRatio, CurRCSkillRatio,
+			m_Info.fCurQLeftTime, m_Info.fCurELeftTime, m_Info.fCurRCLeftTime);
+	}
+
+	// 현재 체력, 스태미너를 이전프레임 체력으로 갱신
+	fPrevQLeftTime = m_Info.fCurQLeftTime;
+	fPrevELeftTime = m_Info.fCurELeftTime;
+	fPrevRCLeftTime = m_Info.fCurRCLeftTime;
+
+}
+
+//====================================================================
 void AKiller::OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult) {
 
 }

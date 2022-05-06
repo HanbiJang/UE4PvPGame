@@ -3,8 +3,6 @@
 #pragma once
 
 #include <MyProp/UI/MyMainHUD.h>
-//#include <MyProp/UI/MyHPBarWidget.h>
-//#include <MyProp/UI/MySPWidget.h>
 #include <MyProp/Player/Survivor/Survivor.h>
 
 #include <MyProp/UI/Killer/MyKillerMainHUD.h>
@@ -33,7 +31,6 @@ public:
 	//HUD
 	TSubclassOf<UUserWidget> m_SurvivorMainHUDClass;
 	UMyMainHUD* m_SurvivorMainHUD;
-
 	UMyMainHUD* GetMainHUD(){ return m_SurvivorMainHUD; };
 
 	//Killer (Server) HUD
@@ -45,8 +42,10 @@ public:
 	virtual void PlayerTick(float DeltaTime) override;
 
 public:
+	//살인마 UI 업데이트
 	UFUNCTION(Reliable, Server) //구현해야함
-		void UpdatePlayHUD_Killer(float _CurHPRatio, float _CurMPRatio);
+		void UpdatePlayHUD_Killer(float _CurQTimeRatio, float _CurETimeRatio, float _CurRCTimeRatio
+			, float _CurQTime, float _CurETime, float _CurRCTime);
 
 	UFUNCTION(Reliable, Client)
 		void UpdatePlayHUD_Survivor(float _CurHPRatio, float _CurSPRatio, float _CurHP, float _MaxHP);

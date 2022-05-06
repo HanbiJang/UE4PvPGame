@@ -12,7 +12,6 @@ void AMyPlayerController::DrawHUD_Client_Implementation() {
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
 		m_SurvivorMainHUDClass = GI->GetSurvivorWidgetClass();
-
 		m_SurvivorMainHUD = Cast<UMyMainHUD>(CreateWidget(this, m_SurvivorMainHUDClass));
 		if (nullptr != m_SurvivorMainHUD) m_SurvivorMainHUD->AddToViewport();
 	}
@@ -33,17 +32,12 @@ void AMyPlayerController::DrawHUD_Client_Implementation() {
 
 void AMyPlayerController::PlayerTick(float DeltaTime) {
 	Super::PlayerTick(DeltaTime);
-
-	//스태미나 UI 업데이트
-
-
 }
 void AMyPlayerController::DrawHUD_Server_Implementation() {
 	//UI 설정
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
 		m_KillerMainHUDClass = GI->GetKillerWidgetClass();
-
 		m_KillerMainHUD = Cast<UMyKillerMainHUD>(CreateWidget(GetWorld(), m_KillerMainHUDClass));
 		if (nullptr != m_KillerMainHUD) m_KillerMainHUD->AddToViewport();
 	}
@@ -57,7 +51,26 @@ void AMyPlayerController::DrawHUD_Server_Implementation() {
 }
 
 
-void AMyPlayerController::UpdatePlayHUD_Killer_Implementation(float _CurHPRatio, float _CurSPRatio) {
+void AMyPlayerController::UpdatePlayHUD_Killer_Implementation(float _CurQTimeRatio, float _CurETimeRatio, float _CurRCTimeRatio
+, float _CurQTime, float _CurETime, float _CurRCTime) {
+
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr) {
+
+		if (m_KillerMainHUD != nullptr) {
+			m_KillerMainHUD->SetQSkillPg(_CurQTimeRatio);
+			m_KillerMainHUD->SetESkillPg(_CurETimeRatio);
+			m_KillerMainHUD->SetClickSkillPg(_CurRCTimeRatio);
+
+			FString _QTime = FString::Printf(TEXT("%d"), (int)_CurQTime);
+			FString _ETime = FString::Printf(TEXT("%d"), (int)_CurETime);
+			FString _RCTime = FString::Printf(TEXT("%d"), (int)_CurRCTime);
+
+			m_KillerMainHUD->SetText_QSkill(_QTime);
+			m_KillerMainHUD->SetText_ESkill(_ETime);
+			m_KillerMainHUD->SetText_ClickSkill(_RCTime);
+		}
+	}
 
 }
 

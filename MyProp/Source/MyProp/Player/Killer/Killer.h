@@ -25,7 +25,7 @@ public:
 private:
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
+	void Tick(float DeltaTime) override;
 	void BeginPlay() override;
 
 	void OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult);
@@ -38,12 +38,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		FKillerInfo m_Info;
 
-	float m_PrevSP;
+	//float m_PrevSP;
 
 	FKillerInfo* GetInfo() { return &m_Info; }
 	void SetInfo(FKillerInfo new_Info) { m_Info = new_Info; }
-	
-	//Q 공격
 
 public:
 	//무기
@@ -57,6 +55,8 @@ public:
 	void AttackAction();
 	void RCAttack();
 	void RCAttackAction(); //실제 구현부
+	void EAttack();
+	void EAttackAction(); //실제 구현부
 
 private:
 	//공격 쿨타임 관련
@@ -70,7 +70,8 @@ private:
 	bool bRangeAttackEnable;
 	FTimerHandle FRangeAttackTimer; //공격 타이머
 	void SetRangeAttackEnable() { bRangeAttackEnable = true; }
-	float rangeAttackSpeed;
+	//float fCurQLeftTime; //남은 시간
+	float fPrevQLeftTime; //남은 시간 (이전)
 
 	//[3] 우클릭 공격
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
@@ -78,7 +79,17 @@ private:
 	bool bRCAttackEnable;
 	FTimerHandle FRCAttackTimer; //공격 타이머
 	void SetRCAttackEnable() { bRCAttackEnable = true; }
-	float rCAttackSpeed;
+	//float fCurRCLeftTime; //남은 시간
+	float fPrevRCLeftTime; //남은 시간 (이전)
+
+	//[4] E클릭 공격
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AMyProjectile> m_EAttackProjectile; //우클공격 파티클
+	bool bEAttackEnable;
+	FTimerHandle FEAttackTimer; //공격 타이머
+	void SetEAttackEnable() { bEAttackEnable = true; }
+	//float fCurELeftTime; //남은 시간
+	float fPrevELeftTime; //남은 시간 (이전)
 
 	//attack effect
 	UParticleSystem* m_AttackEffect;
@@ -88,5 +99,10 @@ private:
 		void RangeAttackEffect_Server();
 	UFUNCTION(Reliable, NetMulticast)
 		void RangeAttackEffect_Multicast();
+
+	//UI 업데이트 ============================
+	UFUNCTION(Reliable, Server)
+		void UpdateUI_Server();
+
 };
 
