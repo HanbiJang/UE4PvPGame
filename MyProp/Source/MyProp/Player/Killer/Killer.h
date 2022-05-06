@@ -9,7 +9,7 @@
 #include "../MyCharacter.h"
 #include "Killer.generated.h"
 
-
+class AMyPlayerController;
 class ASurvivor;
 /**
  * 
@@ -60,6 +60,8 @@ public:
 
 private:
 	//공격 쿨타임 관련
+	AMyPlayerController* PC;
+
 	//[1] 평타
 	bool bAttackEnable;
 	FTimerHandle FAttackTimer; //공격 타이머

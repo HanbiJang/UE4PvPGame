@@ -50,4 +50,6 @@ public:
 	UFUNCTION(Reliable, Client)
 		void UpdatePlayHUD_Survivor(float _CurHPRatio, float _CurSPRatio, float _CurHP, float _MaxHP);
 
+	//살인마 UI 스킬바 사진 변경
+
 };

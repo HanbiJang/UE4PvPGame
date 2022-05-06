@@ -60,12 +60,9 @@ void AKiller::BeginPlay() {
 	//======플레이어 (초기) 데이터 설정======
 	if (GI != nullptr) {
 		SetInfo(*(GI->GetKillerInfo(TEXT("Killer1"))));
-		
-		//꼼수 쿨타임 값 변화로 UI에 표시하기 위함
-		m_Info.fCurQLeftTime = FMath::Clamp(0.1f, 0.f, m_Info.rangeAttackSpeed);
-		m_Info.fCurELeftTime = FMath::Clamp(0.1f, 0.f, m_Info.EAttackSpeed);
-		m_Info.fCurRCLeftTime = FMath::Clamp(0.1f, 0.f, m_Info.rCAttackSpeed);
 	}
+
+	PC = Cast<AMyPlayerController>(this->GetInstigatorController());
 
 }
 
@@ -77,7 +74,7 @@ void AKiller::Tick(float DeltaTime) {
 	//쿨타임 시간 계산
 	if (!bRangeAttackEnable) {
 		//Clamp: 0과 maxHP 값 사이에서 설정함
-		m_Info.fCurQLeftTime = FMath::Clamp(m_Info.fCurQLeftTime-DeltaTime, 0.f, m_Info.rangeAttackSpeed);
+		m_Info.fCurQLeftTime = FMath::Clamp(m_Info.fCurQLeftTime-DeltaTime, 0.f, m_Info.rangeAttackSpeed);		
 	}
 
 	if (!bEAttackEnable) {
@@ -269,7 +266,7 @@ void AKiller::UpdateUI_Server_Implementation() {
 	{
 		// 이전 쿨타임이 현재 쿨타임과 다르면
 		// HUD 갱신
-		AMyPlayerController* PC = Cast<AMyPlayerController>(this->GetInstigatorController());
+		//AMyPlayerController* PC = Cast<AMyPlayerController>(this->GetInstigatorController());
 
 		float CurQSkillRatio = m_Info.fCurQLeftTime / m_Info.rangeAttackSpeed;
 		float CurESkillRatio = m_Info.fCurELeftTime / m_Info.EAttackSpeed;

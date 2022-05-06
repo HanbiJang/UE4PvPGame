@@ -39,7 +39,12 @@ void AMyPlayerController::DrawHUD_Server_Implementation() {
 	if (GI != nullptr) {
 		m_KillerMainHUDClass = GI->GetKillerWidgetClass();
 		m_KillerMainHUD = Cast<UMyKillerMainHUD>(CreateWidget(GetWorld(), m_KillerMainHUDClass));
-		if (nullptr != m_KillerMainHUD) m_KillerMainHUD->AddToViewport();
+		if (nullptr != m_KillerMainHUD) { 
+			m_KillerMainHUD->AddToViewport(); 
+			
+			//UI초기화 (처음에 스킬 사용 가능)
+			//m_KillerMainHUD->GetClickSkillText()->SetVisibility(ESlateVisibility::Hidden);
+		}
 	}
 
 	// InputMode 설정
@@ -58,17 +63,49 @@ void AMyPlayerController::UpdatePlayHUD_Killer_Implementation(float _CurQTimeRat
 	if (GI != nullptr) {
 
 		if (m_KillerMainHUD != nullptr) {
+			//프로그래스바 설정
 			m_KillerMainHUD->SetQSkillPg(_CurQTimeRatio);
 			m_KillerMainHUD->SetESkillPg(_CurETimeRatio);
 			m_KillerMainHUD->SetClickSkillPg(_CurRCTimeRatio);
 
-			FString _QTime = FString::Printf(TEXT("%d"), (int)_CurQTime);
-			FString _ETime = FString::Printf(TEXT("%d"), (int)_CurETime);
-			FString _RCTime = FString::Printf(TEXT("%d"), (int)_CurRCTime);
+			//[1]Q
+			if (_CurQTime < 0.05f) {
+				if(m_KillerMainHUD->GetQSkillText()->Visibility == ESlateVisibility::Visible)
+					m_KillerMainHUD->GetQSkillText()->SetVisibility(ESlateVisibility::Hidden);
+			}
+			else {
+		
+				FString _QTime = FString::Printf(TEXT("%d"), (int)_CurQTime);
+				m_KillerMainHUD->SetText_QSkill(_QTime);
+				if (m_KillerMainHUD->GetQSkillText()->Visibility == ESlateVisibility::Hidden) {
+					m_KillerMainHUD->GetQSkillText()->SetVisibility(ESlateVisibility::Visible);
+				}
+			}
+			//[2]E
+			if (_CurETime < 0.05f) {
+				if (m_KillerMainHUD->GetESkillText()->Visibility == ESlateVisibility::Visible)
+					m_KillerMainHUD->GetESkillText()->SetVisibility(ESlateVisibility::Hidden);
+			}
+			else {
+				FString _ETime = FString::Printf(TEXT("%d"), (int)_CurETime);
+				m_KillerMainHUD->SetText_ESkill(_ETime);
+				if (m_KillerMainHUD->GetESkillText()->Visibility == ESlateVisibility::Hidden) {
+					m_KillerMainHUD->GetESkillText()->SetVisibility(ESlateVisibility::Visible);
+				}
 
-			m_KillerMainHUD->SetText_QSkill(_QTime);
-			m_KillerMainHUD->SetText_ESkill(_ETime);
-			m_KillerMainHUD->SetText_ClickSkill(_RCTime);
+			}
+			//[3]RC
+			if (_CurRCTime < 0.05f) {
+				if (m_KillerMainHUD->GetClickSkillText()->Visibility == ESlateVisibility::Visible)
+					m_KillerMainHUD->GetClickSkillText()->SetVisibility(ESlateVisibility::Hidden);
+			}
+			else {
+				FString _RCTime = FString::Printf(TEXT("%d"), (int)_CurRCTime);
+				m_KillerMainHUD->SetText_ClickSkill(_RCTime);
+				if (m_KillerMainHUD->GetClickSkillText()->Visibility == ESlateVisibility::Hidden) {
+					m_KillerMainHUD->GetClickSkillText()->SetVisibility(ESlateVisibility::Visible);
+				}
+			}
 		}
 	}
 
