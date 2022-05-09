@@ -6,6 +6,8 @@
 #include "Engine/BlueprintGeneratedClass.h"
 #include "MyPlayerObjectPawn.h"
 
+#include <MyProp/Player/Survivor/Survivor.h>
+
 // Sets default values
 AMyCharacter::AMyCharacter() :
 	isMoving(false),
@@ -120,12 +122,14 @@ void AMyCharacter::UpDown(float f) {
 	// 위아래로 이동
 	if (!isObject) {
 		if (m_state == EPLAYER_STATE::CATCH || m_state == EPLAYER_STATE::DASH
-			|| m_state == EPLAYER_STATE::HIT || m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
+			|| (m_state == EPLAYER_STATE::HIT && Cast<ASurvivor>(this)) //서바이벌만
+			|| m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
 			|| m_state == EPLAYER_STATE::MOVE) {
 			if (f != 0.f) {
 				//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
-				if ((!isDashed && !isJumping) 
-					||m_state != EPLAYER_STATE::HIT) ChangeState(EPLAYER_STATE::MOVE);
+				TurnMove();
+				//if ((!isDashed && !isJumping) 
+				//	||m_state != EPLAYER_STATE::HIT) ChangeState(EPLAYER_STATE::MOVE);
 				SetisMoving_Server(true);
 
 				//캐릭터 회전과 이동
@@ -151,16 +155,17 @@ void AMyCharacter::LeftRight(float f) {
 	//오른쪽, 왼쪽으로 이동
 	if (!isObject) {
 		if (m_state == EPLAYER_STATE::CATCH || m_state == EPLAYER_STATE::DASH
-			|| m_state == EPLAYER_STATE::HIT || m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
+			|| (m_state == EPLAYER_STATE::HIT && Cast<ASurvivor>(this)) //서바이벌만
+			|| m_state == EPLAYER_STATE::IDLE || m_state == EPLAYER_STATE::JUMP
 			|| m_state == EPLAYER_STATE::MOVE) {
 			if (f != 0.f) {
 				//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
-				if ((!isDashed && !isJumping) || m_state != EPLAYER_STATE::HIT) ChangeState(EPLAYER_STATE::MOVE);
+				TurnMove();
+				//if ((!isDashed && !isJumping) || m_state != EPLAYER_STATE::HIT) ChangeState(EPLAYER_STATE::MOVE);
 				SetisMoving_Server(true);
 				//isMoving = true;
 
 				//캐릭터 회전과 이동
-
 				FRotator r = FRotator(0, GetControlRotation().Yaw, 0);
 				//GetForwardVector: r만큼 월드 정방향 벡터를 회전
 				AddMovementInput(UKismetMathLibrary::GetRightVector(r), f);
@@ -178,7 +183,9 @@ void AMyCharacter::LeftRight(float f) {
 }
 
 void AMyCharacter::MyJump() {
-	if (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::DASH) {
+	if ( (m_state != EPLAYER_STATE::OBJECT && m_state != EPLAYER_STATE::DASH)
+		 || (m_state == EPLAYER_STATE::HIT && Cast<ASurvivor>(this)) //서바이벌만
+		) {
 		isJumping = true;
 		UE_LOG(LogTemp, Log, TEXT("Jump"))
 		ChangeState(EPLAYER_STATE::JUMP);

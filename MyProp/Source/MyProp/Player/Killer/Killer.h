@@ -28,9 +28,12 @@ private:
 	void Tick(float DeltaTime) override;
 	void BeginPlay() override;
 
-	void OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult);
-	void OnEndOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex);
-	void OnHit(UPrimitiveComponent* _HitComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, FVector _NormalImpulse, const FHitResult& Hit);
+	UFUNCTION() //HeadBox에 할당되는 이벤트
+		void OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult);
+	UFUNCTION()
+		void OnEndOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex);
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* _HitComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, FVector _NormalImpulse, const FHitResult& Hit);
 
 
 public:
@@ -46,7 +49,7 @@ public:
 public:
 	//무기
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* m_Weapon;
+		UStaticMeshComponent* m_Weapon;
 	UStaticMesh* BasicWeaponMesh;
 
 	void RangeAttack();
@@ -106,5 +109,10 @@ private:
 	UFUNCTION(Reliable, Server)
 		void UpdateUI_Server();
 
+	//(뚝) 피격시====================================================
+	void TurnMove() override;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		UBoxComponent* HeadBox;
 };
 

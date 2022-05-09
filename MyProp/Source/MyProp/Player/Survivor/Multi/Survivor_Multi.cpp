@@ -79,13 +79,13 @@ float ASurvivor::TakeDamage(float DamageTaken, struct FDamageEvent const& Damage
     float damageApplied = GetInfo()->fCurHP - DamageTaken;
     SetCurrentHealth(damageApplied);
     
-    //빨개졌다가 돌아오기
-    if(HasAuthority()) //네트워크 권한이 있다면
+    //빨개졌다가 돌아오기 //네트워크 권한이 있다면
+    if (HasAuthority()) {
         HitColorReaction_Server();
-
-    if (HasAuthority())
-        ChangeState(EPLAYER_STATE::HIT);
-
+        
+        //if(!isObject)
+            ChangeState(EPLAYER_STATE::HIT);
+    }
     return damageApplied;
 
 }

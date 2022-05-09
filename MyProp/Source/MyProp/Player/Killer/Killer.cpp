@@ -37,6 +37,11 @@ AKiller::AKiller():
 	if (BPProjectile.Succeeded()) {
 		m_RCAttackProjectile = BPProjectile.Class;
 	}
+
+	//¶Ò¹è±â
+	HeadBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HeadBox"));
+	HeadBox->SetupAttachment(GetMesh(), TEXT("head"));
+
 }
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -64,6 +69,9 @@ void AKiller::BeginPlay() {
 
 	PC = Cast<AMyPlayerController>(this->GetInstigatorController());
 
+	//======¶Ò½ºÅÏ======
+	//GetBox()->OnComponentHit.AddDynamic(this, &AMyProjectile::OnHit);
+	HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AKiller::OnBeginOverlap);
 }
 
 void AKiller::Tick(float DeltaTime) {
@@ -284,13 +292,22 @@ void AKiller::UpdateUI_Server_Implementation() {
 
 }
 
+void AKiller::TurnMove() {
+	if ((!isDashed && !isJumping)) ChangeState(EPLAYER_STATE::MOVE);
+}
+
 //====================================================================
 void AKiller::OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult) {
+	UE_LOG(LogTemp, Log, TEXT(" AKiller OnBeginOverlap OnBeginOverlap OnBeginOverlap "));
+
+	//¹Ú½º ¿À¹ö·¦ ÀÌº¥Æ® -> change Hit
+	ASurvivor* sur = Cast<ASurvivor>(_OtherActor);
+	if (sur)
+		ChangeState(EPLAYER_STATE::HIT);
 
 }
 void AKiller::OnEndOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex) {
 
 }
 void AKiller::OnHit(UPrimitiveComponent* _HitComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, FVector _NormalImpulse, const FHitResult& Hit) {
-
 }

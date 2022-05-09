@@ -19,6 +19,7 @@
 
 class UMyAnimInstance; //중복 헤더 포함 문제 해결
 class AMyPlayerObjectPawn; //중복 헤더 포함 문제 해결
+class ASurvivor;
 
 UCLASS()
 class MYPROP_API AMyCharacter : public ACharacter
@@ -175,4 +176,6 @@ public:
 	/** Property replication */
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	//뚝배기 스턴============================================
+	virtual void TurnMove() {};
 };

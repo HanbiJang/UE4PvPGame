@@ -64,7 +64,7 @@ void UMyStartGameWidget::StartGameBtnPressed() {
 	
 	//서버를 생성하고 참여하기
 	if (m_SelectType == EPLAYER_TYPE::KILLER)
-		UGameplayStatics::OpenLevel(GetWorld(), TEXT("InGame"), true, TEXT("Listen")); //서버
+		UGameplayStatics::OpenLevel(GetWorld(), TEXT("InGameMap"), true, TEXT("Listen")); //서버
 
 	else if (m_SelectType == EPLAYER_TYPE::SURVIVOR) {
 		UGameplayStatics::OpenLevel(GetWorld(), TEXT("127.0.0.1")); //로컬 클라이언트

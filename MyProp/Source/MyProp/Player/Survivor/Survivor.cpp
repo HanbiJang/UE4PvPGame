@@ -78,10 +78,6 @@ void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ASurvivor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
 {
-	////서버의 물리 기준으로 함
-	//if (HasAuthority()) {
-
-	//}
 
 	if (m_state == EPLAYER_STATE::OBJECT && !isGround) {
 		//내적을 이용해 두 충돌 사이의 각을 구하기
@@ -156,19 +152,6 @@ void ASurvivor::Tick(float DeltaTime) {
 	}
 }
 
-void ASurvivor::OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult)
-{
-}
-
-void ASurvivor::OnEndOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex)
-{
-}
-
-void ASurvivor::OnHit(UPrimitiveComponent* _HitComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, FVector _NormalImpulse, const FHitResult& Hit)
-{
-}
-
-//=======================
 void ASurvivor::UpdateSP_Implementation() {
 
 	UpdateSP_Client();
@@ -354,4 +337,22 @@ void ASurvivor::HitColorReaction_Multicast_Implementation() //빨개졌다 다시 돌아
 	TurnRed();
 	GetWorld()->GetTimerManager().SetTimer(FHitRedTimer, this, &ASurvivor::TurnOriginalColor, 0.5f, false);
 
+}
+
+void ASurvivor::TurnMove() {
+	if ((!isDashed && !isJumping) && m_state != EPLAYER_STATE::HIT) ChangeState(EPLAYER_STATE::MOVE);
+}
+
+//=======================
+
+void ASurvivor::OnBeginOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex, bool _bFromSweep, const FHitResult& _SweepResult)
+{
+}
+
+void ASurvivor::OnEndOverlap(UPrimitiveComponent* _PrimitiveComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, int32 _OtherBodyIndex)
+{
+}
+
+void ASurvivor::OnHit(UPrimitiveComponent* _HitComponent, AActor* _OtherActor, UPrimitiveComponent* _OtherComp, FVector _NormalImpulse, const FHitResult& Hit)
+{
 }
