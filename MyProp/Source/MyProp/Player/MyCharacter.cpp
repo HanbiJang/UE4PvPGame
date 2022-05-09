@@ -124,21 +124,17 @@ void AMyCharacter::UpDown(float f) {
 			|| m_state == EPLAYER_STATE::MOVE) {
 			if (f != 0.f) {
 				//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
-				if (!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
+				if ((!isDashed && !isJumping) 
+					||m_state != EPLAYER_STATE::HIT) ChangeState(EPLAYER_STATE::MOVE);
 				SetisMoving_Server(true);
-				//isMoving = true;
-				//캐릭터 회전과 이동
-				//FRotator Rotation = Controller->GetControlRotation();
-				//FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-				//FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-				//AddMovementInput(Direction, f);
 
+				//캐릭터 회전과 이동
 				FRotator r = FRotator(0, GetControlRotation().Yaw, 0);
 				//GetForwardVector: r만큼 월드 정방향 벡터를 회전
 				AddMovementInput(UKismetMathLibrary::GetForwardVector(r), f);
 			}
 			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping && !isMoving) {
-				if (m_state != EPLAYER_STATE::IDLE) {
+				if (m_state != EPLAYER_STATE::IDLE && m_state != EPLAYER_STATE::HIT) {
 					UE_LOG(LogTemp, Log, TEXT("state idle change"));
 					SetisMoving_Server(false);
 					ChangeState(EPLAYER_STATE::IDLE);
@@ -159,15 +155,11 @@ void AMyCharacter::LeftRight(float f) {
 			|| m_state == EPLAYER_STATE::MOVE) {
 			if (f != 0.f) {
 				//대시나 점프일때 애니메이션 = 점프여야함 Move면 안됨
-				if (!isDashed && !isJumping) ChangeState(EPLAYER_STATE::MOVE);
+				if ((!isDashed && !isJumping) || m_state != EPLAYER_STATE::HIT) ChangeState(EPLAYER_STATE::MOVE);
 				SetisMoving_Server(true);
 				//isMoving = true;
 
 				//캐릭터 회전과 이동
-				//FRotator Rotation = Controller->GetControlRotation();
-				//FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
-				//FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-				//AddMovementInput(Direction, f);
 
 				FRotator r = FRotator(0, GetControlRotation().Yaw, 0);
 				//GetForwardVector: r만큼 월드 정방향 벡터를 회전
@@ -175,7 +167,7 @@ void AMyCharacter::LeftRight(float f) {
 			}
 
 			else if (fUpdown == 0 && fLeftRight == 0 && !isJumping) {
-				if (m_state != EPLAYER_STATE::IDLE) {
+				if (m_state != EPLAYER_STATE::IDLE && m_state != EPLAYER_STATE::HIT) {
 					UE_LOG(LogTemp, Log, TEXT("state idle change"));
 					SetisMoving_Server(false);
 					ChangeState(EPLAYER_STATE::IDLE);

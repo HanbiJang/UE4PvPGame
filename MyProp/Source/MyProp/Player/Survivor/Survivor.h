@@ -4,6 +4,7 @@
 
 #include <MyProp/Mode/MyPropGameModeBase.h>
 #include "../Killer/Killer.h"
+#include "Materials/MaterialInterface.h"
 
 #include <Engine/DataTable.h>
 #include "CoreMinimal.h"
@@ -226,5 +227,22 @@ public:
 	//비네팅 효과
 	UFUNCTION(Reliable, Client)
 		void ShowVinetting_Client();
-	
+
+	//맞기 효과
+	//몸이 빨개지기!
+	void TurnRed();
+	void TurnOriginalColor();
+
+	UFUNCTION(Reliable, Server)
+		void HitColorReaction_Server(); //빨개졌다 다시 돌아옴
+	UFUNCTION(Reliable, NetMulticast)
+		void HitColorReaction_Multicast(); //빨개졌다 다시 돌아옴
+
+
+	UMaterialInterface* mat_hit_object;
+	UMaterialInterface* mat_hit_human;
+	UMaterialInterface* mat_original;
+	UPROPERTY(replicated)
+		FTimerHandle FHitRedTimer; //몇초 뒤에 히트 매시에서 오리지널 매시로 돌아오는 타이머
+
 };

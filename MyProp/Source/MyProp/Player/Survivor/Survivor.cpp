@@ -8,6 +8,7 @@
 #include <MyProp/MyPlayerController.h>
 #include <MyProp/Object/MyPlayerObject.h>
 
+
 ASurvivor::ASurvivor() :
 	FVChange(0, 0, 0),
 	fRunPower(5),
@@ -49,6 +50,15 @@ ASurvivor::ASurvivor() :
 	//GetMesh()->SetIsReplicated(true); //스켈레탈 매시
 	//m_PlayerObject->SetIsReplicated(true); //사물 매시
 
+	//머터리얼 가져오기===========================================================
+	//캐릭터가 사용하는 매시입니다
+	ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialHitAsset(TEXT("Material'/Game/Blueprints/MyMaterial/MT_MyHitRed.MT_MyHitRed'"));
+	if (ChaseSoundAsset.Succeeded())
+		mat_hit_object = MaterialHitAsset.Object;
+
+	ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialHitAsset_human(TEXT("MaterialInstanceConstant'/Game/Blueprints/MyMaterial/MI_ColorPalette_Hit.MI_ColorPalette_Hit'"));
+	if (ChaseSoundAsset.Succeeded())
+		mat_hit_human = MaterialHitAsset_human.Object;
 }
 
 void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -118,7 +128,7 @@ void ASurvivor::BeginPlay() {
 
 void ASurvivor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
+	//TurnRed();
 	//레이캐스트로 변신가능 오브젝트 판별
 	SelectObject();
 
@@ -300,4 +310,48 @@ void ASurvivor::DashSpeedDown_Multicast_Implementation(){
 	UE_LOG(LogTemp, Log, TEXT("MaxWalkSpeed: %f"), GetCharacterMovement()->MaxWalkSpeed);
 }
 
+void ASurvivor::TurnRed() {
 
+	if (isObject) { //사물
+		mat_original = m_PlayerObject->GetMaterial(0);
+		//오리지날 메테리얼을 저장하고 레드 머터리얼로 바꿈
+		if (mat_hit_object)
+			m_PlayerObject->SetMaterial(0, mat_hit_object);
+	}
+	else { //사람
+
+		mat_original = GetMesh()->GetMaterial(0);
+		//오리지날 메테리얼을 저장하고 레드 머터리얼로 바꿈
+		if (mat_hit_human)
+			GetMesh()->SetMaterial(0, mat_hit_human);
+	}
+
+}
+
+void ASurvivor::TurnOriginalColor() {
+
+	if (mat_original) {
+		if (isObject) {
+			UE_LOG(LogTemp, Log, TEXT("isObject red change"));
+			m_PlayerObject->SetMaterial(0, mat_original);
+		}
+		else {
+			GetMesh()->SetMaterial(0, mat_original);
+		}
+		mat_original = nullptr;
+	}
+
+}
+
+
+void ASurvivor::HitColorReaction_Server_Implementation() //빨개졌다 다시 돌아옴
+{
+	HitColorReaction_Multicast();
+}
+
+void ASurvivor::HitColorReaction_Multicast_Implementation() //빨개졌다 다시 돌아옴
+{
+	TurnRed();
+	GetWorld()->GetTimerManager().SetTimer(FHitRedTimer, this, &ASurvivor::TurnOriginalColor, 0.5f, false);
+
+}

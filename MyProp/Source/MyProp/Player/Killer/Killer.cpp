@@ -69,6 +69,7 @@ void AKiller::BeginPlay() {
 void AKiller::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
+	if(HasAuthority())
 	UpdateUI_Server();
 
 	//쿨타임 시간 계산

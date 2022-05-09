@@ -30,6 +30,9 @@ void ASurvivor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 
     DOREPLIFETIME(ASurvivor, m_PrevHP);
     DOREPLIFETIME(ASurvivor, m_PrevSP);
+
+    //타격감
+    DOREPLIFETIME(ASurvivor, FHitRedTimer);
 }
 
 void ASurvivor::OnInfoUpdate()
@@ -75,6 +78,14 @@ float ASurvivor::TakeDamage(float DamageTaken, struct FDamageEvent const& Damage
 
     float damageApplied = GetInfo()->fCurHP - DamageTaken;
     SetCurrentHealth(damageApplied);
+    
+    //빨개졌다가 돌아오기
+    if(HasAuthority()) //네트워크 권한이 있다면
+        HitColorReaction_Server();
+
+    if (HasAuthority())
+        ChangeState(EPLAYER_STATE::HIT);
+
     return damageApplied;
 
 }
