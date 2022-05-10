@@ -2,7 +2,7 @@
 
 
 #include "MyPlayerObject.h"
-#include "../Player/MyPlayerObjectPawn.h"
+//#include "../Player/MyPlayerObjectPawn.h"
 #include <math.h>
 
 // Sets default values

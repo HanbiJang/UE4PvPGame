@@ -4,7 +4,7 @@
 #include "Anim/MyAnimInstance.h"
 
 #include "Engine/BlueprintGeneratedClass.h"
-#include "MyPlayerObjectPawn.h"
+//#include "MyPlayerObjectPawn.h"
 
 #include <MyProp/Player/Survivor/Survivor.h>
 
