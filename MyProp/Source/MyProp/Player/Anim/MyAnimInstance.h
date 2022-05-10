@@ -3,7 +3,7 @@
 #pragma once
 
 #include <EngineMinimal.h>
-#include "../MyCharacterState.h"
+#include <MyProp/Player/Common/MyCharacterState.h>
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"

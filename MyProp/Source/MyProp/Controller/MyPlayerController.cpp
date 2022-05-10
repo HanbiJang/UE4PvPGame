@@ -3,7 +3,7 @@
 
 #include "MyPlayerController.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
-#include <MyProp/MyGameInstance.h>
+#include <MyProp/GameInstance/MyGameInstance.h>
 
 #include <MyProp/Mode/MyPropGameModeBase.h>
 

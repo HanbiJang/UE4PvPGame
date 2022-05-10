@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "MyInfo.h" //캐릭터 정보 
+#include <MyProp/Player/Common/MyInfo.h>
 #include <EngineMinimal.h>
 
 #include "CoreMinimal.h"

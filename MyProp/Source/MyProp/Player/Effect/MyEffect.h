@@ -3,7 +3,7 @@
 #pragma once
 
 
-#include <MyProp/Player/MyInfo.h>
+#include <MyProp/Player/Common/MyInfo.h>
 #include "Particles/ParticleSystemComponent.h"
 
 #include "CoreMinimal.h"

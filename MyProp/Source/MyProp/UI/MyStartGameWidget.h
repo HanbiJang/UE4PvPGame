@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <MyProp/Player/MyCharacterState.h>
+#include <MyProp/Player/Common/MyCharacterState.h>
 #include "Components/Button.h"
-#include <MyProp/MyGameInstance.h>
+#include <MyProp/GameInstance/MyGameInstance.h>
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"

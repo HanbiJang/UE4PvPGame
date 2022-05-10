@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <MyProp/Player/Killer/MyProjectile.h>
+#include <MyProp/Player/Killer/Projectile/MyProjectile.h>
 #include "KillerRCProjectile.generated.h"
 
 /**

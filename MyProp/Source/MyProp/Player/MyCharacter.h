@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "MyInfo.h" //캐릭터 정보 
+#include <MyProp/Player/Common/MyInfo.h>
 #include <EngineMinimal.h>
-#include "MyCharacterState.h"
-#include "../MyGameInstance.h"
+#include <MyProp/Player/Common/MyCharacterState.h>
+#include <MyProp/GameInstance/MyGameInstance.h>
 
 #include "Kismet/KismetMathLibrary.h"
 

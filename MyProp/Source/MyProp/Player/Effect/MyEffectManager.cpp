@@ -2,8 +2,7 @@
 
 
 #include "MyEffectManager.h"
-#include <MyProp/Player/MyEffect.h> //static 변수 사용 관련 1
-
+#include <MyProp/Player/Effect/MyEffect.h> //static 변수 사용 관련 1
 //static 변수 사용 관련 2
 UMyEffectManager* UMyEffectManager::m_This = nullptr;
 UWorld* UMyEffectManager::m_World = nullptr;

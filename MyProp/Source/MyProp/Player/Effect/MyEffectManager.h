@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <MyProp/Player/MyInfo.h>
+#include <MyProp/Player/Common/MyInfo.h>
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"

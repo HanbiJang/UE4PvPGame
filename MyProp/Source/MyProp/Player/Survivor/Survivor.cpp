@@ -5,7 +5,7 @@
 #include "Survivor_Move.h"
 #include "Survivor_Change.h"
 #include "Multi/Survivor_Multi.h"
-#include <MyProp/MyPlayerController.h>
+#include <MyProp/Controller/MyPlayerController.h>
 #include <MyProp/Object/MyPlayerObject.h>
 
 

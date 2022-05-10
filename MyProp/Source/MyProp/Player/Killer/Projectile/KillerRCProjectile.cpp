@@ -3,7 +3,7 @@
 
 #include "KillerRCProjectile.h"
 #include "Components/StaticMeshComponent.h"
-#include <MyProp/Player/MyEffectManager.h>
+#include <MyProp/Player/Effect/MyEffectManager.h>
 #include <MyProp/Player/Survivor/Survivor.h> 
 
 

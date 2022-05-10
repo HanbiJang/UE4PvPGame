@@ -4,9 +4,9 @@
 #include "Killer.h"
 #include <DrawDebugHelpers.h>
 #include "../Survivor/Survivor.h" 
-#include <MyProp/Player/MyEffectManager.h>
-#include <MyProp/Player/Killer/KillerRCProjectile.h>
-#include <MyProp/MyPlayerController.h>
+#include <MyProp/Player/Effect/MyEffectManager.h>
+#include <MyProp/Player/Killer/Projectile/KillerRCProjectile.h>
+#include <MyProp/Controller/MyPlayerController.h>
 
 AKiller::AKiller():
 	bAttackEnable(true),

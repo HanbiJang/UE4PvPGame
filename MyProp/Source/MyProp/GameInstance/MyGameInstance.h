@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Player/MyInfo.h"
+#include <MyProp/Player/Common/MyInfo.h>
 #include <Engine/DataTable.h>
-#include <MyProp/Player/MyCharacterState.h>
+#include <MyProp/Player/Common/MyCharacterState.h>
 //#include <MyProp/Player/Killer/Killer.h>
 //#include <MyProp/Player/Survivor/Survivor.h>
 #include <MyProp/UI/MyMainHUD.h>

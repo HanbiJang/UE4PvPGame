@@ -2,12 +2,12 @@
 
 
 #include "MyPropGameModeBase.h"
-#include <MyProp/MyGameInstance.h>
+#include <MyProp/GameInstance/MyGameInstance.h>
 
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #include <MyProp/Player/Killer/Killer.h>
 #include <MyProp/Player/Survivor/Survivor.h>
-#include <MyProp/MyPlayerController.h>
+#include <MyProp/Controller/MyPlayerController.h>
 
 AMyPropGameModeBase::AMyPropGameModeBase() {
 	DefaultPawnClass = nullptr;
