@@ -12,7 +12,8 @@ void UMyMainHUD::NativeConstruct() {
 	m_SPWidget = Cast<UMySPWidget>(GetWidgetFromName(TEXT("BP_MySP")));
 	//체력 
 	m_HPWidget = Cast<UMyHPBarWidget>(GetWidgetFromName(TEXT("BP_MyHP")));
-
+	//기계
+	m_MachineWidget = Cast<UMyMachineWidget>(GetWidgetFromName(TEXT("BP_MyMachine")));
 }
 
 

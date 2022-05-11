@@ -14,20 +14,16 @@ void AMyPlayerController::DrawHUD_Client_Implementation() {
 		m_SurvivorMainHUDClass = GI->GetSurvivorWidgetClass();
 		m_SurvivorMainHUD = Cast<UMyMainHUD>(CreateWidget(this, m_SurvivorMainHUDClass));
 		if (nullptr != m_SurvivorMainHUD) m_SurvivorMainHUD->AddToViewport();
-	}
 
-	//// InputMode 설정
-	//APlayerController* Controller = GetWorld()->GetFirstPlayerController();
-	//FInputModeGameAndUI mode;
-	//Controller->SetInputMode(mode); //변경필요
-	//Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
+		//발전기 UI 숨기기
+		m_SurvivorMainHUD->GetMachineHUD()->SetVisibility(ESlateVisibility::Hidden);
+	}
 
 	// InputMode 설정
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
-	//FInputModeGameAndUI mode;
 	FInputModeGameOnly mode; //UI 클릭 불가
 	Controller->SetInputMode(mode); //변경필요
-	//Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
+
 }
 
 void AMyPlayerController::PlayerTick(float DeltaTime) {
@@ -111,7 +107,11 @@ void AMyPlayerController::UpdatePlayHUD_Killer_Implementation(float _CurQTimeRat
 
 }
 
-void AMyPlayerController::UpdatePlayHUD_Survivor_Implementation(float _CurHPRatio, float _CurSPRatio, float _CurHP, float _MaxHP) {
+void AMyPlayerController::UpdatePlayHUD_Survivor_Implementation(
+	float _CurHPRatio,
+	float _CurSPRatio,
+	float _CurHP, 
+	float _MaxHP) {
 
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {
@@ -137,10 +137,31 @@ void AMyPlayerController::UpdatePlayHUD_Survivor_Implementation(float _CurHPRati
 			if (pSPHUD) {
 				pSPHUD->SetSP(_CurSPRatio);
 			}
+
 		}
 	}
 
 }
 
+void AMyPlayerController::UpdateMachineHUD_Survivor_Implementation(
+	float _CurMachineRatio
+	) {
+
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr) {
+		if (GI->GetSelectType() == EPLAYER_TYPE::SURVIVOR) {
+
+			//발전기 UI
+			UMyMachineWidget* pMachineHUD = m_SurvivorMainHUD->GetMachineHUD();
+
+			//기계 수리
+			if (pMachineHUD) {
+				pMachineHUD->SetPgMachine(_CurMachineRatio);
+			}
+
+		}
+	}
+
+}
 
 

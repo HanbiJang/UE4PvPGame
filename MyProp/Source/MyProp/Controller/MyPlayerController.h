@@ -8,6 +8,9 @@
 #include <MyProp/UI/Killer/MyKillerMainHUD.h>
 #include <MyProp/Player/Killer/Killer.h>
 
+#include <MyProp/UI/MyMachineWidget.h>
+#include <MyProp/Machine/MyMachine.h>
+
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "MyPlayerController.generated.h"
@@ -50,6 +53,7 @@ public:
 	UFUNCTION(Reliable, Client)
 		void UpdatePlayHUD_Survivor(float _CurHPRatio, float _CurSPRatio, float _CurHP, float _MaxHP);
 
-	//살인마 UI 스킬바 사진 변경
+	UFUNCTION(Reliable, Client)
+		void UpdateMachineHUD_Survivor(float _CurMachineRatio);
 
 };

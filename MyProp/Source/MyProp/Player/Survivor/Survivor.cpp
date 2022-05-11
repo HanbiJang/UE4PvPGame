@@ -17,7 +17,8 @@ ASurvivor::ASurvivor() :
 	FRChange(0, 0, 0),
 	fRoPower(0.1f),
 	isGround(false),
-	JumpCnt(0)
+	JumpCnt(0),
+	IsRepairEnable(false)
 {
 
 	//변신용 매시 생성==================================================================
@@ -29,12 +30,12 @@ ASurvivor::ASurvivor() :
 	m_PlayerObject->SetNotifyRigidBodyCollision(true);
 
 	//사운드 가져오기===================================================================
-	ConstructorHelpers::FObjectFinder<USoundWave> HeartBeatSoundAsset(TEXT("SoundWave'/Game/Music/HeartBeat_Fast.HeartBeat_Fast'"));
+	ConstructorHelpers::FObjectFinder<USoundWave> HeartBeatSoundAsset(TEXT("SoundWave'xxx/Game/Music/HeartBeat_Fast.HeartBeat_Fast'"));
 
 	if (HeartBeatSoundAsset.Succeeded())
 		SW_HeartBeat = HeartBeatSoundAsset.Object;
 
-	ConstructorHelpers::FObjectFinder<USoundWave> ChaseSoundAsset(TEXT("SoundWave'/Game/Music/HorrorChaseMusic.HorrorChaseMusic'"));
+	ConstructorHelpers::FObjectFinder<USoundWave> ChaseSoundAsset(TEXT("SoundWave'xxx/Game/Music/HorrorChaseMusic.HorrorChaseMusic'"));
 
 	if (ChaseSoundAsset.Succeeded())
 		SW_Chase = ChaseSoundAsset.Object;
@@ -111,6 +112,9 @@ void ASurvivor::BeginPlay() {
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKiller::StaticClass(), arrActor);
 	for (int i = 0; i < arrActor.Num(); i++) {
 		arrKiller.Add(Cast<AKiller>(arrActor[i])); //형변환
+		////크기 설정하기
+		//SetKillerScale_Server(Cast<AKiller>(arrActor[i]),1.2f);
+		
 	}
 
 	//사운드 스폰하기
@@ -121,6 +125,18 @@ void ASurvivor::BeginPlay() {
 	AC_HeartBeat->Stop();
 	AC_Chase->Stop();
 }
+
+////안됨
+//void ASurvivor::SetKillerScale_Server_Implementation(AKiller* killer,float f) {
+//	SetKillerScale_Multicast(killer,f);
+//}
+//
+//void ASurvivor::SetKillerScale_Multicast_Implementation(AKiller* killer,float f) {
+//	if (killer) {
+//		killer->GetMesh()->SetRelativeScale3D(FVector(f, f, f));
+//		UE_LOG(LogTemp, Log, TEXT("set sets etset"));
+//	}
+//}
 
 void ASurvivor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
@@ -174,6 +190,7 @@ void ASurvivor::UpdateSP_Client_Implementation() {
 		float SPRatio = m_Info.fCurSP / m_Info.fMaxSP;
 
 		if (PC != nullptr) PC->UpdatePlayHUD_Survivor(HPRatio, SPRatio, m_Info.fCurHP, m_Info.fMaxHP);
+
 	}
 
 	// 현재 체력, 스태미너를 이전프레임 체력으로 갱신

@@ -246,5 +246,15 @@ public:
 		FTimerHandle FHitRedTimer; //몇초 뒤에 히트 매시에서 오리지널 매시로 돌아오는 타이머
 
 	void TurnMove() override;
+public:
+	//발전기 수리
+	bool IsRepairEnable;
+	void SetIsRepairEnable(bool value) { IsRepairEnable = value; };
 
+	////킬러 크기
+	//UFUNCTION(Reliable, Server)
+	//	void SetKillerScale_Server(AKiller* killer,float f);
+	//UFUNCTION(Reliable, NetMulticast)
+	//	void SetKillerScale_Multicast(AKiller* killer,float f);
+	
 };

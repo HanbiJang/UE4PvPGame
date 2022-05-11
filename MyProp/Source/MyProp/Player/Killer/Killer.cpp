@@ -19,6 +19,8 @@ AKiller::AKiller():
 	//멀티플레이 - 리플리케이션 설정
 	bReplicates = true;
 	GetMesh()->SetIsReplicated(true); //스켈레탈 매시
+	//크기 설정 (클라한테 안먹힘)
+	//GetMesh()->SetRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
 
 	//칼들고 있게 하기
 	m_Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
@@ -43,6 +45,7 @@ AKiller::AKiller():
 	HeadBox->SetupAttachment(GetMesh(), TEXT("head"));
 
 }
+
 
 void AKiller::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -72,6 +75,7 @@ void AKiller::BeginPlay() {
 	//======뚝스턴======
 	//GetBox()->OnComponentHit.AddDynamic(this, &AMyProjectile::OnHit);
 	HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AKiller::OnBeginOverlap);
+	
 }
 
 void AKiller::Tick(float DeltaTime) {
