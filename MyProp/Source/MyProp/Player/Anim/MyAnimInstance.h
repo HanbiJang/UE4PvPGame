@@ -22,9 +22,9 @@ class MYPROP_API UMyAnimInstance : public UAnimInstance
 public:
 	UMyAnimInstance();
 
-	virtual void NativeInitializeAnimation() override;
-	virtual void NativeBeginPlay() override;
-	virtual void NativeUpdateAnimation(float _fDT) override;
+	/*virtual */void NativeInitializeAnimation() override;
+	/*virtual */void NativeBeginPlay() override;
+	/*virtual */void NativeUpdateAnimation(float _fDT) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		EPLAYER_STATE m_eState; //캐릭터 상태

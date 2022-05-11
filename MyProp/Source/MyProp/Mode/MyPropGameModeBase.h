@@ -53,5 +53,5 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 	FVector vSurvivor1SpawnLocation = FVector(240, 940, 200);
 
 private:
-	virtual void PostLogin(APlayerController* NewPlayer) override; //로그인이 성공한뒤에 호출
+	/*virtual */void PostLogin(APlayerController* NewPlayer) override; //로그인이 성공한뒤에 호출
 };

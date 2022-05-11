@@ -31,6 +31,6 @@ public:
 
 
 public:
-	virtual void NativeConstruct() override;
+	/*virtual */void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& Geometry, float DT) override;
 };

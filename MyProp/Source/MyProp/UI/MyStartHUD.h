@@ -21,7 +21,7 @@ class MYPROP_API UMyStartHUD : public UUserWidget
 	GENERATED_BODY()
 
 private:
-	virtual void NativeConstruct() override;
+	/*virtual*/ void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& Geometry, float DT) override;
 
 	//플레이 버튼 : 게임 시작 패널 띄우기

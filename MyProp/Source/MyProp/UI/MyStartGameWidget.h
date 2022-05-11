@@ -22,7 +22,7 @@ class MYPROP_API UMyStartGameWidget : public UUserWidget
 	GENERATED_BODY()
 	
 private:
-	virtual void NativeConstruct() override;
+	/*virtual*/ void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& Geometry, float DT) override;
 
 	//È¨ ¹öÆ°
