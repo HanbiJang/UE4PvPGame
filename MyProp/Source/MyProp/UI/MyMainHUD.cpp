@@ -14,6 +14,9 @@ void UMyMainHUD::NativeConstruct() {
 	m_HPWidget = Cast<UMyHPBarWidget>(GetWidgetFromName(TEXT("BP_MyHP")));
 	//기계
 	m_MachineWidget = Cast<UMyMachineWidget>(GetWidgetFromName(TEXT("BP_MyMachine")));
+	//발전기 && 타이머
+	m_TimerWidget = Cast<UMyTimerWidget>(GetWidgetFromName(TEXT("BP_TimerWidget")));
+
 }
 
 

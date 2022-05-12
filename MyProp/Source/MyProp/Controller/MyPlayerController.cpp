@@ -2,12 +2,22 @@
 
 
 #include "MyPlayerController.h"
+
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #include <MyProp/GameInstance/MyGameInstance.h>
+#include <MyProp/UI/Common/MyTimerWidget.h>
 
 #include <MyProp/Mode/MyPropGameModeBase.h>
+#include <MyProp/Machine/MyMachine.h>
 
-void AMyPlayerController::DrawHUD_Client_Implementation() {
+AMyPlayerController::AMyPlayerController():
+	DoneMachineNum(0) 
+{
+
+}
+
+void AMyPlayerController::DrawHUD_Client_Implementation() 
+{
 	//UI
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI != nullptr) {

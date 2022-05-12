@@ -8,13 +8,12 @@
 #include <MyProp/UI/Killer/MyKillerMainHUD.h>
 #include <MyProp/Player/Killer/Killer.h>
 
-#include <MyProp/UI/MyMachineWidget.h>
-#include <MyProp/Machine/MyMachine.h>
-
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "MyPlayerController.generated.h"
 
+class AMyMachine;
+class UMyTimerWidget;
 class AMyPropGameModeBase;
 /**
  * 
@@ -23,7 +22,8 @@ UCLASS()
 class MYPROP_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+		AMyPlayerController(); //생성자
 public:
 	UFUNCTION(Client, reliable)
 		void DrawHUD_Client();
@@ -44,6 +44,7 @@ public:
 public:
 	virtual void PlayerTick(float DeltaTime) override;
 
+
 public:
 	//살인마 UI 업데이트
 	UFUNCTION(Reliable, Server) //구현해야함
@@ -56,4 +57,13 @@ public:
 	UFUNCTION(Reliable, Client)
 		void UpdateMachineHUD_Survivor(float _CurMachineRatio);
 
+private:
+	//발전기 갯수 컨트롤 & UI
+	int DoneMachineNum;
+
+public:
+	int GetDoneMachineNum() { return DoneMachineNum; }
+	void SetMachineDone(bool b) {
+		DoneMachineNum++;
+	}
 };

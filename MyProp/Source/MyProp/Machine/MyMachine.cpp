@@ -6,6 +6,7 @@
 #include <MyProp/Player/Survivor/Survivor.h>
 #include <MyProp/Controller/MyPlayerController.h>
 #include <MyProp/GameInstance/MyGameInstance.h>
+#include <MyProp/Mode/MyPropGameModeBase.h>
 
 // Sets default values
 AMyMachine::AMyMachine()
@@ -74,6 +75,17 @@ void AMyMachine::Tick(float DeltaTime)
 		if(sur){
 			sur->ChangeState(EPLAYER_STATE::IDLE);
 		}
+
+		//모든 게임 컨트롤러에서 발전기 개수 증가
+		for (FConstControllerIterator itr = GetWorld()->GetControllerIterator(); itr; ++itr) {
+			AMyPlayerController* PC = Cast<AMyPlayerController>(*itr);
+			if (PC) {
+				PC->SetMachineDone(true); //완료한 발전기 갯수 증가
+				int machineNum = PC->GetDoneMachineNum();
+			}
+
+		}
+		
 	}
 
 	if (!IsDone && IsEnable) { //수리 가능하면

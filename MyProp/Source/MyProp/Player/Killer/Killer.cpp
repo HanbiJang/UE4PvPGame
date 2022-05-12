@@ -98,6 +98,14 @@ void AKiller::Tick(float DeltaTime) {
 		m_Info.fCurRCLeftTime = FMath::Clamp(m_Info.fCurRCLeftTime - DeltaTime, 0.f, m_Info.rCAttackSpeed);
 	}
 
+	//발전기 UI 업데이트=====================================================================
+	if (PC) {
+		int machineNum = PC->GetDoneMachineNum();
+		//이미지 변경하기
+		if(machineNum > 0)
+			PC->GetKillerMainHUD()->GetTimerHUD()->SetMachineImge_Done(machineNum-1);
+	}
+
 }
 
 void AKiller::Attack()

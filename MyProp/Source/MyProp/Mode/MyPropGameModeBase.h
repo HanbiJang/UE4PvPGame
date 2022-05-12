@@ -26,20 +26,11 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-		//MyCharacter에게 폰 빙의 시키기
-		AMyPropGameModeBase();
+	//MyCharacter에게 폰 빙의 시키기
+	AMyPropGameModeBase();
 
 	void BeginPlay();
-
-	//UI
-	//TSubclassOf<UUserWidget>	m_MainHUDClass;
-	//TSubclassOf<UUserWidget>	m_KillerMainHUDClass;
-	//TSubclassOf<UUserWidget>	m_SurvivorMainHUDClass;
-
-	//UMyMainHUD* m_SurvivorMainHUD;
-	//UMyMainHUD* GetMainHUD() { return m_SurvivorMainHUD; }
-	//UMyKillerMainHUD* m_KillerMainHUD;
-	//UMyKillerMainHUD* GetKillerMainHUD() { return m_KillerMainHUD; }
+	void Tick(float DeltaTime) override;
 
 	//플레이어들
 	int maxPlayerNum = 2;
@@ -54,4 +45,5 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 
 private:
 	/*virtual */void PostLogin(APlayerController* NewPlayer) override; //로그인이 성공한뒤에 호출
+
 };

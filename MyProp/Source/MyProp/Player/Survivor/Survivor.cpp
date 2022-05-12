@@ -106,6 +106,9 @@ void ASurvivor::BeginPlay() {
 		SetInfo(*(GI->GetSurvivorInfo(TEXT("Survivor1"))));
 	}
 
+	//플레이어 컨트롤러 가져오기
+	PC = Cast<AMyPlayerController>(GetController());
+
 	//킬러 가져오기 =====================================================================
 	//월드 상의 특정 클래스 Actor을 가져오기
 	TArray<AActor*> arrActor;
@@ -140,8 +143,8 @@ void ASurvivor::BeginPlay() {
 
 void ASurvivor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-	//TurnRed();
-	//레이캐스트로 변신가능 오브젝트 판별
+
+	//레이캐스트로 변신가능 오브젝트 판별======================================================
 	SelectObject();
 
 	//======================================================================================
@@ -156,6 +159,15 @@ void ASurvivor::Tick(float DeltaTime) {
 
 	//살인마와 거리 차이에 따라서 비네팅 효과 & 화면 그레인 (지터) 증가 감소
 	ShowVinetting();
+
+	//발전기 UI 업데이트=====================================================================
+	if (PC) {
+		int machineNum = PC->GetDoneMachineNum();
+		//이미지 변경하기
+		if (machineNum > 0)
+			PC->GetMainHUD()->GetTimerHUD()->SetMachineImge_Done(machineNum - 1);
+	}
+
 
 	//죽기==================================================================================
 	if (GetInfo()->fCurHP <= 0) {
@@ -184,8 +196,6 @@ void ASurvivor::UpdateSP_Client_Implementation() {
 	{
 		// 이전 체력과 현제 체력이 다르다.
 		// HUD 갱신
-		AMyPlayerController* PC = Cast<AMyPlayerController>(this->GetInstigatorController());
-
 		float HPRatio = m_Info.fCurHP / m_Info.fMaxHP;
 		float SPRatio = m_Info.fCurSP / m_Info.fMaxSP;
 

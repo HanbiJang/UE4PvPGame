@@ -3,6 +3,8 @@
 #pragma once
 #include <components/progressbar.h>
 #include <components/TextBlock.h>
+//공통
+#include <MyProp/UI/Common/MyTimerWidget.h>
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -25,6 +27,9 @@ private:
 	UTextBlock* m_ESkillText;
 	UTextBlock* m_ClickSkillText;
 
+	//타이머 & 발전기 위젯
+	UMyTimerWidget* m_TimerWidget;
+
 public:
 	//위젯 주기
 	UProgressBar* GetQSkillPg() { return m_QSkillPg; }
@@ -33,6 +38,8 @@ public:
 	UTextBlock* GetQSkillText(){ return m_QSkillText; }
 	UTextBlock* GetESkillText(){ return m_ESkillText; }
 	UTextBlock* GetClickSkillText(){ return m_ClickSkillText; }
+
+	UMyTimerWidget* GetTimerHUD() { return m_TimerWidget; }
 
 	//위젯 값설정
 	void SetQSkillPg(float _CurTime);

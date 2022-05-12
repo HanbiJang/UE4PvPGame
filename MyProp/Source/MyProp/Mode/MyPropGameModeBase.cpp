@@ -9,20 +9,23 @@
 #include <MyProp/Player/Survivor/Survivor.h>
 #include <MyProp/Controller/MyPlayerController.h>
 
-AMyPropGameModeBase::AMyPropGameModeBase() {
+AMyPropGameModeBase::AMyPropGameModeBase()
+{
 	DefaultPawnClass = nullptr;
 
-	////UI
-	//UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	//if (GI != nullptr) {
-	//	m_SurvivorMainHUDClass = GI->GetSurvivorWidgetClass();
-	//	m_KillerMainHUDClass = GI->GetKillerWidgetClass();
-	//}
+	//MachineArr.Init(5, false);
 }
 
 void AMyPropGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AMyPropGameModeBase::Tick(float DeltaTime) {
+
+	//모든 PlayerController들에게 발전기 UI 업데이트 시킴
+		
+
 }
 
 void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {

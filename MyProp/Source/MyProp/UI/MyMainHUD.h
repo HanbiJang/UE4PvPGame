@@ -6,6 +6,8 @@
 #include "MyHPBarWidget.h"
 #include "MySPWidget.h"
 #include "MyMachineWidget.h"
+//공통
+#include <MyProp/UI/Common/MyTimerWidget.h>
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -34,5 +36,9 @@ public:
 	//기계 수리
 	UMyMachineWidget* m_MachineWidget;
 	UMyMachineWidget* GetMachineHUD() { return m_MachineWidget; }
+
+	//타이머 & 발전기 위젯
+	UMyTimerWidget* m_TimerWidget;
+	UMyTimerWidget* GetTimerHUD() { return m_TimerWidget; }
 
 };

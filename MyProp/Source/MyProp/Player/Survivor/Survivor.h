@@ -58,6 +58,8 @@ public:
 
 	FSurvivorInfo* GetInfo() { return &m_Info; }
 	void SetInfo(FSurvivorInfo new_Info) { m_Info = new_Info; }
+
+	AMyPlayerController* PC; //플레이어 컨트롤러
 	
 	//킬러 정보
 	TArray<AKiller*> arrKiller;

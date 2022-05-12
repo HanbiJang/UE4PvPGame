@@ -15,6 +15,9 @@ void UMyKillerMainHUD::NativeConstruct() {
 	m_ESkillText = Cast<UTextBlock>(GetWidgetFromName(TEXT("ESkillText")));
 	m_ClickSkillText = Cast<UTextBlock>(GetWidgetFromName(TEXT("ClickSkillText")));
 
+	//발전기 && 타이머
+	m_TimerWidget = Cast<UMyTimerWidget>(GetWidgetFromName(TEXT("BP_TimerWidget")));
+
 	//UI 초기 세팅
 	SetQSkillPg(0);
 	SetESkillPg(0);
