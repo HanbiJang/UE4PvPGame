@@ -17,6 +17,38 @@ AMyPlayerController::AMyPlayerController():
 
 }
 
+void AMyPlayerController::BeginPlay() {
+	Super::BeginPlay();
+
+	//게임이 시작되면 타이머를 부름...안됨
+	//GetWorld()->GetTimerManager().SetTimer(FGameTimer, this, &AMyPlayerController::CheckTime, 1.0f, true, GameLeftTimeSec);
+}
+
+void AMyPlayerController::PlayerTick(float DeltaTime) {
+	Super::PlayerTick(DeltaTime);
+	
+	//발전기 수리 ==========================================================
+	if (DoneMachineNum >= 5) { //발전기 수리가 5개됐으면
+		IsAllMachineRepaired = true; //모든 발전기가 수리되었다는 것을 알리자
+	}
+
+	////게임 타이머 ==============================================================
+	//if (GameLeftTimeSec > 0) {
+	//	GameLeftTimeSec = FMath::Clamp(GameLeftTimeSec - DeltaTime, 0.f, 60 * 99.f);
+	//	if (GameLeftTimeSec <= 0) {
+	//		GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, TEXT("Game Over"));
+	//	}
+	//}
+
+}
+
+void AMyPlayerController::UpdateTimerUI_Client_Implementation(const FString& timestr) {
+
+	GetMainHUD()->GetTimerHUD()->SetTimeText(timestr);
+
+}
+
+//화면 그리기========================================================
 void AMyPlayerController::DrawHUD_Client_Implementation() 
 {
 	//UI
@@ -35,14 +67,6 @@ void AMyPlayerController::DrawHUD_Client_Implementation()
 	FInputModeGameOnly mode; //UI 클릭 불가
 	Controller->SetInputMode(mode); //변경필요
 
-}
-
-void AMyPlayerController::PlayerTick(float DeltaTime) {
-	Super::PlayerTick(DeltaTime);
-	
-	if (DoneMachineNum >= 5) { //발전기 수리가 5개됐으면
-		IsAllMachineRepaired = true; //모든 발전기가 수리되었다는 것을 알리자
-	}
 }
 void AMyPlayerController::DrawHUD_Server_Implementation() {
 	//UI 설정

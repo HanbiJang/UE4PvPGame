@@ -61,7 +61,9 @@ public:
 		UBoxComponent* RepairBox;
 	ASurvivor* sur; //1명 생존자
 
-
 	UFUNCTION(Reliable, Client)
 		void MachineUIVisiblity_Client(bool b, ASurvivor* _sur);
+
+	UFUNCTION(Reliable, Server)
+		void SetTimerTime_Server(float f);
 };

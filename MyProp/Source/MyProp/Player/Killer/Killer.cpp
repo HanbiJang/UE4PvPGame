@@ -106,6 +106,31 @@ void AKiller::Tick(float DeltaTime) {
 			PC->GetKillerMainHUD()->GetTimerHUD()->SetMachineImge_Done(machineNum-1);
 	}
 
+	////타이머 업데이트 =====================================================================
+	//if (PC) {
+	//	int min = (PC->GameLeftTimeSec) / 60.f;
+	//	int sec = (PC->GameLeftTimeSec) - min * 60;
+	//	FString timeStr;
+	//	if (min <= 9) {
+	//		if (sec <= 9) {
+	//			timeStr = FString::Printf(TEXT("0%i:0%i"), min, sec);
+	//		}
+	//		else {
+	//			timeStr = FString::Printf(TEXT("0%i:%i"), min, sec);
+	//		}
+	//	}
+	//	else {
+	//		if (sec <= 9) {
+	//			timeStr = FString::Printf(TEXT("%i:0%i"), min, sec);
+	//		}
+	//		else {
+	//			timeStr = FString::Printf(TEXT("%i:%i"), min, sec);
+	//		}
+	//	}
+
+	//	PC->GetKillerMainHUD()->GetTimerHUD()->SetTimeText(timeStr);
+	//}
+
 }
 
 void AKiller::Attack()

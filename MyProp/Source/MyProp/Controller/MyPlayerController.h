@@ -42,8 +42,8 @@ public:
 	UMyKillerMainHUD* GetKillerMainHUD() { return m_KillerMainHUD; };
 
 public:
-	virtual void PlayerTick(float DeltaTime) override;
-
+	/*virtual*/ void PlayerTick(float DeltaTime) override;
+	void BeginPlay() override;
 
 public:
 	//살인마 UI 업데이트
@@ -68,4 +68,18 @@ public:
 	void SetMachineDone(bool b) {
 		DoneMachineNum++;
 	}
+
+	//게임 타이머======================================================
+	
+	//FTimerHandle FGameTimer; //게임 타이머
+//private:
+	//float GameLeftTimeSec; //게임 남은 시간을 초로 환산한 시간 : 7분
+	//void CheckTime(); //게임 타이머 시간 체크
+public:
+	//float GetGameLeftTimeSec() { return GameLeftTimeSec; }
+	//void SetGameLeftTimeSec(float value) { GameLeftTimeSec = value; }
+	
+	UFUNCTION(Reliable, Client)
+		void UpdateTimerUI_Client(const FString& timestr);
+
 };
