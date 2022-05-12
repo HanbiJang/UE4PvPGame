@@ -65,30 +65,28 @@ void AMyMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!IsDone && CurRepairTime >= RepairTime) {//수리 완료	
+	if (!IsDone && CurRepairTime >= RepairTime) {
+		//수리 완료	
 		IsDone = true; 
 		m_Light->SetIntensity(10000.f);//라이트 켜기 15000.
 		//매시 변경
 		if(m_DoneMesh)
 			m_Mesh->SetStaticMesh(m_DoneMesh);
-		//생존자 상태 변경
+		//수리하던 생존자 상태 변경
 		if(sur){
 			sur->ChangeState(EPLAYER_STATE::IDLE);
 		}
 
-		//모든 게임 컨트롤러에서 타이머 시간, 발전기 개수 증가
+		//모든 게임 컨트롤러에서 발전기 개수 증가
 		for (FConstControllerIterator itr = GetWorld()->GetControllerIterator(); itr; ++itr) {
 			AMyPlayerController* PC = Cast<AMyPlayerController>(*itr);
 			if (PC) {
 				PC->SetMachineDone(true); //완료한 발전기 갯수 증가
 				int machineNum = PC->GetDoneMachineNum();
 			}
-			//타이머 시간 증가
-			//PC->SetGameLeftTimeSec(PC->GetGameLeftTimeSec() + 120.f);
-			//AMyPropGameModeBase* GM = Cast<AMyPropGameModeBase>(GetWorld()->GetMode);
-			SetTimerTime_Server(120.f);
 		}
-
+		//타이머 시간 증가
+		SetTimerTime_Server(120.f);
 		
 	}
 
