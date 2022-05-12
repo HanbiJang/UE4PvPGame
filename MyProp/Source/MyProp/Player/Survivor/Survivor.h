@@ -240,10 +240,19 @@ public:
 	UFUNCTION(Reliable, NetMulticast)
 		void HitColorReaction_Multicast(); //빨개졌다 다시 돌아옴
 
-
+private:
 	UMaterialInterface* mat_hit_object;
 	UMaterialInterface* mat_hit_human;
 	UMaterialInterface* mat_original;
+
+public:
+	UMaterialInterface* Getmat_hit_object() { return mat_hit_object; }
+	UMaterialInterface* Getmat_hit_human() { return mat_hit_human; }
+	UMaterialInterface* Getmat_original() { return mat_original; }
+	void Setmat_hit_object(UMaterialInterface* m) { mat_hit_object = m; };
+	void Setmat_hit_human(UMaterialInterface* m) { mat_hit_human = m; };
+	void Setmat_original(UMaterialInterface* m) { mat_original = m; };
+
 	UPROPERTY(replicated)
 		FTimerHandle FHitRedTimer; //몇초 뒤에 히트 매시에서 오리지널 매시로 돌아오는 타이머
 

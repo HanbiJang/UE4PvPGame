@@ -102,7 +102,7 @@ private:
 private:
 	UFUNCTION(Reliable, Server)
 		void RangeAttackEffect_Server();
-	UFUNCTION(Reliable, NetMulticast)
+	UFUNCTION(Reliable, Server)
 		void RangeAttackEffect_Multicast();
 
 	//UI 업데이트 ============================

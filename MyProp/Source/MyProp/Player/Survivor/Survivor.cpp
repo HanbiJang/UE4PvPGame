@@ -55,11 +55,11 @@ ASurvivor::ASurvivor() :
 	//캐릭터가 사용하는 매시입니다
 	ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialHitAsset(TEXT("Material'/Game/Blueprints/MyMaterial/MT_MyHitRed.MT_MyHitRed'"));
 	if (MaterialHitAsset.Succeeded())
-		mat_hit_object = MaterialHitAsset.Object;
+		Setmat_hit_object(MaterialHitAsset.Object);
 
 	ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialHitAsset_human(TEXT("MaterialInstanceConstant'/Game/Blueprints/MyMaterial/MI_ColorPalette_Hit.MI_ColorPalette_Hit'"));
 	if (MaterialHitAsset_human.Succeeded())
-		mat_hit_human = MaterialHitAsset_human.Object;
+		Setmat_hit_human(MaterialHitAsset_human.Object);
 }
 
 void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -337,16 +337,16 @@ void ASurvivor::DashSpeedDown_Multicast_Implementation(){
 void ASurvivor::TurnRed() {
 
 	if (isObject) { //사물
-		mat_original = m_PlayerObject->GetMaterial(0);
+		Setmat_original(m_PlayerObject->GetMaterial(0));
 		//오리지날 메테리얼을 저장하고 레드 머터리얼로 바꿈
-		if (mat_hit_object)
-			m_PlayerObject->SetMaterial(0, mat_hit_object);
+		if (Getmat_hit_object())
+			m_PlayerObject->SetMaterial(0, Getmat_hit_object());
 	}
 	else { //사람
-		mat_original = GetMesh()->GetMaterial(0);
+		Setmat_original(GetMesh()->GetMaterial(0));
 		//오리지날 메테리얼을 저장하고 레드 머터리얼로 바꿈
-		if (mat_hit_human) {
-			GetMesh()->SetMaterial(0, mat_hit_human);
+		if (Getmat_hit_human()) {
+			GetMesh()->SetMaterial(0, Getmat_hit_human());
 		}
 			
 	}
@@ -354,15 +354,14 @@ void ASurvivor::TurnRed() {
 }
 void ASurvivor::TurnOriginalColor() {
 
-	if (mat_original) {
+	if (Getmat_original()) {
 		if (isObject) {
-			UE_LOG(LogTemp, Log, TEXT("isObject red change"));
-			m_PlayerObject->SetMaterial(0, mat_original);
+			m_PlayerObject->SetMaterial(0, Getmat_original());
 		}
 		else {
-			GetMesh()->SetMaterial(0, mat_original);
+			GetMesh()->SetMaterial(0, Getmat_original());
 		}
-		mat_original = nullptr;
+		Setmat_original(nullptr);
 	}
 
 }
@@ -376,7 +375,6 @@ void ASurvivor::HitColorReaction_Multicast_Implementation() //빨개졌다 다시 돌아
 {
 	TurnRed();
 	GetWorld()->GetTimerManager().SetTimer(FHitRedTimer, this, &ASurvivor::TurnOriginalColor, 0.5f, false);
-
 }
 
 void ASurvivor::TurnMove() {

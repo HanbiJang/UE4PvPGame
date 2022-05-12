@@ -11,7 +11,7 @@
 
 AMyPropGameModeBase::AMyPropGameModeBase():
 	GameLeftTimeSec(60.f * 7),
-	maxPlayerNum(5),
+	maxPlayerNum( 3/*5*/ ),
 	IsGameStartEnable(false)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -48,7 +48,6 @@ void AMyPropGameModeBase::UpdateTimerUI_Implementation(float DeltaTime) {
 		//시간 업데이트
 		if (GameLeftTimeSec > 0) {
 			GameLeftTimeSec = FMath::Clamp(GameLeftTimeSec - DeltaTime, 0.f, 60 * 99.f);
-			UE_LOG(LogTemp, Log, TEXT("tick...%f"), GameLeftTimeSec);
 			if (GameLeftTimeSec <= 0) {
 				GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, TEXT("Game Over"));
 			}

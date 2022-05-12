@@ -205,8 +205,7 @@ void AKiller::RangeAttackAction() {
 
 	//공격 (충돌) Trace 채널을 이용한 범위 체크	
 	float fRadius = 300.f; //구의 크기
-	FVector attackPos = GetActorLocation();
-	ASurvivor* survivor;
+	FVector attackPos = GetActorLocation(); 
 
 	TArray<FHitResult> arrHit; //충돌 결과
 	FCollisionQueryParams param(NAME_None, false, this);
@@ -215,32 +214,34 @@ void AKiller::RangeAttackAction() {
 		, ECC_GameTraceChannel3/*Attack Trace Channel*/
 		, FCollisionShape::MakeSphere(fRadius), param);
 
-	if (arrHit.Num())
-	{
-		for (int i = 0; i < arrHit.Num(); i++) {
-			survivor = Cast<ASurvivor>(arrHit[i].GetActor());
+	TSet<AActor*> hitset; //중복 없는 배열 	
+	for (int i = 0; i < arrHit.Num(); i++) {
+		hitset.Add(arrHit[i].GetActor());
 
-			//생존자든 아니든, 맞은 부위에 이펙트 표시하기
-			FTransform trans(GetActorRotation(), arrHit[i].ImpactPoint);
-			UMyEffectManager::GetInst(GetWorld())->CreateEffect(EKillerEffect::ATTACK, trans, GetLevel());
+		//생존자든 아니든, 맞은 부위에 이펙트 표시하기
+		FTransform trans(GetActorRotation(), arrHit[i].ImpactPoint);
+		UMyEffectManager::GetInst(GetWorld())->CreateEffect(EKillerEffect::ATTACK, trans, GetLevel());
+	}
 
-			UE_LOG(LogTemp, Log, TEXT("%s"), *(arrHit[i].GetActor()->GetName()) );
-
-			if (survivor != nullptr) { //cast 실패시 null
-				//생존자가 맞게하기
-				UGameplayStatics::ApplyDamage(survivor, 5.f, NULL, GetOwner(), NULL);
-				break;
-			}
+	for (auto Iterator = hitset.CreateIterator(); Iterator; ++Iterator) {
+		ASurvivor* survivor = Cast<ASurvivor>(*Iterator);
+		//UE_LOG(LogTemp, Log, TEXT("Cast result : arrHit[%i].GetActor(): %s"), i,*(arrHit[i].BoneName.ToString()));
+		if (survivor != nullptr) { //cast 실패시 null
+			//생존자가 맞게하기
+			UE_LOG(LogTemp, Log, TEXT("sur hp: %f"), survivor->GetInfo()->fCurHP);
+			UGameplayStatics::ApplyDamage(survivor, 7.0f, NULL, GetOwner(), NULL);
 		}
 	}
 
+}
+
 #ifdef ENABLE_DRAW_DEBUG //범위를 눈으로 확인
-	FColor color;
-	arrHit.Num() ? color = FColor::Red : color = FColor::Green;
-	DrawDebugSphere(GetWorld(), attackPos, fRadius, 12, color, false, 2.5f);
+	//FColor color;
+	//arrHit.Num() ? color = FColor::Red : color = FColor::Green;
+	//DrawDebugSphere(GetWorld(), attackPos, fRadius, 12, color, false, 2.5f);
 #endif
 
-}
+
 
 void AKiller::RCAttack() {
 	//공격 모션
