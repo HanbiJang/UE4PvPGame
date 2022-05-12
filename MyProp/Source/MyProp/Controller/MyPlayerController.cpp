@@ -11,7 +11,8 @@
 #include <MyProp/Machine/MyMachine.h>
 
 AMyPlayerController::AMyPlayerController():
-	DoneMachineNum(0) 
+	DoneMachineNum(0),
+	IsAllMachineRepaired(false)
 {
 
 }
@@ -38,6 +39,10 @@ void AMyPlayerController::DrawHUD_Client_Implementation()
 
 void AMyPlayerController::PlayerTick(float DeltaTime) {
 	Super::PlayerTick(DeltaTime);
+	
+	if (DoneMachineNum >= 5) { //발전기 수리가 5개됐으면
+		IsAllMachineRepaired = true; //모든 발전기가 수리되었다는 것을 알리자
+	}
 }
 void AMyPlayerController::DrawHUD_Server_Implementation() {
 	//UI 설정

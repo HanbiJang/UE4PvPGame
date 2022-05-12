@@ -60,9 +60,11 @@ public:
 private:
 	//발전기 갯수 컨트롤 & UI
 	int DoneMachineNum;
+	bool IsAllMachineRepaired;
 
 public:
 	int GetDoneMachineNum() { return DoneMachineNum; }
+	bool GetIsAllMachineRepaired() { return IsAllMachineRepaired; }
 	void SetMachineDone(bool b) {
 		DoneMachineNum++;
 	}

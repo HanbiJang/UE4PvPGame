@@ -95,6 +95,12 @@ void ASurvivor::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitive
 void ASurvivor::Interaction()
 {
 	//발전기, 문 등과 상호작용
+	if (m_state != EPLAYER_STATE::OBJECT) {
+		//상태 전환 (기계 파괴, 기계 수리)
+		if(IsRepairEnable)
+			ChangeState(EPLAYER_STATE::MACHINE);
+	}
+
 }
 
 void ASurvivor::BeginPlay() {
@@ -178,6 +184,14 @@ void ASurvivor::Tick(float DeltaTime) {
 		}
 
 	}
+
+	//발전기가 모두 수리되면     ===========================================================
+	if (PC) {
+		if (PC->GetIsAllMachineRepaired()) {
+			SetIsRepairEnable(false);
+		}
+	}
+
 }
 
 void ASurvivor::UpdateSP_Implementation() {
@@ -337,7 +351,6 @@ void ASurvivor::TurnRed() {
 	}
 
 }
-
 void ASurvivor::TurnOriginalColor() {
 
 	if (mat_original) {
@@ -358,7 +371,6 @@ void ASurvivor::HitColorReaction_Server_Implementation() //빨개졌다 다시 돌아옴
 {
 	HitColorReaction_Multicast();
 }
-
 void ASurvivor::HitColorReaction_Multicast_Implementation() //빨개졌다 다시 돌아옴
 {
 	TurnRed();

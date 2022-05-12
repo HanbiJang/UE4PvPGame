@@ -52,9 +52,9 @@ public:
 		FSurvivorInfo m_Info;
 
 	UPROPERTY(replicated)
-	float m_PrevHP;
+		float m_PrevHP;
 	UPROPERTY(replicated)
-	float m_PrevSP;
+		float m_PrevSP;
 
 	FSurvivorInfo* GetInfo() { return &m_Info; }
 	void SetInfo(FSurvivorInfo new_Info) { m_Info = new_Info; }
@@ -144,11 +144,11 @@ public:
 	
 	//Jump 관련 변수
 	UPROPERTY(replicated)
-	bool isGround;
+		bool isGround;
 
 	//2단 점프 제한
 	UPROPERTY(replicated)
-	int JumpCnt = 0;
+		int JumpCnt = 0;
 
 	//땅과 닿았을 시 isGround를 true로 만든다
 protected:

@@ -208,10 +208,6 @@ void AMyCharacter::DashStop()
 
 void AMyCharacter::Interaction()
 {
-	if (m_state != EPLAYER_STATE::OBJECT) {
-		//상태 전환 (기계 파괴, 기계 수리)
-		ChangeState(EPLAYER_STATE::MACHINE);
-	}
 
 }
 
