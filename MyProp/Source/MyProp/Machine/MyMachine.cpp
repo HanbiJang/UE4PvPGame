@@ -13,7 +13,7 @@ AMyMachine::AMyMachine()
 :
 IsEnable(true),
 Range(100.f), //수리 거리
-RepairTime(10.f), //총 수리해야하는 시간
+RepairTime(60.f), //총 수리해야하는 시간
 CurRepairTime(0.f),
 IsDone(false) //수리 완료 여부
 {

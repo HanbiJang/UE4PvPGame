@@ -54,11 +54,11 @@ ASurvivor::ASurvivor() :
 	//머터리얼 가져오기===========================================================
 	//캐릭터가 사용하는 매시입니다
 	ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialHitAsset(TEXT("Material'/Game/Blueprints/MyMaterial/MT_MyHitRed.MT_MyHitRed'"));
-	if (ChaseSoundAsset.Succeeded())
+	if (MaterialHitAsset.Succeeded())
 		mat_hit_object = MaterialHitAsset.Object;
 
 	ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialHitAsset_human(TEXT("MaterialInstanceConstant'/Game/Blueprints/MyMaterial/MI_ColorPalette_Hit.MI_ColorPalette_Hit'"));
-	if (ChaseSoundAsset.Succeeded())
+	if (MaterialHitAsset_human.Succeeded())
 		mat_hit_human = MaterialHitAsset_human.Object;
 }
 
@@ -191,31 +191,6 @@ void ASurvivor::Tick(float DeltaTime) {
 			SetIsRepairEnable(false);
 		}
 	}
-
-	////타이머 업데이트 =====================================================================
-	//if (PC) {
-	//	int min = (PC->GameLeftTimeSec)/60.f;
-	//	int sec = (PC->GameLeftTimeSec) - min*60;
-	//	FString timeStr;
-	//	if (min <= 9) {
-	//		if (sec <= 9) {
-	//			timeStr = FString::Printf(TEXT("0%i:0%i"),min,sec);
-	//		}
-	//		else {
-	//			timeStr = FString::Printf(TEXT("0%i:%i"), min, sec);
-	//		}
-	//	}
-	//	else {
-	//		if (sec <= 9) {
-	//			timeStr = FString::Printf(TEXT("%i:0%i"), min, sec);
-	//		}
-	//		else {
-	//			timeStr = FString::Printf(TEXT("%i:%i"), min, sec);
-	//		}
-	//	}
-
-	//	PC->GetMainHUD()->GetTimerHUD()->SetTimeText(timeStr);
-	//}
 
 }
 
@@ -368,11 +343,12 @@ void ASurvivor::TurnRed() {
 			m_PlayerObject->SetMaterial(0, mat_hit_object);
 	}
 	else { //사람
-
 		mat_original = GetMesh()->GetMaterial(0);
 		//오리지날 메테리얼을 저장하고 레드 머터리얼로 바꿈
-		if (mat_hit_human)
+		if (mat_hit_human) {
 			GetMesh()->SetMaterial(0, mat_hit_human);
+		}
+			
 	}
 
 }
