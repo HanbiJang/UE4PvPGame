@@ -6,6 +6,11 @@
 #include "Components/Button.h"
 #include <MyProp/GameInstance/MyGameInstance.h>
 
+//매칭
+#include "OnlineSubsystem.h"
+#include "OnlineSessionSettings.h"
+#include "Interfaces/OnlineSessionInterface.h"
+
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MyStartGameWidget.generated.h"
@@ -59,4 +64,14 @@ public:
 	UFUNCTION()
 		void StartGameBtnPressed();
 
+
+public:
+	//매칭 시스템 ===================================
+	void CreateServer();
+	void FindServer();
+	void Init();
+
+	void MySession();
+	virtual void OnCreateSessionComplete(FName ServerName, bool Succeded); //세션 생성이 끝났을때 호출하는 함수  
+	IOnlineSessionPtr SessionInterface;
 };

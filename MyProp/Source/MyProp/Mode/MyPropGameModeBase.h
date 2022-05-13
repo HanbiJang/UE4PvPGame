@@ -31,9 +31,6 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 
 	void BeginPlay();
 	void Tick(float DeltaTime) override;
-
-	//플레이어들 최대 입장 수
-	int maxPlayerNum;
 	
 	//서버장이 킬러가 되고 나머지 클라는 생존자가 됨
 	TArray<AMyPlayerController*> PCSurvivorArr;

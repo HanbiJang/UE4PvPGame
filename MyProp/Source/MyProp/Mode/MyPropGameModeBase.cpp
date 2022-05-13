@@ -11,7 +11,6 @@
 
 AMyPropGameModeBase::AMyPropGameModeBase():
 	GameLeftTimeSec(60.f * 7),
-	maxPlayerNum( 3/*5*/ ),
 	IsGameStartEnable(false)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -36,7 +35,7 @@ void AMyPropGameModeBase::Tick(float DeltaTime) {
 
 void AMyPropGameModeBase::UpdateTimerUI_Implementation(float DeltaTime) {
 	//게임 시작
-	if (GI->iPlayerCnt == maxPlayerNum && !IsGameStartEnable) {
+	if (GI->iPlayerCnt == GI->maxPlayer && !IsGameStartEnable) {
 		IsGameStartEnable = true;
 		UE_LOG(LogTemp, Log, TEXT("Start Game!!!!"));
 	}

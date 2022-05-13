@@ -27,6 +27,9 @@ void UMyStartGameWidget::NativeConstruct()
 		m_StartGameBtn->OnClicked.AddDynamic(this, &UMyStartGameWidget::StartGameBtnPressed);
 	}
 
+	//¸ÅÄª
+	Init();
+
 }
 
 void UMyStartGameWidget::NativeTick(const FGeometry& Geometry, float DT)

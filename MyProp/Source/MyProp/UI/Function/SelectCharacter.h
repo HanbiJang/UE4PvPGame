@@ -18,4 +18,5 @@ class MYPROP_API USelectCharacter : public UObject
 {
 	GENERATED_BODY()
 
+
 };
