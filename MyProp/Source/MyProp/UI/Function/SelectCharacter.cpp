@@ -5,6 +5,7 @@
 #include <MyProp/UI/MyStartGameWidget.h>
 #include "Kismet/GameplayStatics.h"
 #include <MyProp/GameInstance/MyGameInstance.h>
+#include <MyProp/Controller/MyPlayerController.h>
 
 
 void UMyStartGameWidget::RandomBtnPressed() {
@@ -101,7 +102,13 @@ void UMyStartGameWidget::CreateServer() {
 //서버 찾기 (생존자) 
 void UMyStartGameWidget::FindServer() {
 
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	SessionSearch->bIsLanQuery = true; //Is Lan
+	SessionSearch->MaxSearchResults = 10000;
+	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
+	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Blue, TEXT("Find Session Start"));
 }
 
 void UMyStartGameWidget::Init() {
@@ -110,14 +117,48 @@ void UMyStartGameWidget::Init() {
 		if (SessionInterface.IsValid()) {
 			//바인딩 - 게임 세션 생성이 완료되었을 때
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UMyStartGameWidget::OnCreateSessionComplete);
+			//바인딩  - 게임 세션 찾기가 완료되었을 때
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UMyStartGameWidget::OnFindSessionComplete);
+			//바인딩 - 게임에 조인할 때 부르는 함수
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UMyStartGameWidget::OnJoinSessionComplete);
 		}
 	}
 }
 
 void UMyStartGameWidget::OnCreateSessionComplete(FName ServerName, bool Succeded) {
-	UE_LOG(LogTemp, Log, TEXT("Create %s Session Success: %d"), *ServerName.ToString() ,Succeded);
+	
 	if (Succeded) {
+		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Create Session Success"));
+		UE_LOG(LogTemp, Log, TEXT("Create %s Session Success: %d"), *ServerName.ToString(), Succeded);
 		//"World'/Game/Levels/InGameMap.InGameMap'" (원래 주소) listen =서버로 동작
 		GetWorld()->ServerTravel("/Game/Levels/InGameMap?listen");
+	}
+}
+
+void UMyStartGameWidget::OnFindSessionComplete(bool Succeded) {
+	
+	if (Succeded) {
+		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Find Session Success"));
+
+		TArray<FOnlineSessionSearchResult> SearchResults = SessionSearch->SearchResults;
+
+		if (SearchResults.Num()) {
+			SessionInterface->JoinSession(0, "My Session", SearchResults[0]);
+		}
+		
+		FString str = FString::Printf(TEXT("Serch result : server count %d"), SearchResults.Num());
+		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, str);
+	} 
+
+}
+
+void UMyStartGameWidget::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result) {
+	GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Join Session Success"));
+
+	if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0)) {
+		FString JoinAddress = "";
+		SessionInterface->GetResolvedConnectString(SessionName , JoinAddress);
+		if(JoinAddress != "")
+			PC->ClientTravel(JoinAddress, ETravelType::TRAVEL_Absolute);
 	}
 }

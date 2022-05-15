@@ -73,5 +73,10 @@ public:
 
 	void MySession();
 	virtual void OnCreateSessionComplete(FName ServerName, bool Succeded); //세션 생성이 끝났을때 호출하는 함수  
+	virtual void OnFindSessionComplete(bool Succeded); //세션 생성이 끝났을때 호출하는 함수  
+	virtual void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result); //세션 조인이 끝났을때 호출하는 함수  
+
 	IOnlineSessionPtr SessionInterface;
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
+	
 };
