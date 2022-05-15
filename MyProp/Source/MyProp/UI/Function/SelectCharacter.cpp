@@ -145,6 +145,9 @@ void UMyStartGameWidget::OnFindSessionComplete(bool Succeded) {
 		if (SearchResults.Num()) {
 			SessionInterface->JoinSession(0, "My Session", SearchResults[0]);
 		}
+		else { //결과 없으면 계속 찾기
+			SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+		}
 		
 		FString str = FString::Printf(TEXT("Serch result : server count %d"), SearchResults.Num());
 		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, str);

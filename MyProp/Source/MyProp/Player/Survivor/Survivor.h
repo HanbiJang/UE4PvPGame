@@ -230,6 +230,8 @@ public:
 	UFUNCTION(Reliable, Client)
 		void ShowVinetting_Client();
 
+	TArray<AActor*> arrActor; //킬러 배열
+
 	//맞기 효과
 	//몸이 빨개지기!
 	void TurnRed();

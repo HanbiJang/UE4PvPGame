@@ -10,7 +10,7 @@
 
 
 ASurvivor::ASurvivor() :
-	FVChange(0, 0, 0),
+	FVChange(700, -12250, 340),
 	fRunPower(5),
 	bChangeEnable(true),
 	fJumpPower(500),
@@ -30,12 +30,12 @@ ASurvivor::ASurvivor() :
 	m_PlayerObject->SetNotifyRigidBodyCollision(true);
 
 	//사운드 가져오기===================================================================
-	ConstructorHelpers::FObjectFinder<USoundWave> HeartBeatSoundAsset(TEXT("SoundWave'xxx/Game/Music/HeartBeat_Fast.HeartBeat_Fast'"));
+	ConstructorHelpers::FObjectFinder<USoundWave> HeartBeatSoundAsset(TEXT("SoundWave'/Game/Music/HeartBeat_Fast.HeartBeat_Fast'"));
 
 	if (HeartBeatSoundAsset.Succeeded())
 		SW_HeartBeat = HeartBeatSoundAsset.Object;
 
-	ConstructorHelpers::FObjectFinder<USoundWave> ChaseSoundAsset(TEXT("SoundWave'xxx/Game/Music/HorrorChaseMusic.HorrorChaseMusic'"));
+	ConstructorHelpers::FObjectFinder<USoundWave> ChaseSoundAsset(TEXT("SoundWave'/Game/Music/HorrorChaseMusic.HorrorChaseMusic'"));
 
 	if (ChaseSoundAsset.Succeeded())
 		SW_Chase = ChaseSoundAsset.Object;
@@ -117,13 +117,11 @@ void ASurvivor::BeginPlay() {
 
 	//킬러 가져오기 =====================================================================
 	//월드 상의 특정 클래스 Actor을 가져오기
-	TArray<AActor*> arrActor;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKiller::StaticClass(), arrActor);
 	for (int i = 0; i < arrActor.Num(); i++) {
 		arrKiller.Add(Cast<AKiller>(arrActor[i])); //형변환
 		////크기 설정하기
-		//SetKillerScale_Server(Cast<AKiller>(arrActor[i]),1.2f);
-		
+		//SetKillerScale_Server(Cast<AKiller>(arrActor[i]),1.2f);	
 	}
 
 	//사운드 스폰하기
@@ -224,6 +222,17 @@ void ASurvivor::UpdateSP_Client_Implementation() {
 
 
 void ASurvivor::ShowVinetting_Client_Implementation(){
+
+	//킬러 가져오기 =====================================================================
+	//월드 상의 특정 클래스 Actor을 가져오기
+	if (arrActor.Num() == 0) {
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKiller::StaticClass(), arrActor);
+		for (int i = 0; i < arrActor.Num(); i++) {
+			arrKiller.Add(Cast<AKiller>(arrActor[i])); //형변환
+		}
+	}
+
+
 	for (int i = 0; i < arrKiller.Num(); i++) {
 
 		if ((m_state != EPLAYER_STATE::OBJECT && this->GetDistanceTo(arrKiller[i]) < 500)

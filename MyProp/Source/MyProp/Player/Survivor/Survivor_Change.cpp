@@ -86,18 +86,23 @@ void ASurvivor::ChangeToObject_Multicast_Implementation(/*UStaticMesh* mesh, FVe
 		//플레이어 상태 변경
 		ChangeState(EPLAYER_STATE::OBJECT);
 
+		//카메라만 옮기기 시점 옮기기...
+		//m_Arm->DetachFromParent(true);
+		m_Arm->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
+
+		//사운드 컴포넌트 이동
+		AC_HeartBeat->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
+		AC_Chase->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
+
 		FVector originalPos = GetActorLocation(); //변신 당시 원래 위치 저장
-
-		//원래 [인간형] 오브젝트 다른 곳으로 치우기 && 각도 시작과 같이 설정하기
-		SetActorLocation(FVChange);
-		SetActorRotation(FRChange);
-
-		FString stateMessage = FString::Printf(TEXT("Survivor Body Location X: %f"), GetActorLocation().X);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, stateMessage);
 
 		//물리 끄기
 		//m_PlayerObjectPawn->m_ObjectMesh->SetSimulatePhysics(false);
 		m_PlayerObject->SetSimulatePhysics(false);
+
+		//원래 [인간형] 오브젝트 다른 곳으로 치우기 && 각도 시작과 같이 설정하기
+		SetActorLocation(FVChange);
+		SetActorRotation(FRChange);
 
 		//물체 위치를 인간폼이 있던 곳으로 설정
 		if (pPlayerObject != nullptr) {
@@ -105,27 +110,18 @@ void ASurvivor::ChangeToObject_Multicast_Implementation(/*UStaticMesh* mesh, FVe
 			FVector fscale = pPlayerObject->GetMyMesh()->GetRelativeScale3D();
 
 			//m_PlayerObjectPawn->m_ObjectMesh->SetAllPhysicsPosition(originalPos + FVector(0, 0, mesh->GetBoundingBox().GetSize().Z * fscale.Z));
-			m_PlayerObject->SetAllPhysicsPosition(originalPos + FVector(0, 0, mesh->GetBoundingBox().GetSize().Z * fscale.Z));
+			m_PlayerObject->SetAllPhysicsPosition(FVector(originalPos.X, originalPos.Y, originalPos.Z + (mesh->GetBoundingBox().GetSize().Z * fscale.Z) / 2));
 
 			//클릭한 오브젝트 메시의 크기와 같게 설정
 			m_PlayerObject->SetRelativeScale3D(fscale);
 			m_PlayerObject->SetStaticMesh(mesh);
 		}
 
-		//시점 옮기기...
-		//카메라만 옮기기
-		m_Arm->DetachFromParent(true);
-		m_Arm->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
-
-		//사운드 컴포넌트 이동
-		AC_HeartBeat->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
-		AC_Chase->AttachToComponent(m_PlayerObject, FAttachmentTransformRules::KeepRelativeTransform);
-
 		//0.1초 뒤에 오브젝트 물리 켜기
 		GetWorld()->GetTimerManager().SetTimer(FPhysicsTimer, this, &ASurvivor::SetSimulatePhysicsTrue, 0.1f, false);
 
-		//변신 가능 상태 조절 1.5초 뒤에 변신 가능해지기
-		GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &ASurvivor::SetbChangeEnableTrue, 1.5f, false);
+		//변신 가능 상태 조절 3초 뒤에 변신 가능해지기
+		GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &ASurvivor::SetbChangeEnableTrue, 3.f, false);
 
 		//변신 시 캐릭터 체력 디버프
 		//[미구현]
@@ -198,7 +194,7 @@ void ASurvivor::ChangeToPlayer_Multicast_Implementation() {
 			+ FVector(0, 0, m_PlayerObject->GetStaticMesh()->GetBoundingBox().GetSize().Z * GetActorScale().Z));
 
 		//인간폼의 위치를 오브젝트가 있던 액터 위치로 설정하기
-		SetActorLocation(originalPos);
+		SetActorLocation(FVector(originalPos.X, originalPos.Y, originalPos.Z + 90.f));
 
 		//1.5초 뒤에 변신 가능해지기
 		GetWorld()->GetTimerManager().SetTimer(FChangeEnableTimer, this, &ASurvivor::SetbChangeEnableTrue, 1.5f, false);

@@ -42,8 +42,8 @@ class MYPROP_API AMyPropGameModeBase : public AGameModeBase
 	//AMyPlayerController* Killer1Controller;
 
 	//플레이어 스폰 시작 위치 (y값에 값 서로 간의 거리 100씩 더해서 스폰될 것)
-	FVector vKillerSpawnLocation = FVector(240, 170, 200);
-	FVector vSurvivor1SpawnLocation = FVector(240, 940, 200);
+	FVector vKillerSpawnLocation = FVector(-6270, -450, 0);
+	FVector vSurvivor1SpawnLocation = FVector(2000, 1750, 200);
 
 private:
 	/*virtual */void PostLogin(APlayerController* NewPlayer) override; //로그인이 성공한뒤에 호출
