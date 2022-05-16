@@ -41,6 +41,9 @@ public:
 	//매시
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* m_Mesh; //사물형 스테틱 매시 (물리 기능 있음)
+
+	UStaticMeshComponent* GetMyMesh() { return m_Mesh; }
+
 	//컴포넌트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		UCapsuleComponent* m_Cap;
@@ -58,12 +61,19 @@ public:
 	float IsDone; //수리 완료 여부
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-		UBoxComponent* RepairBox;
-	ASurvivor* sur; //1명 생존자
+		UBoxComponent* RepairBox; //발전기를 돌릴 수 있는 공간
+
+	TArray<ASurvivor*> surArr; //다수의 (수리 중인) 생존자
 
 	UFUNCTION(Reliable, Client)
 		void MachineUIVisiblity_Client(bool b, ASurvivor* _sur);
 
 	UFUNCTION(Reliable, Server)
-		void SetTimerTime_Server(float f);
+		void SetTimerUpdate_Server(float f);
+
+	UFUNCTION(Reliable, Server)
+		void SetMachineDoneAllPlayer_Server();
+	UFUNCTION(Reliable, NetMulticast)
+		void SetMachineDoneAllPlayer_Multicast();
+
 };

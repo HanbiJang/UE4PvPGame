@@ -64,10 +64,11 @@ ASurvivor::ASurvivor() :
 
 void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Pressed, this, &ASurvivor::Dash); //누를때 대시 실행
 	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Released, this, &ASurvivor::DashStop); //대시 멈춤
 
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &ASurvivor::Interaction);
 
 	//사물폼 변신 
@@ -164,13 +165,13 @@ void ASurvivor::Tick(float DeltaTime) {
 	//살인마와 거리 차이에 따라서 비네팅 효과 & 화면 그레인 (지터) 증가 감소
 	ShowVinetting();
 
-	//발전기 UI 업데이트=====================================================================
-	if (PC) {
-		int machineNum = PC->GetDoneMachineNum();
-		//이미지 변경하기
-		if (machineNum > 0)
-			PC->GetMainHUD()->GetTimerHUD()->SetMachineImge_Done(machineNum - 1);
-	}
+	////발전기 UI 업데이트=====================================================================
+	//if (PC) {
+	//	int machineNum = PC->GetDoneMachineNum();
+	//	//이미지 변경하기
+	//	if (machineNum > 0)
+	//		PC->GetMainHUD()->GetTimerHUD()->SetMachineImge_Done(machineNum - 1);
+	//}
 
 
 	//죽기==================================================================================
@@ -183,12 +184,12 @@ void ASurvivor::Tick(float DeltaTime) {
 
 	}
 
-	//발전기가 모두 수리되면     ===========================================================
-	if (PC) {
-		if (PC->GetIsAllMachineRepaired()) {
-			SetIsRepairEnable(false);
-		}
-	}
+	////발전기가 모두 수리되면     ===========================================================
+	//if (PC) {
+	//	if (PC->GetIsAllMachineRepaired()) {
+	//		SetIsRepairEnable(false);
+	//	}
+	//}
 
 }
 

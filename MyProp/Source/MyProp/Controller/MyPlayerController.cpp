@@ -10,9 +10,9 @@
 #include <MyProp/Mode/MyPropGameModeBase.h>
 #include <MyProp/Machine/MyMachine.h>
 
-AMyPlayerController::AMyPlayerController():
-	DoneMachineNum(0),
-	IsAllMachineRepaired(false)
+AMyPlayerController::AMyPlayerController()
+	//DoneMachineNum(0),
+	//IsAllMachineRepaired(false)
 {
 
 }
@@ -26,25 +26,26 @@ void AMyPlayerController::BeginPlay() {
 
 void AMyPlayerController::PlayerTick(float DeltaTime) {
 	Super::PlayerTick(DeltaTime);
-	
-	//발전기 수리 ==========================================================
-	if (DoneMachineNum >= 5) { //발전기 수리가 5개됐으면
-		IsAllMachineRepaired = true; //모든 발전기가 수리되었다는 것을 알리자
-	}
-
-	////게임 타이머 ==============================================================
-	//if (GameLeftTimeSec > 0) {
-	//	GameLeftTimeSec = FMath::Clamp(GameLeftTimeSec - DeltaTime, 0.f, 60 * 99.f);
-	//	if (GameLeftTimeSec <= 0) {
-	//		GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, TEXT("Game Over"));
-	//	}
-	//}
 
 }
 
-void AMyPlayerController::UpdateTimerUI_Client_Implementation(const FString& timestr) {
+void AMyPlayerController::UpdateTimerUI_Client_Implementation(const FString& timestr, int DoneMachineNum) {
 
 	GetMainHUD()->GetTimerHUD()->SetTimeText(timestr);
+
+	//발전기 수에 따라서 발전기 그림 업데이트
+	if(DoneMachineNum >= 1)
+		GetMainHUD()->GetTimerHUD()->SetMachineImge_Done(DoneMachineNum-1);
+
+}
+
+void AMyPlayerController::UpdateTimerUI_Server_Implementation(const FString& timestr, int DoneMachineNum) {
+
+	GetKillerMainHUD()->GetTimerHUD()->SetTimeText(timestr);
+
+	//발전기 수에 따라서 발전기 그림 업데이트
+	if (DoneMachineNum >= 1)
+		GetKillerMainHUD()->GetTimerHUD()->SetMachineImge_Done(DoneMachineNum - 1);
 
 }
 

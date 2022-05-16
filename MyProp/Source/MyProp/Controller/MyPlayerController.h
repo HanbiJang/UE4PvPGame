@@ -57,17 +57,17 @@ public:
 	UFUNCTION(Reliable, Client)
 		void UpdateMachineHUD_Survivor(float _CurMachineRatio);
 
-private:
-	//발전기 갯수 컨트롤 & UI
-	int DoneMachineNum;
-	bool IsAllMachineRepaired;
-
-public:
-	int GetDoneMachineNum() { return DoneMachineNum; }
-	bool GetIsAllMachineRepaired() { return IsAllMachineRepaired; }
-	void SetMachineDone(bool b) {
-		DoneMachineNum++;
-	}
+//private:
+//	//발전기 갯수 컨트롤 & UI
+//	int DoneMachineNum;
+//	bool IsAllMachineRepaired;
+//
+//public:
+//	int GetDoneMachineNum() { return DoneMachineNum; }
+//	bool GetIsAllMachineRepaired() { return IsAllMachineRepaired; }
+//	void SetMachineDone(bool b) {
+//		DoneMachineNum++;
+//	}
 
 	//게임 타이머======================================================
 	
@@ -80,6 +80,8 @@ public:
 	//void SetGameLeftTimeSec(float value) { GameLeftTimeSec = value; }
 	
 	UFUNCTION(Reliable, Client)
-		void UpdateTimerUI_Client(const FString& timestr);
+		void UpdateTimerUI_Client(const FString& timestr, int DoneMachineNum);
+	UFUNCTION(Reliable, Server)
+		void UpdateTimerUI_Server(const FString& timestr, int DoneMachineNum);
 
 };

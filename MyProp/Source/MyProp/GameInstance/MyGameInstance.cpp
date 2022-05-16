@@ -53,6 +53,11 @@ UMyGameInstance::UMyGameInstance()
 	if (SurvivorWidget.Succeeded())
 		m_SurvivorWidgetClass = SurvivorWidget.Class;
 
+	//UI 이미지 가져오기
+	ConstructorHelpers::FObjectFinder<UTexture2D>
+		Machine_DoneAsset(TEXT("Texture2D'/Game/MyImages/Machine_Done.Machine_Done'"));
+	if (Machine_DoneAsset.Succeeded())
+		Machine_DoneImg = Machine_DoneAsset.Object;
 
 }
 

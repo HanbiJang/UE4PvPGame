@@ -63,4 +63,10 @@ public:
 public:
 	UMyGameInstance();
 	~UMyGameInstance();
+
+	//¿ÃπÃ¡ˆ
+	UTexture2D* Machine_DoneImg;
+	UTexture2D* GetDoneImg() {
+		return Machine_DoneImg;
+	}
 };

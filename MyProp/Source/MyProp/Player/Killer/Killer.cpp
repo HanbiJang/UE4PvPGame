@@ -8,6 +8,8 @@
 #include <MyProp/Player/Killer/Projectile/KillerRCProjectile.h>
 #include <MyProp/Controller/MyPlayerController.h>
 
+#include <MyProp/Machine/MyMachine.h>
+
 AKiller::AKiller():
 	bAttackEnable(true),
 	attackSpeed(2.f), //평타 쿨타임
@@ -70,12 +72,19 @@ void AKiller::BeginPlay() {
 		SetInfo(*(GI->GetKillerInfo(TEXT("Killer1"))));
 	}
 
-	PC = Cast<AMyPlayerController>(this->GetInstigatorController());
+	PC = Cast<AMyPlayerController>(this->GetController());
 
 	//======뚝스턴======
 	//GetBox()->OnComponentHit.AddDynamic(this, &AMyProjectile::OnHit);
 	HeadBox->OnComponentBeginOverlap.AddDynamic(this, &AKiller::OnBeginOverlap);
 	
+	//발전기들을 가져오기======
+	TArray<AActor*> arrActor;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyMachine::StaticClass(), arrActor);
+	for (int i = 0; i < arrActor.Num(); i++) {
+		machineArr.Add(Cast<AMyMachine>(arrActor[i])); //형변환
+	}
+
 }
 
 void AKiller::Tick(float DeltaTime) {
@@ -98,38 +107,7 @@ void AKiller::Tick(float DeltaTime) {
 		m_Info.fCurRCLeftTime = FMath::Clamp(m_Info.fCurRCLeftTime - DeltaTime, 0.f, m_Info.rCAttackSpeed);
 	}
 
-	//발전기 UI 업데이트=====================================================================
-	if (PC) {
-		int machineNum = PC->GetDoneMachineNum();
-		//이미지 변경하기
-		if(machineNum > 0)
-			PC->GetKillerMainHUD()->GetTimerHUD()->SetMachineImge_Done(machineNum-1);
-	}
-
-	////타이머 업데이트 =====================================================================
-	//if (PC) {
-	//	int min = (PC->GameLeftTimeSec) / 60.f;
-	//	int sec = (PC->GameLeftTimeSec) - min * 60;
-	//	FString timeStr;
-	//	if (min <= 9) {
-	//		if (sec <= 9) {
-	//			timeStr = FString::Printf(TEXT("0%i:0%i"), min, sec);
-	//		}
-	//		else {
-	//			timeStr = FString::Printf(TEXT("0%i:%i"), min, sec);
-	//		}
-	//	}
-	//	else {
-	//		if (sec <= 9) {
-	//			timeStr = FString::Printf(TEXT("%i:0%i"), min, sec);
-	//		}
-	//		else {
-	//			timeStr = FString::Printf(TEXT("%i:%i"), min, sec);
-	//		}
-	//	}
-
-	//	PC->GetKillerMainHUD()->GetTimerHUD()->SetTimeText(timeStr);
-	//}
+	DrawOutLineMachine();
 
 }
 
@@ -332,6 +310,15 @@ void AKiller::UpdateUI_Server_Implementation() {
 
 void AKiller::TurnMove() {
 	if ((!isDashed && !isJumping)) ChangeState(EPLAYER_STATE::MOVE);
+}
+
+void AKiller::DrawOutLineMachine_Implementation(){
+
+	//항상 발전기의 아웃라인을 그리기
+	for (int i = 0; i < machineArr.Num(); i++) {
+		machineArr[i]->GetMyMesh()->SetRenderCustomDepth(true);
+	}
+
 }
 
 //====================================================================

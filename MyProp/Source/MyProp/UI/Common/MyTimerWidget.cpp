@@ -3,6 +3,9 @@
 #include "MyTimerWidget.h"
 
 #include <MyProp/Mode/MyPropGameModeBase.h>
+#include <MyProp/GameInstance/MyGameInstance.h>
+#include "Kismet/GameplayStatics.h"
+
 
 void UMyTimerWidget::NativeConstruct() {
 	Super::NativeConstruct();
@@ -16,12 +19,14 @@ void UMyTimerWidget::NativeConstruct() {
 		m_MachineImgArr[i] = Cast<UImage>(GetWidgetFromName(*str));
 	}
 
-	//이미지 가져오기 (생성자가 아니므로 이렇게 가져와야)
-	UTexture2D* DoneImgAsset = LoadObject<UTexture2D>(GetWorld(),
-		TEXT("Texture2D'/Game/MyImages/Machine_Done.Machine_Done'"));
-	if (DoneImgAsset) {
-		DoneImg = DoneImgAsset;
+	//이미지 가져오기
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI != nullptr) {
+		UTexture2D* DoneImgAsset = Cast<UTexture2D>(GI->GetDoneImg());
+		if (DoneImgAsset) DoneImg = DoneImgAsset;
 	}
+
+
 
 }
 void UMyTimerWidget::NativeTick(const FGeometry& Geometry, float DT) {
@@ -39,5 +44,19 @@ void UMyTimerWidget::SetTimeText(const FString& _Name)
 
 
 void UMyTimerWidget::SetMachineImge_Done(int idx) {
-	m_MachineImgArr[idx]->SetBrushFromTexture(DoneImg);
+	if(DoneImg)
+		m_MachineImgArr[idx]->SetBrushFromTexture(DoneImg);
+
+	else {
+		//GI에서 이미지 가져오기
+		UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (GI != nullptr) {
+			UTexture2D* DoneImgAsset = Cast<UTexture2D>(GI->GetDoneImg());
+			if (DoneImgAsset) {
+				DoneImg = DoneImgAsset;
+				m_MachineImgArr[idx]->SetBrushFromTexture(DoneImg);
+			}
+		}
+
+	}
 }

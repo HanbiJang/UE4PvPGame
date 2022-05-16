@@ -59,4 +59,12 @@ public:
 
 	UFUNCTION(Reliable, Server)
 		void UpdateTimerUI(float DeltaTime);
+
+	//발전기 수==========================================================
+private:
+	int DoneMachineNum; //돌린 발전기 수
+public:
+	int GetDoneMachineNum() { return DoneMachineNum; }
+	void SetDoneMachineNum(int value) { DoneMachineNum = value; }
+
 };

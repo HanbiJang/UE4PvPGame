@@ -9,6 +9,7 @@
 #include "../MyCharacter.h"
 #include "Killer.generated.h"
 
+class AMyMachine;
 class AMyPlayerController;
 class ASurvivor;
 /**
@@ -114,5 +115,11 @@ private:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
 		UBoxComponent* HeadBox;
+
+	//발전기 테두리
+	//사물 외곽선 그리기 기능
+	UFUNCTION(Reliable, Server)
+		void DrawOutLineMachine();
+	TArray<AMyMachine*> machineArr;
 };
 

@@ -11,7 +11,8 @@
 
 AMyPropGameModeBase::AMyPropGameModeBase():
 	GameLeftTimeSec(60.f * 7),
-	IsGameStartEnable(false)
+	IsGameStartEnable(false),
+	DoneMachineNum(0)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -48,7 +49,7 @@ void AMyPropGameModeBase::UpdateTimerUI_Implementation(float DeltaTime) {
 		if (GameLeftTimeSec > 0) {
 			GameLeftTimeSec = FMath::Clamp(GameLeftTimeSec - DeltaTime, 0.f, 60 * 99.f);
 			if (GameLeftTimeSec <= 0) {
-				GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, TEXT("Game Over"));
+				GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Red, TEXT("Killer Win"));
 			}
 		}
 		//시간 분,초로 계산
@@ -67,12 +68,14 @@ void AMyPropGameModeBase::UpdateTimerUI_Implementation(float DeltaTime) {
 
 		//서버장 타이머 UI 업데이트
 		//UI가 안그려졌을 때 대비...
-		if(PCKiller->GetKillerMainHUD() && PCKiller->GetKillerMainHUD()->GetTimerHUD())
-			PCKiller->GetKillerMainHUD()->GetTimerHUD()->SetTimeText(timeStr);
+		if (PCKiller->GetKillerMainHUD() && PCKiller->GetKillerMainHUD()->GetTimerHUD()) {
+			PCKiller->UpdateTimerUI_Server(timeStr, DoneMachineNum); //시간 && 발전기수 업데이트 추가 추가
+		}
+			
 		//모든 클라 플레이어 UI 업데이트
 		for (int i = 0; i < PCSurvivorArr.Num(); i++) {
 			//UI가 클라 전용이라 UMG를 그냥 가져와서 쓸수가 없음.클라 전용에서만 실행되는 함수면 가능
-			PCSurvivorArr[i]->UpdateTimerUI_Client(timeStr);
+			PCSurvivorArr[i]->UpdateTimerUI_Client(timeStr, DoneMachineNum); //발전기수 업데이트 추가 추가
 		}
 	}
 }
