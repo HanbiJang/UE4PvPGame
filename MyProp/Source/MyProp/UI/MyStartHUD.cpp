@@ -2,6 +2,8 @@
 
 #include "MyStartHUD.h"
 #include "MyStartGameWidget.h"
+//#include <MyProp/Mode/MyStartModeBase.h>
+#include <MyProp/GameInstance/MyGameInstance.h>
 
 void UMyStartHUD::NativeConstruct() {
 	Super::NativeConstruct();
@@ -10,7 +12,7 @@ void UMyStartHUD::NativeConstruct() {
 	m_PlayBtn = Cast<UButton>(GetWidgetFromName(TEXT("PlayBtn")));
 	m_ExitBtn = Cast<UButton>(GetWidgetFromName(TEXT("ExitBtn")));
 	m_StartGameWidget = Cast<UMyStartGameWidget>(GetWidgetFromName(TEXT("StartGamewidget")));
-
+	ET_MyPlayerName = Cast<UEditableTextBox>(GetWidgetFromName(TEXT("ET_MyPlayerName")));
 
 	//위젯에 기능 할당
 	if (IsValid(m_PlayBtn))
@@ -27,6 +29,11 @@ void UMyStartHUD::NativeConstruct() {
 	{
 		m_StartGameWidget->GetHomeBtn()->OnClicked.AddDynamic(this, &UMyStartHUD::ShowHomeUI);
 	}
+
+	if(IsValid(ET_MyPlayerName)){ //텍스트 박스에 이름 넣기
+		ET_MyPlayerName->OnTextChanged.AddDynamic(this, &UMyStartHUD::OnMyPlayerNameTextChange);
+	}
+
 }
 
 void UMyStartHUD::NativeTick(const FGeometry& Geometry, float DT){
@@ -58,3 +65,13 @@ void UMyStartHUD::ShowHomeUI() {
 	m_ExitBtn->SetVisibility(ESlateVisibility::Visible);
 }
 
+void UMyStartHUD::OnMyPlayerNameTextChange(const FText& Text){
+	//텍스트를 게임 인스턴스에 정보 넘기기
+	UMyGameInstance* GI = Cast<UMyGameInstance>( UGameplayStatics::GetGameInstance(GetWorld()) );
+	if (GI) {
+		GI->MyPlayerName = Text.ToString();
+	}
+	//else {
+	//	GI->MyPlayerName = "DefaultName";
+	//}
+}

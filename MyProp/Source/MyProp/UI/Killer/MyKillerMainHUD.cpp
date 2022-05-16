@@ -2,6 +2,7 @@
 
 
 #include "MyKillerMainHUD.h"
+#include <MyProp/UI/Common/MyOtherPlayerWidget.h>
 
 void UMyKillerMainHUD::NativeConstruct() {
 	Super::NativeConstruct();
@@ -17,6 +18,9 @@ void UMyKillerMainHUD::NativeConstruct() {
 
 	//발전기 && 타이머
 	m_TimerWidget = Cast<UMyTimerWidget>(GetWidgetFromName(TEXT("BP_TimerWidget")));
+
+	//다른 플레이어 
+	m_OtherPlayerWidget = Cast<UMyOtherPlayerWidget>(GetWidgetFromName(TEXT("BP_OtherPlayerWidget")));
 
 	//UI 초기 세팅
 	SetQSkillPg(0);

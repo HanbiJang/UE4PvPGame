@@ -32,4 +32,8 @@ public:
 public:
 	virtual void BeginPlay() override;
 	
+	//플레이어 이름 && 스타트 화면에서 설정됨
+	FString MyPlayerName;
+	FString GetMyPlayerName() { return MyPlayerName; }
+	void SetMyPlayerName(FString str) { MyPlayerName = str; }
 };

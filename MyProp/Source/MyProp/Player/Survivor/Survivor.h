@@ -43,6 +43,7 @@ private:
 
 	//상호작용
 	void Interaction();
+	void InteractionStop();
 
 public:
 

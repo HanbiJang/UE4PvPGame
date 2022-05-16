@@ -70,6 +70,7 @@ void ASurvivor::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction(TEXT("Dash"), EInputEvent::IE_Released, this, &ASurvivor::DashStop); //대시 멈춤
 
 	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Pressed, this, &ASurvivor::Interaction);
+	PlayerInputComponent->BindAction(TEXT("Interaction"), EInputEvent::IE_Released, this, &ASurvivor::InteractionStop);
 
 	//사물폼 변신 
 	PlayerInputComponent->BindAction(TEXT("Change"), EInputEvent::IE_Pressed, this, &ASurvivor::ChangeToObject);
@@ -97,9 +98,20 @@ void ASurvivor::Interaction()
 {
 	//발전기, 문 등과 상호작용
 	if (m_state != EPLAYER_STATE::OBJECT) {
-		//상태 전환 (기계 파괴, 기계 수리)
+		//상태 전환 (기계 수리)
 		if(IsRepairEnable)
 			ChangeState(EPLAYER_STATE::MACHINE);
+	}
+
+}
+
+void ASurvivor::InteractionStop(){
+
+	//발전기, 문 등과 상호작용
+	if (m_state != EPLAYER_STATE::OBJECT) {
+		//상태 전환
+		if (IsRepairEnable)
+			ChangeState(EPLAYER_STATE::IDLE);
 	}
 
 }
@@ -183,13 +195,6 @@ void ASurvivor::Tick(float DeltaTime) {
 		}
 
 	}
-
-	////발전기가 모두 수리되면     ===========================================================
-	//if (PC) {
-	//	if (PC->GetIsAllMachineRepaired()) {
-	//		SetIsRepairEnable(false);
-	//	}
-	//}
 
 }
 

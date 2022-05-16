@@ -41,6 +41,12 @@ public:
 	UMyKillerMainHUD* m_KillerMainHUD;
 	UMyKillerMainHUD* GetKillerMainHUD() { return m_KillerMainHUD; };
 
+	//플레이어 이름 && 스타트 화면에서 설정됨
+	FString MyPlayerName = "DefaultName";
+
+	FString GetMyPlayerName() { return MyPlayerName; }
+	void SetMyPlayerName(FString str) { MyPlayerName = str; }
+
 public:
 	/*virtual*/ void PlayerTick(float DeltaTime) override;
 	void BeginPlay() override;
@@ -57,28 +63,7 @@ public:
 	UFUNCTION(Reliable, Client)
 		void UpdateMachineHUD_Survivor(float _CurMachineRatio);
 
-//private:
-//	//발전기 갯수 컨트롤 & UI
-//	int DoneMachineNum;
-//	bool IsAllMachineRepaired;
-//
-//public:
-//	int GetDoneMachineNum() { return DoneMachineNum; }
-//	bool GetIsAllMachineRepaired() { return IsAllMachineRepaired; }
-//	void SetMachineDone(bool b) {
-//		DoneMachineNum++;
-//	}
-
-	//게임 타이머======================================================
-	
-	//FTimerHandle FGameTimer; //게임 타이머
-//private:
-	//float GameLeftTimeSec; //게임 남은 시간을 초로 환산한 시간 : 7분
-	//void CheckTime(); //게임 타이머 시간 체크
 public:
-	//float GetGameLeftTimeSec() { return GameLeftTimeSec; }
-	//void SetGameLeftTimeSec(float value) { GameLeftTimeSec = value; }
-	
 	UFUNCTION(Reliable, Client)
 		void UpdateTimerUI_Client(const FString& timestr, int DoneMachineNum);
 	UFUNCTION(Reliable, Server)

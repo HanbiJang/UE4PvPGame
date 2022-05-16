@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include <MyProp/GameInstance/MyGameInstance.h>
 #include <MyProp/Controller/MyPlayerController.h>
+#include <MyProp/Mode/MyStartModeBase.h>
 
 
 void UMyStartGameWidget::RandomBtnPressed() {
@@ -158,10 +159,21 @@ void UMyStartGameWidget::OnFindSessionComplete(bool Succeded) {
 void UMyStartGameWidget::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result) {
 	GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Join Session Success"));
 
+	//월드 셋팅에서 PC변경
 	if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0)) {
 		FString JoinAddress = "";
 		SessionInterface->GetResolvedConnectString(SessionName , JoinAddress);
-		if(JoinAddress != "")
-			PC->ClientTravel(JoinAddress, ETravelType::TRAVEL_Absolute);
+		if (JoinAddress != "") {
+			if (Cast<AMyPlayerController>(PC)) { 
+				//UMyGameInstance* GI = Cast<UMyGameInstance>(GetWorld()->GetGameInstance());
+				//if (GI) {
+				//	Cast<AMyPlayerController>(PC)->SetMyPlayerName(GI->MyPlayerName);
+				//}
+				Cast<AMyPlayerController>(PC)->ClientTravel(JoinAddress, ETravelType::TRAVEL_Absolute);
+			}
+			
+			//PC->ClientTravel(JoinAddress, ETravelType::TRAVEL_Absolute);
+		}
+			
 	}
 }

@@ -10,6 +10,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MyKillerMainHUD.generated.h"
 
+class UMyOtherPlayerWidget;
 /**
  * 
  */
@@ -30,6 +31,9 @@ private:
 	//타이머 & 발전기 위젯
 	UMyTimerWidget* m_TimerWidget;
 
+	//다른 플레이어 보기 위젯
+	UMyOtherPlayerWidget* m_OtherPlayerWidget;
+
 public:
 	//위젯 주기
 	UProgressBar* GetQSkillPg() { return m_QSkillPg; }
@@ -40,6 +44,8 @@ public:
 	UTextBlock* GetClickSkillText(){ return m_ClickSkillText; }
 
 	UMyTimerWidget* GetTimerHUD() { return m_TimerWidget; }
+
+	UMyOtherPlayerWidget* GetOtherPlayerWidget() { return m_OtherPlayerWidget; }
 
 	//위젯 값설정
 	void SetQSkillPg(float _CurTime);

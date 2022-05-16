@@ -64,9 +64,22 @@ public:
 	UMyGameInstance();
 	~UMyGameInstance();
 
+	//플레이어 이름
+	FString MyPlayerName;
+
 	//이미지
 	UTexture2D* Machine_DoneImg;
 	UTexture2D* GetDoneImg() {
 		return Machine_DoneImg;
 	}
+	
+	//다른 플레이어 이미지
+	TArray<UTexture2D*> AllPlayerImg;
+	TArray<UTexture2D*> GetAllPlayerImg() {
+		return AllPlayerImg;
+	};
+	UTexture2D* GetPlayerImg(int idx) {
+		return AllPlayerImg[idx];
+	};
+
 };

@@ -67,4 +67,11 @@ public:
 	int GetDoneMachineNum() { return DoneMachineNum; }
 	void SetDoneMachineNum(int value) { DoneMachineNum = value; }
 
+	//플레이어 이름======================================================
+private:
+	TArray<FString> PlayerNames;
+public:
+	TArray<FString> GetPlayerNames() { return PlayerNames; }
+	void SetPlayerNames(TArray<FString> value) { PlayerNames = value; }
+	
 };

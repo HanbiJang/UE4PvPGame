@@ -27,6 +27,8 @@ void AMyPlayerController::BeginPlay() {
 void AMyPlayerController::PlayerTick(float DeltaTime) {
 	Super::PlayerTick(DeltaTime);
 
+	FString str = FString::Printf(TEXT("MyPlayerName :  %s"), *MyPlayerName);
+	GEngine->AddOnScreenDebugMessage(0, 0.5, FColor::Blue, str);
 }
 
 void AMyPlayerController::UpdateTimerUI_Client_Implementation(const FString& timestr, int DoneMachineNum) {
