@@ -149,7 +149,7 @@ void AKiller::AttackAction()
 
 			if (survivor != nullptr) { //cast 실패시 null
 				//생존자가 맞게하기
-				UGameplayStatics::ApplyDamage(survivor,30.f,NULL,GetOwner(),NULL);
+				UGameplayStatics::ApplyDamage(survivor,30.f,NULL,GetOwner(),NULL);			
 
 				break;
 			}

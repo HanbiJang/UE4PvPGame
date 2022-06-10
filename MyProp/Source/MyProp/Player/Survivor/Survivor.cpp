@@ -40,11 +40,26 @@ ASurvivor::ASurvivor() :
 	if (ChaseSoundAsset.Succeeded())
 		SW_Chase = ChaseSoundAsset.Object;
 
+	//타격음
+	ConstructorHelpers::FObjectFinder<USoundWave> Hit1SoundAsset(TEXT("SoundWave'/Game/Music/Woman_Hit_1.Woman_Hit_1'"));
+	if (Hit1SoundAsset.Succeeded())
+		SW_Hit_1 = Hit1SoundAsset.Object;
+	ConstructorHelpers::FObjectFinder<USoundWave> Hit2SoundAsset(TEXT("SoundWave'/Game/Music/Woman_Hit_2.Woman_Hit_2'"));
+	if (Hit2SoundAsset.Succeeded())
+		SW_Hit_2 = Hit2SoundAsset.Object;
+	ConstructorHelpers::FObjectFinder<USoundWave> Hit3SoundAsset(TEXT("SoundWave'/Game/Music/Woman_Hit_3.Woman_Hit_3'"));
+	if (Hit3SoundAsset.Succeeded())
+		SW_Hit_3 = Hit3SoundAsset.Object;
+
+
 	//오디오 컴포넌트 부착
 	AC_HeartBeat = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio_HeartBeat"));
 	AC_Chase = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio_Chase"));
+	AC_Effect_1 = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio_Effect_1"));
+
 	AC_HeartBeat->AttachTo(GetMesh());
 	AC_Chase->AttachTo(GetMesh());
+	AC_Effect_1->AttachTo(GetMesh());
 
 	//멀티플레이 리플리케이션 설정
 	bReplicates = true;

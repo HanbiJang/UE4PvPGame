@@ -167,11 +167,21 @@ public:
 	USoundWave* SW_HeartBeat;
 	//추격 BGM 사운드 에셋
 	USoundWave* SW_Chase;
+	//이펙트 음 사운드 에셋
+	USoundWave* SW_Hit_1;
+	//이펙트 음 사운드 에셋
+	USoundWave* SW_Hit_2;
+	//이펙트 음 사운드 에셋
+	USoundWave* SW_Hit_3;
+
+
 	//사운드 컴포넌트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-	UAudioComponent* AC_HeartBeat;
+		UAudioComponent* AC_HeartBeat;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
-	UAudioComponent* AC_Chase;
+		UAudioComponent* AC_Chase;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Info, meta = (AllowPrivateAccess = "true"))
+		UAudioComponent* AC_Effect_1;
 
 	//멀티플레이==============================
 	//캐릭터 Info를 공유하기

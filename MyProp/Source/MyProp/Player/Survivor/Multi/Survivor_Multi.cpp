@@ -76,6 +76,19 @@ void ASurvivor::SetCurrentHealth(float healthValue) {
 //내장된 ApplyDamage로 충돌 시, 데미지를 줄수가 있다
 float ASurvivor::TakeDamage(float DamageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) {
 
+    //소리 재생
+    
+    if (DamageTaken > 0 && DamageTaken <= 10) {
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), SW_Hit_1, GetActorLocation());
+    }
+    else if (DamageTaken > 10 && DamageTaken <= 20) {
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), SW_Hit_2, GetActorLocation());
+    }
+    else {
+        UGameplayStatics::PlaySoundAtLocation(GetWorld(), SW_Hit_3, GetActorLocation());
+    }
+
+
     float damageApplied = GetInfo()->fCurHP - DamageTaken;
     SetCurrentHealth(damageApplied);
     
@@ -83,7 +96,7 @@ float ASurvivor::TakeDamage(float DamageTaken, struct FDamageEvent const& Damage
     if (HasAuthority()) {
         HitColorReaction_Server();
         
-        //if(!isObject)
+        if(!isObject)
             ChangeState(EPLAYER_STATE::HIT);
     }
     return damageApplied;
