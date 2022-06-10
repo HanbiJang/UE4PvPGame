@@ -41,6 +41,10 @@ private:
 	UButton* m_SurvivorBtn;
 	UButton* m_StartGameBtn;
 
+	//로딩 UI
+public:
+	UUserWidget* m_LoadingHUD;
+
 public:
 
 	//홈 버튼 : 홈화면으로 되돌아가기
@@ -78,5 +82,14 @@ public:
 
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
-	
+
+	//비동기 로딩 관련
+	//void OnLoadingComplete(const FName&, UPackage*, EAsyncLoadingResult::Type);
+	void OnLoadingComplete_Server(FOnlineSessionSettings SessionSettings);
+	void OnLoadingComplete_Client(APlayerController* pc, FString joinAddress, ETravelType type);
+
+	FTimerHandle LoadingTimerHandler;
+	FTimerHandle LoadingClientTimerHandler;
+	//void DelayServerTravel();
+	//void DelayClientTravel();
 };

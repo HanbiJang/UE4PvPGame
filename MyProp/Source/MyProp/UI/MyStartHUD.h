@@ -36,6 +36,7 @@ private:
 	//나가기 버튼 : 게임 종료하기
 	UButton* m_ExitBtn;
 
+
 public:
 	UButton* GetPlayBtn() { return m_PlayBtn;}
 	UButton* GetExitBtn() { return m_ExitBtn; }

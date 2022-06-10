@@ -28,7 +28,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime) {
 	Super::PlayerTick(DeltaTime);
 
 	FString str = FString::Printf(TEXT("MyPlayerName :  %s"), *MyPlayerName);
-	GEngine->AddOnScreenDebugMessage(0, 0.5, FColor::Blue, str);
+	//GEngine->AddOnScreenDebugMessage(0, 0.5, FColor::Blue, str);
 }
 
 void AMyPlayerController::UpdateTimerUI_Client_Implementation(const FString& timestr, int DoneMachineNum) {
@@ -92,7 +92,6 @@ void AMyPlayerController::DrawHUD_Server_Implementation() {
 	Controller->SetInputMode(mode);
 	//Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
 }
-
 
 void AMyPlayerController::UpdatePlayHUD_Killer_Implementation(float _CurQTimeRatio, float _CurETimeRatio, float _CurRCTimeRatio
 , float _CurQTime, float _CurETime, float _CurRCTime) {

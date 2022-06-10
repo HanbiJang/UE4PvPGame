@@ -35,4 +35,5 @@ void UMyStartGameWidget::NativeConstruct()
 void UMyStartGameWidget::NativeTick(const FGeometry& Geometry, float DT)
 {
 	Super::NativeTick(Geometry, DT);
+
 }

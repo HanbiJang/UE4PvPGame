@@ -67,8 +67,15 @@ void UMyStartGameWidget::StartGameBtnPressed() {
 			}
 			m_SelectType = GI->GetSelectType();
 		}	
+		//로딩 화면 보여주기
+		m_LoadingHUD = (CreateWidget(GetWorld(), GI->m_LoadingWidget));
+		if (nullptr != m_LoadingHUD) {
+			m_LoadingHUD->AddToViewport();
+		}
+
 	}
-	
+
+
 	//선택한 캐릭터 타입에 따라 서버를 생성하거나 서버에 참여하기(찾기)
 	if (m_SelectType == EPLAYER_TYPE::KILLER) {
 		//UGameplayStatics::OpenLevel(GetWorld(), TEXT("InGameMap"), true, TEXT("Listen")); //서버
@@ -98,7 +105,19 @@ void UMyStartGameWidget::CreateServer() {
 	if(GI) SessionSettings.NumPublicConnections = GI->maxPlayer;
 	else SessionSettings.NumPublicConnections = 5;
 
-	SessionInterface->CreateSession(0, FName("MySession"), SessionSettings);
+	//비동기 로딩 세션 생성 전에 미리 해야함
+	LoadPackageAsync(TEXT("/Game/Levels/InGameMap"),
+		FLoadPackageAsyncDelegate::CreateLambda([=](const FName& PackageName, UPackage* LoadedPackage, EAsyncLoadingResult::Type result)
+			{
+				if (result == EAsyncLoadingResult::Succeeded) {
+					OnLoadingComplete_Server(SessionSettings);
+				}
+			}
+		),
+		0,
+				PKG_ContainsMap);
+
+	//SessionInterface->CreateSession(0, FName("My Session"), SessionSettings);
 }
 //서버 찾기 (생존자) 
 void UMyStartGameWidget::FindServer() {
@@ -109,7 +128,7 @@ void UMyStartGameWidget::FindServer() {
 	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 
 	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Blue, TEXT("Find Session Start"));
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, TEXT("Find Session Start"));
 }
 
 void UMyStartGameWidget::Init() {
@@ -129,35 +148,85 @@ void UMyStartGameWidget::Init() {
 void UMyStartGameWidget::OnCreateSessionComplete(FName ServerName, bool Succeded) {
 	
 	if (Succeded) {
-		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Create Session Success"));
+		//GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Create Session Success"));
 		UE_LOG(LogTemp, Log, TEXT("Create %s Session Success: %d"), *ServerName.ToString(), Succeded);
 		//"World'/Game/Levels/InGameMap.InGameMap'" (원래 주소) listen =서버로 동작
+
 		GetWorld()->ServerTravel("/Game/Levels/InGameMap?listen");
+
 	}
 }
+
+void UMyStartGameWidget::OnLoadingComplete_Server(FOnlineSessionSettings SessionSettings) {
+	//(레벨) 로딩 완료되었을 때의 함수
+	SessionInterface->CreateSession(0, FName("My Session"), SessionSettings);
+	
+	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("InGameMap"),true,(FString)(L"listen"));
+
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("OnLoadingComplete_Server"));
+	//GetWorld()->ServerTravel("/Game/Levels/InGameMap?listen");
+
+}
+
+void UMyStartGameWidget::OnLoadingComplete_Client(APlayerController* pc, FString joinAddress, ETravelType type) {
+	
+	//로딩 완료되었을 때의 함수
+	//GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Game Start!"));
+	Cast<AMyPlayerController>(pc)->ClientTravel(joinAddress, type);
+
+}
+
+//void UMyStartGameWidget::OnLoadingComplete(const FName&, UPackage*, EAsyncLoadingResult::Type result) {
+//	//로딩 완료되었을 때의 함수
+//	if (result == EAsyncLoadingResult::Succeeded) {
+//		//GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("succee"));
+//		GetWorld()->ServerTravel("/Game/Levels/InGameMap?listen");
+//		//GetWorld()->GetTimerManager().SetTimer(LoadingTimerHandler, this, &UMyStartGameWidget::DelayServerTravel, 3.0f, false);
+//	}
+//	else {
+//		//GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Fail"));
+//	}
+//	
+//}
+
+
+//void UMyStartGameWidget::DelayServerTravel() {
+//
+//	//로딩 완료되었을 때의 함수
+//	GetWorld()->ServerTravel("/Game/Levels/InGameMap?listen");
+//
+//}
+
+//void UMyStartGameWidget::DelayClientTravel() {
+//	
+//	//내용 없음
+//}
 
 void UMyStartGameWidget::OnFindSessionComplete(bool Succeded) {
 	
 	if (Succeded) {
-		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Find Session Success"));
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Find Session Success"));
 
 		TArray<FOnlineSessionSearchResult> SearchResults = SessionSearch->SearchResults;
 
-		if (SearchResults.Num()) {
+		if (SearchResults.Num() /*> 0*/) {
+			GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Join Session Start"));
 			SessionInterface->JoinSession(0, "My Session", SearchResults[0]);
 		}
-		else { //결과 없으면 계속 찾기
-			SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+		else/* if (SearchResults.Num() == 0)*/ { //결과 없으면 계속 찾기
+			GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("SearchResults Null"));
+			FindServer();
+			//SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 		}
 		
 		FString str = FString::Printf(TEXT("Serch result : server count %d"), SearchResults.Num());
-		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, str);
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, str);
 	} 
 
 }
 
 void UMyStartGameWidget::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result) {
-	GEngine->AddOnScreenDebugMessage(0, 2, FColor::Red, TEXT("Join Session Success"));
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Join Session Complete"));
 
 	//월드 셋팅에서 PC변경
 	if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0)) {
@@ -169,10 +238,35 @@ void UMyStartGameWidget::OnJoinSessionComplete(FName SessionName, EOnJoinSession
 				//if (GI) {
 				//	Cast<AMyPlayerController>(PC)->SetMyPlayerName(GI->MyPlayerName);
 				//}
+				
+				//비동기 로딩
+				//LoadPackageAsync(TEXT("/Game/Levels/InGameMap"),
+				//	FLoadPackageAsyncDelegate::CreateLambda([=](const FName& PackageName, UPackage* LoadedPackage, EAsyncLoadingResult::Type result)
+				//		{
+				//			if (result == EAsyncLoadingResult::Succeeded) {
+				//				Cast<AMyPlayerController>(PC)->ClientTravel(JoinAddress, ETravelType::TRAVEL_Absolute);
+				//				//OnLoadingComplete_Client(PC, JoinAddress, ETravelType::TRAVEL_Absolute);
+				//			}
+				//			else {
+				//				GEngine->AddOnScreenDebugMessage(0, 5, FColor::Blue, TEXT("Join Failed"));
+
+				//				//다시 찾기
+				//				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+				//			}
+				//		}
+				//	),
+				//	0,
+				//	PKG_ContainsMap);
+				GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("Client Travel..."));
 				Cast<AMyPlayerController>(PC)->ClientTravel(JoinAddress, ETravelType::TRAVEL_Absolute);
+
 			}
+			else { GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("pc cast null")); }
 			
 			//PC->ClientTravel(JoinAddress, ETravelType::TRAVEL_Absolute);
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("JoinAddress null"));
 		}
 			
 	}

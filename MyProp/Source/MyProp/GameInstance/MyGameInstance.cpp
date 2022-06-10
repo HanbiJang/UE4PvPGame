@@ -59,6 +59,12 @@ UMyGameInstance::UMyGameInstance()
 	if (Machine_DoneAsset.Succeeded())
 		Machine_DoneImg = Machine_DoneAsset.Object;
 
+	//로딩 UI 가져오기
+	ConstructorHelpers::FClassFinder<UUserWidget>
+		LoadingWidget(TEXT("WidgetBlueprint'/Game/Blueprints/UI/Loading/LoadingUi.LoadingUI_C'"));
+	if (LoadingWidget.Succeeded())
+		m_LoadingWidget = LoadingWidget.Class;
+
 }
 
 UMyGameInstance::~UMyGameInstance()

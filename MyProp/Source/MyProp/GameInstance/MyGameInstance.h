@@ -34,6 +34,9 @@ private:
 	TSubclassOf<UUserWidget> m_SurvivorWidgetClass;
 
 public:
+	TSubclassOf<UUserWidget> m_LoadingWidget;
+
+public:
 	//플레이어 수
 	int iPlayerCnt = 0;
 	int maxPlayer = 5;
