@@ -3,6 +3,8 @@
 
 #include "MyGameInstance.h"
 
+#include <MyProp/UI/Common/MyMatchingHUD.h>
+
 const FSurvivorInfo* UMyGameInstance::GetSurvivorInfo(const FString& _RowName)
 {
 	FSurvivorInfo* Info = m_SurvivorTable->FindRow<FSurvivorInfo>(FName(_RowName), TEXT(""));
@@ -52,6 +54,11 @@ UMyGameInstance::UMyGameInstance()
 		SurvivorWidget(TEXT("WidgetBlueprint'/Game/Blueprints/UI/InGameUI/BP_MyMainHUD.BP_MyMainHUD_C'"));
 	if (SurvivorWidget.Succeeded())
 		m_SurvivorWidgetClass = SurvivorWidget.Class;
+
+	ConstructorHelpers::FClassFinder<UUserWidget>
+		MatchingHUD(TEXT("WidgetBlueprint'/Game/Blueprints/UI/StartUI/BP_MyMatchingHUD.BP_MyMatchingHUD_C'"));
+	if (MatchingHUD.Succeeded())
+		m_MatchingHUDClass = MatchingHUD.Class;
 
 	//UI 이미지 가져오기
 	ConstructorHelpers::FObjectFinder<UTexture2D>

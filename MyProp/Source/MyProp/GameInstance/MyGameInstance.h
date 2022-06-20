@@ -13,6 +13,7 @@
 #include "Engine/GameInstance.h"
 #include "MyGameInstance.generated.h"
 
+class AMyMatchingHUD;
 /**
  * 
  */
@@ -32,6 +33,7 @@ private:
 	//UI
 	TSubclassOf<UUserWidget> m_KillerWidgetClass;
 	TSubclassOf<UUserWidget> m_SurvivorWidgetClass;
+	TSubclassOf<UUserWidget> m_MatchingHUDClass;
 
 public:
 	TSubclassOf<UUserWidget> m_LoadingWidget;
@@ -40,6 +42,7 @@ public:
 	//플레이어 수
 	int iPlayerCnt = 0;
 	int maxPlayer = 5;
+	int curPlayerNum = 0; //현재 플레이어 수
 
 
 public:
@@ -55,6 +58,7 @@ public:
 	//UI
 	const TSubclassOf<UUserWidget> GetSurvivorWidgetClass() { return m_SurvivorWidgetClass; };
 	const TSubclassOf<UUserWidget> GetKillerWidgetClass() { return m_KillerWidgetClass; };
+	const TSubclassOf<UUserWidget> GetMatchingHUDClass() { return m_MatchingHUDClass; };
 
 	//캐릭터 선택
 private:
