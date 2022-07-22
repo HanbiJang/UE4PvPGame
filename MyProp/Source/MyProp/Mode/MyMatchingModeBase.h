@@ -13,5 +13,7 @@ UCLASS()
 class MYPROP_API AMyMatchingModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
+
+	//컨트롤러에서 매칭 HUD를 띄우고 모드에서는.......
 	
 };

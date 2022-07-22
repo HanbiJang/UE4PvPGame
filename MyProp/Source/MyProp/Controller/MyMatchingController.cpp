@@ -20,7 +20,23 @@ void AMyMatchingController::BeginPlay() {
 	//FInputModeGameOnly mode; //UI 클릭 불가
 	//Controller->SetInputMode(mode); //변경필요
 
+	PosessToPawn();
 
+}
+
+void AMyMatchingController::PosessToPawn() //같은 카메라 pawn 에게 할당되도록 하기
+{
+
+
+	for (TObjectIterator<APawn> e; e; ++e) 
+	{
+		if (e->Tags[0].ToString().Equals("MatchingCamera")) 
+		{
+			//플레이어들이 월드 상의 같은 카메라 액터에게 Posess 설정하기
+			GetWorld()->GetFirstPlayerController()->Possess(*e);
+			break;
+		}
+	}
 }
 
 void AMyMatchingController::PlayerTick(float DeltaTime) {

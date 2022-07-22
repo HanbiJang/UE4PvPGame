@@ -28,8 +28,7 @@ void AMyStartModeBase::BeginPlay() {
 	// InputMode 설정
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();		
 	FInputModeGameAndUI mode;
-
 	Controller->SetInputMode(mode);
-	Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다.
-	
+	Controller->bShowMouseCursor = true; // 언제나 마우스 커서가 보이게 한다
+
 }
