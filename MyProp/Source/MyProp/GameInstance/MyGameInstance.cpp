@@ -4,6 +4,11 @@
 #include "MyGameInstance.h"
 
 #include <MyProp/UI/Common/MyMatchingHUD.h>
+#include <MyProp/Controller/MyPlayerController.h>
+
+TArray<AMyPlayerController*> UMyGameInstance::GetMatchingPCArr() { return  MatchingPCArr; };
+void UMyGameInstance::AddMatchingPCArr(AMyPlayerController* p) { MatchingPCArr.Add(p); }
+
 
 const FSurvivorInfo* UMyGameInstance::GetSurvivorInfo(const FString& _RowName)
 {
@@ -19,6 +24,10 @@ const FKillerInfo* UMyGameInstance::GetKillerInfo(const FString& _RowName)
 
 UMyGameInstance::UMyGameInstance()
 {
+	//플레이어 컨트롤러 정보
+	//MatchingPCArr.Init(nullptr,maxPlayer);
+	iPlayerCnt = 0;
+	
 	ConstructorHelpers::FObjectFinder<UDataTable> SurvivorTable(
 		TEXT("DataTable'/Game/Blueprints/Survivor/DT_Survivor.DT_Survivor'"));
 	if (SurvivorTable.Succeeded())

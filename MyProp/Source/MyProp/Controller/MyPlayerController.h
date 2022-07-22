@@ -15,6 +15,7 @@
 class AMyMachine;
 class UMyTimerWidget;
 class AMyPropGameModeBase;
+class UMyMatchingHUD;
 /**
  * 
  */
@@ -68,5 +69,36 @@ public:
 		void UpdateTimerUI_Client(const FString& timestr, int DoneMachineNum);
 	UFUNCTION(Reliable, Server)
 		void UpdateTimerUI_Server(const FString& timestr, int DoneMachineNum);
+
+
+	//매칭 ------
+	//HUD
+	TSubclassOf<UUserWidget> m_MatchingMainHUDClass;
+	UMyMatchingHUD* m_MatchingMainHUD;
+	UMyMatchingHUD* GetMatchingMainHUD() { return m_MatchingMainHUD; };
+
+	void PosessToPawn(); //같은 카메라 pawn 에게 할당되도록 하기
+
+	//플레이어 수
+	int iPlayerCnt;
+	void SetPlayerCnt(int n) { iPlayerCnt = n; }
+	
+	UFUNCTION(Reliable, Client)
+		void SetPlayerCnt_Client(int n);
+
+	int GetPlayerCnt() { return iPlayerCnt;  }
+
+	UFUNCTION(Reliable, NetMulticast)
+		void UpdatePlayerNum(int num); //UI 상에서 플레이어 수를 반영하기
+
+	int ID;
+	bool IsMatchingHUDSet;
+
+public:
+	void SetID(int i) { ID = i; }
+	int GetID() { return ID; }
+
+	UFUNCTION(Reliable, Client)
+		void SetID_Client(int n);
 
 };

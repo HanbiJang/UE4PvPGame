@@ -14,6 +14,7 @@
 #include "MyGameInstance.generated.h"
 
 class AMyMatchingHUD;
+class AMyPlayerController;
 /**
  * 
  */
@@ -40,10 +41,12 @@ public:
 
 public:
 	//플레이어 수
-	int iPlayerCnt = 0;
-	int maxPlayer = 5;
-	int curPlayerNum = 0; //현재 플레이어 수
+	int iPlayerCnt; //현재 플레이어 수
+	const int maxPlayer = 5;
 
+	TArray<AMyPlayerController*> MatchingPCArr;
+	TArray<AMyPlayerController*> GetMatchingPCArr();
+	void AddMatchingPCArr(AMyPlayerController* p);
 
 public:
 	const TSubclassOf<APawn> GetKiller() {

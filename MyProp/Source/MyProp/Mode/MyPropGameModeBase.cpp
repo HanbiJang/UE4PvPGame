@@ -89,7 +89,7 @@ void AMyPropGameModeBase::PostLogin(APlayerController* NewPlayer) {
 	if (GI) {
 		//플레이어 인원 수 증가
 		GI->iPlayerCnt++;
-		UE_LOG(LogTemp, Log, TEXT("player Num : %i"), GI->iPlayerCnt);
+		//UE_LOG(LogTemp, Log, TEXT("player Num : %i"), GI->iPlayerCnt);
 
 		//캐릭터 스폰 인포
 		FActorSpawnParameters spawnInfo;
