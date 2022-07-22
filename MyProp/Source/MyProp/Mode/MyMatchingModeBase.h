@@ -32,5 +32,9 @@ private:
 	UMyGameInstance* GI;
 
 	void BeginPlay();
+
+	FTimerHandle FGameStartTimer;
+
+	void GoGameMap();
 	
 };

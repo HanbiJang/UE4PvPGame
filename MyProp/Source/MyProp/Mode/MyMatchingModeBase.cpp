@@ -28,6 +28,7 @@ void AMyMatchingModeBase::Tick(float DeltaTime)
 
 	//인원 수 반영하기
 	UpdatePlayerNum();
+
 }
 
 void AMyMatchingModeBase::UpdatePlayerNum()
@@ -97,6 +98,17 @@ void AMyMatchingModeBase::PostLogin(APlayerController* NewPlayer)
 	else {
 		//타이틀로 돌아가기		
 		UGameplayStatics::OpenLevel(GetWorld(), TEXT("StartMap"));
+		return;
 	}
 
+	if(GetWorld()->GetNumPlayerControllers() == GI->maxPlayer)
+		GetWorld()->GetTimerManager().SetTimer(FGameStartTimer, this, &AMyMatchingModeBase::GoGameMap, 5.0f, false);
+	//5초 예열 시간
+
+}
+
+void AMyMatchingModeBase::GoGameMap() 
+{
+	FString UrlString = TEXT("InGameMap");
+	GetWorld()->ServerTravel(UrlString);
 }

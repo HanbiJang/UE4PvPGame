@@ -63,7 +63,8 @@ void AMyPlayerController::PlayerTick(float DeltaTime) {
 	else if (levelName.Equals("InGameMap")) 
 	{
 		//matching UI 해제하기
-		m_MatchingMainHUD->RemoveFromViewport();
+		if(m_MatchingMainHUD)
+			m_MatchingMainHUD->RemoveFromViewport();
 	}
 
 }
